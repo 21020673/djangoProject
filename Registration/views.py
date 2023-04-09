@@ -1,10 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.shortcuts import render, redirect
+
+from .models import CarSpecs
 
 
 # Create your views here.
+@login_required(login_url='login')
 def display(request):
-    if request.user.is_authenticated:
-        return render(request, 'display.html')
-    else:
-        return redirect('login')
+    cars = CarSpecs.objects.all()
+    context = {'cars': cars}
+    return render(request, 'display.html', context)

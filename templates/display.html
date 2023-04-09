@@ -5,73 +5,34 @@
     <title>Cars</title>
 </head>
 <body>
-    <table border="1">
-        <tr>
-            <th>Make</th>
-            <th>Model</th>
-            <th>Year</th>
-            <th>Price</th>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>1 Series</td>
-            <td>2011</td>
-            <td>£22,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>3 Series</td>
-            <td>2012</td>
-            <td>£28,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>5 Series</td>
-            <td>2013</td>
-            <td>£32,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>7 Series</td>
-            <td>2014</td>
-            <td>£40,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>8 Series</td>
-            <td>2015</td>
-            <td>£50,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>9 Series</td>
-            <td>2016</td>
-            <td>£60,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>10 Series</td>
-            <td>2017</td>
-            <td>£70,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>11 Series</td>
-            <td>2018</td>
-            <td>£80,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>12 Series</td>
-            <td>2019</td>
-            <td>£90,000</td>
-        </tr>
-        <tr>
-            <td>BMW</td>
-            <td>13 Series</td>
-            <td>2020</td>
-            <td>£100,000</td>
-        </tr>
-    </table>
+<table>
+<thead>
+    <tr>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Generation</th>
+        <th>Body Type</th>
+        <th>Year</th>
+        <th>Engine Type</th>
+        <th>Transmission</th>
+        <th>Fuel Tank Capacity</th>
+        <th>Engine HP</th>
+    </tr>
+</thead>
+<tbody>
+    {% for car in cars %}
+    <tr>
+        <th>{{ car.make }}</th>
+        <th>{{ car.model }}</th>
+        <th>{{ car.generation }}</th>
+        <th>{{car.body_type }}</th>
+        <th>{{car.year_from }}</th>
+        <th>{{car.engine_type }}</th>
+        <th>{{car.transmission }}</th>
+        <th>{{car.fuel_tank_capacity_l }}</th>
+        <th>{{car.engine_hp }}</th>
+    </tr>
+    {% endfor %}
+</table>
 </body>
 </html>
