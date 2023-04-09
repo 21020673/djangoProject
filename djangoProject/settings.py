@@ -77,13 +77,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'car': {
-        'NAME': 'car_registration',
-        'ENGINE': 'django.db.backends.mysql',
-        'USER': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306'
-    }
 }
 
 # Password validation
@@ -103,8 +96,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-DATABASE_ROUTERS = ['Registration.models.CarRouter']
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

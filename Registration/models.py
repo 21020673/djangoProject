@@ -7,6 +7,8 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+from UserManagement.models import AuthUser
+
 
 class CarSpecs(models.Model):
     make = models.CharField(primary_key=True, max_length=45)
@@ -39,7 +41,6 @@ class CarSpecs(models.Model):
 
     class Meta:
         managed = False
-        app_label = 'car_db'
         db_table = 'car_specs'
         unique_together = (('make', 'model', 'generation'),)
 
@@ -55,7 +56,6 @@ class Cars(models.Model):
 
     class Meta:
         managed = False
-        app_label = 'car_db'
         db_table = 'cars'
 
 
@@ -69,7 +69,6 @@ class Owners(models.Model):
 
     class Meta:
         managed = False
-        app_label = 'car_db'
         db_table = 'owners'
 
 
@@ -83,45 +82,15 @@ class RegisterData(models.Model):
 
     class Meta:
         managed = False
-        app_label = 'car_db'
         db_table = 'register_data'
 
-class CarRouter:
-    """
-    A router to control all database operations on models in the
-    user application.
-    """
+class RegisterCenter(models.Model):
+    center_id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=45, blank=True, null=True)
+    username = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='username', blank=True, null=True)
+    address = models.CharField(max_length=200, blank=True, null=True)
+    city_province = models.CharField(max_length=45, blank=True, null=True)
 
-    def db_for_read(self, model, **hints):
-        """
-        Attempts to read user models go to users_db.
-        """
-        if model._meta.app_label == 'car_db':
-            return 'car'
-        return None
-
-    def db_for_write(self, model, **hints):
-        """
-        Attempts to write user models go to users_db.
-        """
-        if model._meta.app_label == 'car_db':
-            return 'car'
-        return None
-
-    def allow_relation(self, obj1, obj2, **hints):
-        """
-        Allow relations if a model in the user app is involved.
-        """
-        if obj1._meta.app_label == 'car_db' or \
-                obj2._meta.app_label == 'car_db':
-            return True
-        return None
-
-    def allow_migrate(self, db, app_label, model_name=None, **hints):
-        """
-        Make sure the auth app only appears in the 'users_db'
-        database.
-        """
-        if app_label == 'car_db':
-            return db == 'car'
-        return None
+    class Meta:
+        managed = False
+        db_table = 'register_center'
