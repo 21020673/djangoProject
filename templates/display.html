@@ -6,32 +6,24 @@
 </head>
 <body>
 <table>
-<thead>
+    <thead>
     <tr>
-        <th>Make</th>
+        <th>Owner</th>
+        <th>License Plate</th>
         <th>Model</th>
-        <th>Generation</th>
-        <th>Body Type</th>
-        <th>Year</th>
-        <th>Engine Type</th>
-        <th>Transmission</th>
-        <th>Fuel Tank Capacity</th>
-        <th>Engine HP</th>
+        <th>Certificate Date</th>
+        <th>Expiry Date</th>
     </tr>
-</thead>
-<tbody>
-    {% for car in cars %}
-    <tr>
-        <th>{{ car.make }}</th>
-        <th>{{ car.model }}</th>
-        <th>{{ car.generation }}</th>
-        <th>{{car.body_type }}</th>
-        <th>{{car.year_from }}</th>
-        <th>{{car.engine_type }}</th>
-        <th>{{car.transmission }}</th>
-        <th>{{car.fuel_tank_capacity_l }}</th>
-        <th>{{car.engine_hp }}</th>
-    </tr>
+    </thead>
+    <tbody>
+    {% for car in cars|slice:":10"%}
+        <tr>
+            <td><a href="{% url 'display' %}">{{ car.owner.name }}</a></td>
+            <td>{{ car.license_plate.license_plate }}</td>
+            <td><a href="{% url 'display' %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a></td>
+            <td>{{ car.certificate_date }}</td>
+            <td>{{ car.expiry_date }}</td>
+        </tr>
     {% endfor %}
 </table>
 </body>

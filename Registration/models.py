@@ -11,9 +11,10 @@ from UserManagement.models import AuthUser
 
 
 class CarSpecs(models.Model):
-    make = models.CharField(primary_key=True, max_length=45)
-    model = models.CharField(max_length=200)
-    generation = models.CharField(max_length=45)
+    id = models.IntegerField(primary_key=True)
+    make = models.CharField(max_length=45, blank=True, null=True)
+    model = models.CharField(max_length=200, blank=True, null=True)
+    generation = models.CharField(max_length=45, blank=True, null=True)
     year_from = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
     year_to = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
     series = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
@@ -42,17 +43,11 @@ class CarSpecs(models.Model):
     class Meta:
         managed = False
         db_table = 'car_specs'
-        unique_together = (('make', 'model', 'generation'),)
 
 
 class Cars(models.Model):
     license_plate = models.CharField(primary_key=True, max_length=20)
-    make = models.ForeignKey(CarSpecs, models.DO_NOTHING, db_column='make', blank=True, null=True,
-                             related_name='car_make')
-    model = models.ForeignKey(CarSpecs, models.DO_NOTHING, db_column='model', blank=True, null=True,
-                              related_name='car_model')
-    generation = models.ForeignKey(CarSpecs, models.DO_NOTHING, db_column='generation', blank=True, null=True,
-                                   related_name='car_generation')
+    model = models.ForeignKey(CarSpecs, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -60,37 +55,39 @@ class Cars(models.Model):
 
 
 class Owners(models.Model):
-    owner_id = models.CharField(primary_key=True, max_length=45)
+    owner_id = models.IntegerField(primary_key=True)
     type = models.CharField(max_length=40, blank=True, null=True)
-    cccd = models.CharField(db_column='CCCD', max_length=12, blank=True, null=True)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
-    residence = models.CharField(max_length=45, blank=True, null=True)
+    city_province = models.CharField(max_length=45, blank=True, null=True)
+    address = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'owners'
 
 
-class RegisterData(models.Model):
-    certificate_id = models.IntegerField(primary_key=True)
-    certificate_date = models.CharField(max_length=45, blank=True, null=True)
-    expiry_date = models.CharField(max_length=45, blank=True, null=True)
-    register_center = models.CharField(max_length=45, blank=True, null=True)
-    owner = models.ForeignKey(Owners, models.DO_NOTHING, db_column='owner', blank=True, null=True)
-    license_plate = models.ForeignKey(Cars, models.DO_NOTHING, db_column='license_plate', blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'register_data'
-
 class RegisterCenter(models.Model):
     center_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=45, blank=True, null=True)
-    username = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='username', blank=True, null=True)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
     city_province = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'register_center'
+
+
+class RegisterData(models.Model):
+    certificate_id = models.IntegerField(primary_key=True)
+    certificate_date = models.DateTimeField(blank=True, null=True)
+    expiry_date = models.DateTimeField(blank=True, null=True)
+    register_center = models.ForeignKey(RegisterCenter, models.DO_NOTHING, db_column='register_center', blank=True,
+                                        null=True)
+    owner = models.ForeignKey(Owners, models.DO_NOTHING, db_column='owner', blank=True, null=True)
+    license_plate = models.ForeignKey(Cars, models.DO_NOTHING, db_column='license_plate', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'register_data'
