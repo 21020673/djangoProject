@@ -3,21 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
+    <style>
+        body {
+			background-color: #d8ecfc;
+		}
+		.container {
+			margin: auto;
+			max-width: 80%;
+		}
+		#top-bar {
+			background-image: linear-gradient(#303c94, #2494d4);
+			height: 110px;
+			padding: 10px;
+			box-shadow: 5px 0px 5px #cad4e3, -5px 0px 5px #cad4e3;
+		}
+		ul.menu {
+
+			position: relative;
+			background-image: linear-gradient( #2494d4, #303c94);
+			padding-top: 5px;
+			padding-bottom:5px;
+/*			margin-top: 0px;*/
+		}
+		ul.menu > li {
+			display: inline;
+			height: 50px;
+			padding: 5px 10px;
+			list-style-type: none;
+			cursor:pointer;
+		}
+		ul.menu > li:hover {
+			background:#cdcdcd;
+		}
+		ul.menu > li  img {
+			max-width: 20px;
+		}
+		#top-img {
+			width: 60%;
+  			height: auto;
+		}
+    </style>
 </head>
 <body>
-<h1>Hello, {{ user.username|default:'Guest' }}!</h1>
-<div>
-    {% if perms.UserManagement.add_user %}
-        <a href="{% url 'register' %}">Register new user</a>
+    <div class="container">
+        <div id="top-bar">
+            <img id="top-img" src="http://www.vr.org.vn/Publishing_Resources/web/images/logo.png">
+        </div>
+        <nav>
+            <div id="menu-bar">
+                <ul class="menu">
+                    <li>Home
+                        <!-- <a><img src="https://www.kindpng.com/picc/m/559-5595969_white-home-icon-transparent-png-house-icon-vector.png"></a> -->
+                    </li>
+                    <li><a>Placeholder</a></li>
+                    <li><a>Placeholder</a></li>
+                    <li><a>Placeholder</a></li>
+                </ul>
+            </div>
+        </nav>
         <br>
-    {% endif %}
-    {% if user.is_authenticated %}
-        <a href="{% url 'display' %}">Display</a>
-        <br>
-        <a href="{% url 'logout' %}">Logout</a>
-    {% else %}
-        <a href="{% url 'login' %}">Login</a>
-    {% endif %}
-</div>
+
+        <h1>Hello, {{ user.username|default:'Guest' }}!</h1>
+        <div>
+            {% if perms.UserManagement.add_user %}
+                <a href="{% url 'register' %}">Register new user</a>
+                <br>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <a href="{% url 'display' %}">Display</a>
+                <br>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>
