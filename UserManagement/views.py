@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 def home(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     context = {'user': request.user}
     return render(request, 'index.html', context)
 
@@ -34,7 +36,7 @@ def login_request(request):
 def logout_request(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
-    return redirect("home")
+    return redirect('login')
 
 
 @permission_required('UserManagement.add_user', raise_exception=True)
