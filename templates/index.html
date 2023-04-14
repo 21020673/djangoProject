@@ -1,82 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Index</title>
-    <style>
-        body {
-			background-color: #d8ecfc;
-		}
-		.container {
-			margin: auto;
-			max-width: 80%;
-		}
-		#top-bar {
-			background-image: linear-gradient(#303c94, #2494d4);
-			height: 110px;
-			padding: 10px;
-			box-shadow: 5px 0px 5px #cad4e3, -5px 0px 5px #cad4e3;
-		}
-		ul.menu {
-
-			position: relative;
-			background-image: linear-gradient( #2494d4, #303c94);
-			padding-top: 5px;
-			padding-bottom:5px;
-/*			margin-top: 0px;*/
-		}
-		ul.menu > li {
-			display: inline;
-			height: 50px;
-			padding: 5px 10px;
-			list-style-type: none;
-			cursor:pointer;
-		}
-		ul.menu > li:hover {
-			background:#cdcdcd;
-		}
-		ul.menu > li  img {
-			max-width: 20px;
-		}
-		#top-img {
-			width: 60%;
-  			height: auto;
-		}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>newLogin</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://kit.fontawesome.com/f2d3c30620.js" crossorigin="anonymous"></script>
+    <style type="text/css">
+        img.bg {
+            position: absolute;
+            height: 100%;
+            opacity: 0.08;
+            z-index: 0;
+        }
+        .icon {
+            display:inline-block;
+            font-size: 40px;
+            line-height: 50px;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            vertical-align: bottom;
+        }
+        .w3-purple-blue {
+            background-color: #2494d4;
+        }
+        .white-font {
+            color: white;
+        }
+        .w3-bar-item {
+            height: 80px;
+        }
+        #logo {
+            width: 100%;
+            height: 10px;
+            border-bottom: solid 5px white;
+        }
+        #content {
+            z-index: 1;
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div id="top-bar">
-            <img id="top-img" src="http://www.vr.org.vn/Publishing_Resources/web/images/logo.png">
-        </div>
-        <nav>
-            <div id="menu-bar">
-                <ul class="menu">
-                    <li>Home
-{#                        <a><img src="https://www.kindpng.com/picc/m/559-5595969_white-home-icon-transparent-png-house-icon-vector.png"></a>#}
-                    </li>
-                    <li><a>Placeholder</a></li>
-                    <li><a>Placeholder</a></li>
-                    <li><a>Placeholder</a></li>
-                </ul>
-            </div>
-        </nav>
-        <br>
 
-        <h1>Hello, {{ user.username|default:'Guest' }}!</h1>
-        <div>
-            {% if perms.UserManagement.add_user %}
-                <a href="{% url 'register' %}">Register new user</a>
-                <br>
-            {% endif %}
-            {% if user.is_authenticated %}
-                <a href="{% url 'display' %}">Display</a>
-                <br>
-                <a href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-            {% endif %}
+<body>
+
+    <!-- Sidebar -->
+    <div class="w3-sidebar w3-purple-blue w3-bar-block white-font" style="width:80px">
+
+        <!-- <h3 class="w3-bar-item">Menu</h3> -->
+        <div class="w3-bar-item">
+            LOGO
         </div>
+        <div class="w3-bar-item"></div>
+        <a href="#" class="w3-bar-item w3-button">
+            <span class="icon" style="font-size: 2em;">
+            <i class="fa-solid fa-house"></i>
+            </span>
+        </a>
+        <a href="{% url 'display' %}" class="w3-bar-item w3-button">
+            <span class="icon" style="font-size: 2em;">
+            <i class="fa-solid fa-car"></i>
+            </span>
+        </a>
+        <a href="{% url 'register' %}" class="w3-bar-item w3-button">
+            <span class="icon" style="font-size: 2em;">
+            <i class="fa-solid fa-plus"></i>
+            </span>
+        </a>
+        <div class="w3-bar-item"></div>
+
+        <div class="w3-bar-item"></div>
+        <a href="{% url 'logout' %}" class="w3-bar-item w3-button">
+            <span class="icon" style="font-size: 2em;">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            </span>
+        </a>
     </div>
+
+    <!-- Page Content -->
+    <div style="margin-left:80px">
+        <img class="bg" src="https://png.pngtree.com/background/20220805/original/pngtree-vietnam-dong-son-bronze-drum-pattern-blue-background-picture-image_1915085.jpg">
+    </div>
+    <div id="content" style="margin-left:100px ">
+
+        <div class="w3-container">
+            <br>
+            <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
+            <div>
+                {% if perms.UserManagement.add_user %}
+                    <a href="{% url 'register' %}">Register new user</a>
+                    <br>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'display' %}">Display</a>
+                    <br>
+                    <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="w3-container">
+
+        </div>
+
+    </div>
+
 </body>
 </html>
+
+
+
