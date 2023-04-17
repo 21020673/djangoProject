@@ -92,7 +92,7 @@
 <script>
     let labels = [
         {% for month in number_registered_by_month %}
-            '{{ month.certificate_date__quarter}} -{{ month.certificate_date__year}}',
+            '{{ month.certificate_date__month}} -{{ month.certificate_date__year}}',
         {% endfor %}
     ]
     let data = [
