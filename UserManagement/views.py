@@ -2,8 +2,10 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Count
 from django.shortcuts import render, redirect
 
+from Registration.models import RegisterData
 from .forms import RegisterForm
 
 
@@ -11,7 +13,22 @@ from .forms import RegisterForm
 def home(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    context = {'user': request.user}
+    if request.user.has_perm('UserManagement.add_user'):
+        context = {
+            'user': request.user,
+            'number_registered_by_year': RegisterData.objects.values('certificate_date__year').annotate(
+                count=Count('certificate_date__year')).order_by('certificate_date__year'),
+            'number_registered_by_month': RegisterData.objects.values('certificate_date__year',
+                                                                      'certificate_date__month').annotate(
+                count=Count('certificate_date__month')).order_by('certificate_date__year', 'certificate_date__month'),
+            'number_expired_by_year': RegisterData.objects.values('expiry_date__year').annotate(
+                count=Count('expiry_date__year')).order_by('expiry_date__year'),
+            'number_expired_by_month': RegisterData.objects.values('expiry_date__year',
+                                                                   'expiry_date__month').annotate(
+                count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month'),
+        }
+    else:
+        context = {'user': request.user}
     return render(request, 'index.html', context)
 
 
