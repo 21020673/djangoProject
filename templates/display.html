@@ -10,7 +10,7 @@
     <tr>
         <th><a href="{% url 'owner' %}">Owner</a></th>
         <th>License Plate</th>
-        <th><a href="{% url 'car' %}">Model</a></th>
+        <th><a href="{% url 'cars' %}">Model</a></th>
         <th>Certificate Date</th>
         <th>Expiry Date</th>
     </tr>
@@ -18,9 +18,9 @@
     <tbody>
     {% for car in page_obj %}
         <tr>
-            <td>{{ car.owner.name }}</td>
+            <td><a href="{% url 'owner' car.owner.owner_id %}">{{ car.owner.name }}</a></td>
             <td>{{ car.license_plate.license_plate }}</td>
-            <td>{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</td>
+            <td><a href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a></td>
             <td>{{ car.certificate_date }}</td>
             <td>{{ car.expiry_date }}</td>
         </tr>

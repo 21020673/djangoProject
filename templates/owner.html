@@ -9,12 +9,20 @@
     <thead>
     <tr>
         <th>Name</th>
+        <th>Type</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>City Province</th>
     </tr>
     </thead>
     <tbody>
     {% for owner in owners|slice:":10" %}
         <tr>
             <td>{{ owner.name }}</td>
+            <td>{{ owner.type }}</td>
+            <td>{{ owner.phone }}</td>
+            <td>{{ owner.address }}</td>
+            <td>{{ owner.city_province }}</td>
         </tr>
     {% endfor %}
     </tbody>

@@ -17,14 +17,22 @@ def display(request):
 
 
 @login_required(login_url='login')
-def owner(request):
+def owner(request, owner_id):
     owner_data = Owners.objects.all()
+    if owner_id is not None:
+        owner_data = owner_data.filter(owner_id=owner_id)
     context = {'owners': owner_data}
     return render(request, 'owner.html', context)
 
 
 @login_required(login_url='login')
 def car_models(request):
-    car_model = CarSpecs.objects.all()
-    context = {'cars': car_model}
+    cars = CarSpecs.objects.all()
+    context = {'cars': cars}
     return render(request, 'cars.html', context)
+
+
+def car_detail(request, car_id):
+    car_model = CarSpecs.objects.get(id=car_id)
+    context = {'car': car_model}
+    return render(request, 'car_detail.html', context)
