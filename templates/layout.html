@@ -1,10 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %} {% endblock %}</title>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://kit.fontawesome.com/f2d3c30620.js" crossorigin="anonymous"></script>
+	<style>
+		* {
+			overflow: hidden;
+		}
+        .left {
+        	display: inline-block;
+        }
+		.topnav {
+			padding-left: 70px;
+			padding-right: 70px;
+			height: 60px;
+			background-color: #383434;
+			overflow: hidden;
+		}
+
+		/* Style the links inside the navigation bar */
+		.topnav a {
+			height: 60px;
+		  	float: right;
+		  	color: #cccccc;
+		  	text-align: center;
+		  	padding: 14px 16px;
+		  	text-decoration: none;
+		  	font-size: 17px;
+		}
+			/* Change the color of links on hover */
+		.topnav a:hover {
+			background-color: #181414;
+			color: white;
+		}
+			/* Add a color to the active/current link */
+		.topnav a.active {
+			background-color: #181414;
+			color: white;
+		}
+		.topnav input[type=text] {
+			position: relative;
+			left: 10%;
+            bottom: 40%;
+		  	background-color: #e5e5e5;
+		  	color: #aeacac;
+		  	padding: 6px;
+		  	padding-left: 10px;
+		  	border: none;
+		  	border-radius: 10px;
+		  	width: 450px;
+		  	font-size: 15px;
+		}
+		.topnav input[type=text]:focus {
+			background-color: white;
+			color: black;
+			outline: 0 none;
+
+		}
+		#small-logo {
+        	height: 60px;
+        }
+        #small-logo:hover {
+        	background-color: #181414!important;
+        	cursor: pointer;
+        }
+        #name {
+        	color: #cccccc;
+        	font-weight: bold;
+        }
+
+        img.bg {
+            position: absolute;
+            height: 100%;
+            opacity: 0.08;
+            z-index: -1;
+        }
+
+        div.content {
+        	margin-left: 70px;
+			margin-right: 70px;
+			margin-top: 40px;
+			margin-bottom: 30px;
+			border-radius: 20px;
+			padding: 40px;
+			background-color: #fdfdfd;
+			height: 510px;
+        }
+        .center {
+            justify-content: center;
+        }
+
+	</style>
 </head>
 <body>
+    <div class="topnav">
+		<div class="left">
+            {% load static %}
+                <img id="small-logo" src="{% static 'logo2.png' %}">
+		</div>
 
+    {% block navbar %}
+
+    {% endblock %}
+
+	</div>
+	<img class="bg" src="https://png.pngtree.com/background/20220805/original/pngtree-vietnam-dong-son-bronze-drum-pattern-blue-background-picture-image_1915085.jpg">
+    <div class="content">
+        {% block content %}
+
+        {% endblock %}
+    </div>
 </body>
 </html>
