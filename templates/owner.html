@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Owner{% endblock %}
 
 {% block navbar %}
         {% if user.is_authenticated %}
@@ -11,7 +11,7 @@
             {% if perms.UserManagement.add_user %}
                 <a href="{% url 'register' %}">Register</a>
             {% endif %}
-            <a class="active" href="{% url 'display' %}">Display</a>
+            <a class="active" href="{% url 'database' %}">Database</a>
         {% endif %}
     {% endblock %}
 

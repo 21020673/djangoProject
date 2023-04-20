@@ -1,4 +1,23 @@
-<p>
-    Car: {{ car.make }} {{ car.model }}<br>
-{#    todo: list all car specs#}
-</p>
+{% extends "layout.html" %}
+
+{% block title %}Car detail{% endblock %}
+
+{% block navbar %}
+    {% if user.is_authenticated %}
+        {% block searchbar %}
+            <input type="text" placeholder="Search..">
+        {% endblock %}
+        <a href="{% url 'logout' %}">Logout</a>
+        {% if perms.UserManagement.add_user %}
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+        <a class="active" href="{% url 'database' %}">Database</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <p>
+        Car: {{ car.make }} {{ car.model }}<br>
+        {#    todo: list all car specs#}
+    </p>
+{% endblock %}
