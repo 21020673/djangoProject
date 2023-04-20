@@ -6,8 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-
-from UserManagement.models import AuthUser
+from django.contrib.auth.models import User
 
 
 class CarSpecs(models.Model):
@@ -68,9 +67,9 @@ class Owners(models.Model):
 
 
 class RegisterCenter(models.Model):
-    center_id = models.IntegerField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    center_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45, blank=True, null=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
     city_province = models.CharField(max_length=45, blank=True, null=True)
 

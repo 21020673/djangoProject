@@ -1,23 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Owner</title>
-</head>
-<body>
-<table>
-    <thead>
-    <tr>
-        <th>Name</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for owner in owners|slice:":10" %}
+{% extends "layout.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block navbar %}
+        {% if user.is_authenticated %}
+            {% block searchbar %}
+                <input type="text" placeholder="Search..">
+            {% endblock %}
+            <a href="{% url 'logout' %}">Logout</a>
+            {% if perms.UserManagement.add_user %}
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+            <a class="active" href="{% url 'display' %}">Display</a>
+        {% endif %}
+    {% endblock %}
+
+{% block content %}
+    <table>
+        <thead>
         <tr>
-            <td>{{ owner.name }}</td>
+            <th>Name</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</body>
-</html>
+        </thead>
+        <tbody>
+        {% for owner in owners|slice:":10" %}
+            <tr>
+                <td>{{ owner.name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

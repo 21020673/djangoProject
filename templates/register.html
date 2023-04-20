@@ -1,21 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-{#    <script src="https://unpkg.com/htmx.org@1.8.6" integrity="sha384-Bj8qm/6B+71E6FQSySofJOUjA/gq330vEqjFx9LakWybUySyI1IQHwPtbTU7bNwx" crossorigin="anonymous"></script>#}
-    <style>
+{% extends "layout.html" %}
 
-    </style>
-</head>
-<body>
-<h3>Register here</h3>
-<hr>
+{% block title %}Register{% endblock %}
 
-<form action="" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
-</body>
-</html>
+{% block navbar %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Logout</a>
+            {% if perms.UserManagement.add_user %}
+                <a class="active" href="{% url 'register' %}">Register</a>
+            {% endif %}
+            <a href="{% url 'display' %}">Display</a>
+        {% endif %}
+    {% endblock %}
+
+{% block content %}
+
+    <h2>Register here</h2>
+    <hr>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+{% endblock %}
