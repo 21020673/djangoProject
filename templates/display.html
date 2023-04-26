@@ -1,43 +1,31 @@
-{% extends "layout.html" %}
+{% extends "layout2.html" %}
 
 {% block title %}Database{% endblock %}
 
-{% block navbar %}
-        {% if user.is_authenticated %}
-            {% block searchbar %}
-                <input type="text" placeholder="Search..">
-            {% endblock %}
-
-            <a href="{% url 'logout' %}">Logout</a>
-            {% if perms.UserManagement.add_user %}
-                <a href="{% url 'register' %}">Register</a>
-            {% endif %}
-            <a class="active" href="{% url 'database' %}">Database</a>
-        {% endif %}
-    {% endblock %}
-
 {% block content %}
-    <table>
-    <thead>
-    <tr>
-        <th><a href="{% url 'owner' %}">Owner</a></th>
-        <th>License Plate</th>
-        <th><a href="{% url 'cars' %}">Model</a></th>
-        <th>Certificate Date</th>
-        <th>Expiry Date</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for car in page_obj %}
+    <div class="center-block">
+        <table>
+        <thead>
         <tr>
-            <td><a href="{% url 'owner' car.owner.owner_id %}">{{ car.owner.name }}</a></td>
-            <td>{{ car.license_plate.license_plate }}</td>
-            <td><a href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a></td>
-            <td>{{ car.certificate_date }}</td>
-            <td>{{ car.expiry_date }}</td>
+            <th><a href="{% url 'owner' %}">Owner</a></th>
+            <th>License Plate</th>
+            <th><a href="{% url 'cars' %}">Model</a></th>
+            <th>Certificate Date</th>
+            <th>Expiry Date</th>
         </tr>
-    {% endfor %}
-</table>
+        </thead>
+        <tbody>
+        {% for car in page_obj %}
+            <tr>
+                <td><a href="{% url 'owner' car.owner.owner_id %}">{{ car.owner.name }}</a></td>
+                <td>{{ car.license_plate.license_plate }}</td>
+                <td><a href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a></td>
+                <td>{{ car.certificate_date }}</td>
+                <td>{{ car.expiry_date }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
 
     <div class="pagination">
         <span class="step-links">
