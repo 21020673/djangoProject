@@ -1,15 +1,8 @@
 {
-  "name": "djangoproject",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+  "devDependencies": {
+    "tailwindcss": "^3.3.2"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "tailwindcss": "^3.3.1"
+  "scripts": {
+    "build": "npx tailwindcss -i Registration/static/input.css -o Registration/static/output.css --watch"
   }
 }
