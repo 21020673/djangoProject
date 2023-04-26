@@ -1,0 +1,80 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'output.css' %}">
+    <title>{% block title %} {% endblock %}</title>
+</head>
+<body class="text-gray-600 bg-gray-100">
+<div> <!-- content wrapper -->
+    <div>
+
+        <nav>
+            <ul class="flex justify-start bg-white relative">
+                {% block navbar %}
+                    <li class="w-12 h-12 mx-12">
+                        <a class=" object-contain" href="{% url 'home' %}">
+                            <img src="{% static 'logo.png' %}">
+                        </a>
+                    </li>
+                    <li class="mx-12 my-3 border-white font-semibold">
+                        <a href="{% url 'home' %}">
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="mx-12 my-3">
+                        <a href="{% url 'database' %}">
+                            <span>Database</span>
+                        </a>
+                    </li>
+                    <li class="mx-12 my-3">
+                        <a href="{% url 'register' %}">
+                            <span>Register</span>
+                        </a>
+                    </li>
+                    <li class="mx-12 my-3">
+                        <a href="{% url 'logout' %}">
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                    <!-- end left side -->
+                {% endblock %}
+
+                {#                    <li class="absolute right-14 px-4 my-3 bg-red-400 rounded-md text-white"> <!-- Not logged in -->#}
+                {#                        <a href="#">#}
+                {#                            <span>Login</span>#}
+                {#                        </a>#}
+                {#                    </li>#}
+
+                <!-- <li>
+                    <h1><span>Username</span></h1>
+                </li>
+                <li>
+                    <a href="#">
+                        <span>Register User</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span>Logout</span>
+                    </a>
+                </li> -->
+
+            </ul>
+        </nav>
+
+    </div> <!-- end nav -->
+
+    <main class="px-16 py-6">
+        <header>
+            {% block content %}
+
+            {% endblock %}
+        </header>
+    </main>
+</div>
+</body>
+</html>
