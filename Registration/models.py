@@ -80,8 +80,8 @@ class RegisterCenter(models.Model):
 
 class RegisterData(models.Model):
     certificate_id = models.IntegerField(primary_key=True)
-    certificate_date = models.DateTimeField(blank=True, null=True)
-    expiry_date = models.DateTimeField(blank=True, null=True)
+    certificate_date = models.DateField(blank=True, null=True)
+    expiry_date = models.DateField(blank=True, null=True)
     register_center = models.ForeignKey(RegisterCenter, models.DO_NOTHING, db_column='register_center', blank=True,
                                         null=True)
     owner = models.ForeignKey(Owners, models.DO_NOTHING, db_column='owner', blank=True, null=True)
