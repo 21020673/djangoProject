@@ -4,5 +4,8 @@
   },
   "scripts": {
     "build": "npx tailwindcss -i Registration/static/input.css -o Registration/static/output.css --watch"
+  },
+  "dependencies": {
+    "daisyui": "^2.51.6"
   }
 }

@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render
 
 from .models import RegisterData, Owners, CarSpecs
@@ -8,12 +9,25 @@ from .models import RegisterData, Owners, CarSpecs
 # Create your views here.
 @login_required(login_url='login')
 def display(request):
-    cars = RegisterData.objects.all()
-    paginator = Paginator(cars, 30)  # Show 30 contacts per page.
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj': page_obj}
-    return render(request, 'display.html', context)
+    if request.GET.get('basic-search'):
+        search_item = request.GET.get('basic-search')
+        cars = RegisterData.objects.filter(Q(owner__name__icontains=search_item) |
+                                           Q(license_plate__license_plate__icontains=search_item) |
+                                           Q(license_plate__model__make__icontains=search_item) |
+                                           Q(license_plate__model__model__icontains=search_item)
+        )
+        paginator = Paginator(cars, 20)  # Show 30 contacts per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {'page_obj': page_obj}
+        return render(request, 'display.html', context)
+    else:
+        cars = RegisterData.objects.all()
+        paginator = Paginator(cars, 20)  # Show 20 contacts per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {'page_obj': page_obj}
+        return render(request, 'display.html', context)
 
 
 @login_required(login_url='login')
