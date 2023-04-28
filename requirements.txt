@@ -1,2 +1,4 @@
 Django~=3.2.18
 mysqlclient~=2.1.0
+django-crispy-forms~=2.0
+crispy-tailwind~=0.5.0
