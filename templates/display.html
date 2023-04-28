@@ -21,9 +21,9 @@
     </form>
 
     <div class="center-block">
-        <table>
+        <table class="table w-full">
             <thead>
-            <tr>
+            <tr class="hover">
                 <th><a href="{% url 'owner' %}">Owner</a></th>
                 <th>License Plate</th>
                 <th><a href="{% url 'cars' %}">Model</a></th>
@@ -33,7 +33,7 @@
             </thead>
             <tbody>
             {% for car in page_obj %}
-                <tr>
+                <tr class="hover">
                     <td><a href="{% url 'owner' car.owner.owner_id %}">{{ car.owner.name }}</a></td>
                     <td>{{ car.license_plate.license_plate }}</td>
                     <td>

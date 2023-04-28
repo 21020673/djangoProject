@@ -18,7 +18,7 @@ def display(request):
         )
     else:
         cars = RegisterData.objects.all()
-    paginator = Paginator(cars, 20)  # Show 20 contacts per page.
+    paginator = Paginator(cars, 10)  # Show 10 contacts per page.
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {'page_obj': page_obj}

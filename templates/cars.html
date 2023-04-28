@@ -3,15 +3,15 @@
 {% block title %}Car{% endblock %}
 
 {% block content %}
-<table>
+<table class="table w-full">
     <thead>
-    <tr>
+    <tr class="hover">
         <th>Name</th>
     </tr>
     </thead>
     <tbody>
     {% for car in cars|slice:":10" %}
-        <tr>
+        <tr class="hover">
             <td>{{ car.model }}</td>
 {#        todo: list basic car specs#}
         </tr>

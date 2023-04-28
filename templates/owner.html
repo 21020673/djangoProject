@@ -3,9 +3,9 @@
 {% block title %}Owner{% endblock %}
 
 {% block content %}
-    <table>
+    <table class="table w-full">
     <thead>
-    <tr>
+    <tr class="hover">
         <th>Name</th>
         <th>Type</th>
         <th>Phone</th>
@@ -15,7 +15,7 @@
     </thead>
     <tbody>
     {% for owner in owners|slice:":10" %}
-        <tr>
+        <tr class="hover">
             <td>{{ owner.name }}</td>
             <td>{{ owner.type }}</td>
             <td>{{ owner.phone }}</td>
