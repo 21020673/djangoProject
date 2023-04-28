@@ -1,8 +1,8 @@
-{% extends "layout2.html" %}
+{% extends "database.html" %}
 
 {% block title %}Owner{% endblock %}
 
-{% block content %}
+{% block table %}
     <table class="table w-full">
     <thead>
     <tr class="hover">
@@ -14,7 +14,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for owner in owners|slice:":10" %}
+    {% for owner in page_obj%}
         <tr class="hover">
             <td>{{ owner.name }}</td>
             <td>{{ owner.type }}</td>

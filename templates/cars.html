@@ -1,19 +1,24 @@
-{% extends "layout2.html" %}
+{% extends "database.html" %}
 
 {% block title %}Car{% endblock %}
 
-{% block content %}
+{% block table %}
 <table class="table w-full">
     <thead>
     <tr class="hover">
-        <th>Name</th>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Year</th>
+        <th>Body Type</th>
     </tr>
     </thead>
     <tbody>
-    {% for car in cars|slice:":10" %}
+    {% for car in page_obj %}
         <tr class="hover">
+            <td>{{ car.make }}</td>
             <td>{{ car.model }}</td>
-{#        todo: list basic car specs#}
+            <td>{{ car.year_from }}</td>
+            <td>{{ car.body_type }}</td>
         </tr>
     {% endfor %}
     </tbody>
