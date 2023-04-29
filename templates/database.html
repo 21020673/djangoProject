@@ -3,27 +3,8 @@
 {% load pagination_tags %}
 
 {% block title %}Database{% endblock %}
-
-{% block active-tab %}
-    <li class="mx-12"><a href="{% url 'home' %}">Home</a></li>
-    <li class="mx-12" tabindex="0">
-        <a href="{% url 'database' %}">
-            <span class="font-semibold">Database</span>
-            <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                 viewBox="0 0 24 24">
-                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
-            </svg>
-        </a>
-        <ul class="p-2 bg-base-100">
-            <li><a href="{% url 'owner' %}">Owner</a></li>
-            <li><a href="{% url 'cars' %}">Model</a></li>
-        </ul>
-    </li>
-    <li class="mx-12"><a href="#">Report</a></li>
-{% endblock %}
-
 {% block content %}
-    <div class="flex justify-end">
+    <div class="flex justify-between items-baseline">
         <form method="get">
             <div class="form-control">
                 <div class="input-group">
@@ -84,6 +65,7 @@
     </div>
 
     {% block table %}{% endblock %}
+
     <div class="pagination mt-10">
         <div class="step-links btn-group">
             {% if page_obj.has_previous %}
