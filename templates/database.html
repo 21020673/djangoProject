@@ -4,38 +4,125 @@
 
 {% block title %}Database{% endblock %}
 
+{% block active-tab %}
+    <li class="mx-12"><a href="{% url 'home' %}">Home</a></li>
+    <li class="mx-12" tabindex="0">
+        <a href="{% url 'database' %}">
+            <span class="font-semibold">Database</span>
+            <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                 viewBox="0 0 24 24">
+                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
+            </svg>
+        </a>
+        <ul class="p-2 bg-base-100">
+            <li><a href="{% url 'owner' %}">Owner</a></li>
+            <li><a href="{% url 'cars' %}">Model</a></li>
+        </ul>
+    </li>
+    <li class="mx-12"><a href="#">Report</a></li>
+{% endblock %}
+
 {% block content %}
-    <form method="get">
-        <div class="form-control">
-            <div class="input-group">
-                <input name="search" type="text" placeholder="Search…" class="input input-bordered"/>
-                <button class="btn btn-square">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
+    <div class="flex justify-end">
+        <form method="get">
+            <div class="form-control">
+                <div class="input-group">
+                    <input name="search" type="text" placeholder="Search…" class="input input-bordered"/>
+                    <button class="btn btn-square">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="pagination mt-10">
+            <div class="step-links btn-group">
+                {% if page_obj.has_previous %}
+                    <button class="btn"><a href="?{% url_replace request 'page' 1 %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>
+                        </svg>
+
+                    </a></button>
+                    <button class="btn"><a href="?{% url_replace request 'page' page_obj.previous_page_number %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                        </svg>
+                    </a></button>
+                {% endif %}
+                <button class="btn btn-active">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
                 </button>
+
+                <span class="current">
+
+            </span>
+
+                {% if page_obj.has_next %}
+                    <button class="btn"><a href="?{% url_replace request 'page' page_obj.next_page_number %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                        </svg>
+                    </a></button>
+                    <button class="btn"><a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>
+                        </svg>
+                    </a></button>
+                {% endif %}
             </div>
         </div>
-    </form>
+    </div>
 
     {% block table %}{% endblock %}
-    <div class="pagination">
-        <span class="step-links">
+    <div class="pagination mt-10">
+        <div class="step-links btn-group">
             {% if page_obj.has_previous %}
-                <a href="?{% url_replace request 'page' 1 %}">&laquo; first</a>
-                <a href="?{% url_replace request 'page' page_obj.previous_page_number %}">previous</a>
+                <button class="btn"><a href="?{% url_replace request 'page' 1 %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>
+                    </svg>
+
+                </a></button>
+                <button class="btn"><a href="?{% url_replace request 'page' page_obj.previous_page_number %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                    </svg>
+                </a></button>
             {% endif %}
+            <button class="btn btn-active">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</button>
 
             <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?{% url_replace request 'page' page_obj.next_page_number %}">next</a>
-                <a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last &raquo;</a>
+                <button class="btn"><a href="?{% url_replace request 'page' page_obj.next_page_number %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                    </svg>
+                </a></button>
+                <button class="btn"><a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>
+                    </svg>
+                </a></button>
             {% endif %}
-        </span>
+        </div>
     </div>
 {% endblock %}
