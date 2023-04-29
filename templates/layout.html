@@ -5,7 +5,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% load static %}
-    <link rel="stylesheet" href="{% static 'output.css' %}">
+{#    <link rel="stylesheet" href="{% static 'output.css' %}">#}
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
     <title>{% block title %} {% endblock %}</title>
 </head>
@@ -57,8 +58,8 @@
 
         {% if user.is_authenticated %}
             <div class="navbar bg-base-100">
-                <div class="flex-1 px-16">
-                    <img class="h-12 object-none" src="{% static "logo.png" %}">
+                <div class="flex-1">
+                    <img class="" src="{% static "logo.png" %}">
                 </div>
                 <div class="flex-none">
                     <ul class="menu menu-horizontal px-1">
@@ -68,8 +69,8 @@
                     </ul>
                 </div>
                 <!-- profile btn -->
-                <div class="flex-none navbar-end">
-                    <div class="dropdown dropdown-end px-16">
+                <div class="flex-none navbar-end mr-16">
+                    <div class="dropdown dropdown-end">
                         <label tabindex="0" class="btn btn-ghost btn-circle">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                  stroke="currentColor" class="w-6 h-6">
@@ -79,10 +80,10 @@
 
                         </label>
                         <ul tabindex="0"
-                            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-fit">
+                            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-max">
                             <li><span class="text-right">{{ user.username }}</span></li>
                             <li><a href="{% url 'register' %}">Register New User</a></li>
-                            <li><a class="text-primary" href="{% url 'logout' %}">Log out</a></li>
+                            <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
                         </ul>
                     </div>
                 </div>
