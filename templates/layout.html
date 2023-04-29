@@ -5,124 +5,48 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% load static %}
-{#    <link rel="stylesheet" href="{% static 'output.css' %}">#}
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body class="text-gray-600 bg-gray-100">
 <div> <!-- content wrapper -->
     <div>
-        {#        <div class="navbar bg-base-100">#}
-        {#            <div class="navbar-start">#}
-        {##}
-        {#                <!-- md and lower -->#}
-        {#                <div class="dropdown">#}
-        {#                    <label tabindex="0" class="btn btn-ghost btn-circle">#}
-        {#                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">#}
-        {#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-        {#                                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>#}
-        {#                        </svg>#}
-        {##}
-        {#                    </label>#}
-        {#                    <ul tabindex="0"#}
-        {#                        class="menu menu-compact dropdown-content md:inline-block mt-3 p-2 shadow bg-base-100 rounded-box w-52">#}
-        {#                        <li><img class="w-12 h-12 mx-12" src="{% static "logo.png" %}"></li>#}
-        {#                        <li><a href="{% url 'home' %}">Home</a></li>#}
-        {#                        <li><a href="{% url 'database' %}">Database</a></li>#}
-        {#                        <li><a href="#">Report</a></li>#}
-        {#                    </ul>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#            <div class="navbar-center md:hidden">#}
-        {#                <img class="w-12 h-12 mx-12" src="{% static "logo.png" %}">#}
-        {#            </div>#}
-        {#            <div class="navbar-end">#}
-        {#                        <span class="text-right pr-10">{{ user.username}}</span>#}
-        {#                        <div class="dropdown dropdown-end">#}
-        {#                            <label tabindex="0" class="btn btn-ghost btn-circle">#}
-        {#                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">#}
-        {#                                    <path stroke-linecap="round" stroke-linejoin="round"#}
-        {#                                          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>#}
-        {#                                </svg>#}
-        {##}
-        {#                            </label>#}
-        {#                            <ul tabindex="0"#}
-        {#                                class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">#}
-        {#                                <li><a  href="{% url 'register' %}">Register New User</a></li>#}
-        {#                                <li  class="text-red-400"><a  href="{% url 'logout' %}">Log out</a></li>#}
-        {#                            </ul>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#        </div>#}
-
-        {% if user.is_authenticated %}
-            <div class="navbar bg-base-100">
-                <div class="flex-1">
-                    <img class="" src="{% static "logo.png" %}">
-                </div>
-                <div class="flex-none">
-                    <ul class="menu menu-horizontal px-1">
-                        {% block active-tab %}
-
-                        {% endblock %}
+        <div class="navbar bg-base-100 max-h-16">
+            <a class="pl-12" href="{% url 'home' %}">
+                <img class="h-16" src="{% static "logo.png" %}">
+                <h1 class="">Register Total</h1>
+            </a>
+            <div class="flex-none">
+                <ul class="menu menu-horizontal px-1">
+                    <li class="mx-12" tabindex="0">
+                        <a href="{% url 'database' %}">
+                            <span {% if '/database/' in request.path %}
+                                class="font-semibold" {% endif %}>Database</span>
+                        </a>
+                    </li>
+                    <li class="mx-12"><a href="#">Report</a></li>
+                </ul>
+            </div>
+            <!-- profile btn -->
+            <div class="flex-none navbar-end">
+                <div class="dropdown dropdown-end px-16">
+                    <label tabindex="0" class="btn btn-ghost btn-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                        </svg>
+                    </label>
+                    <ul tabindex="0"
+                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-fit">
+                        <li><span class="text-right">{{ user.username }}</span></li>
+                        <li><a href="{% url 'register' %}">Register New User</a></li>
+                        <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
                     </ul>
                 </div>
-                <!-- profile btn -->
-                <div class="flex-none navbar-end mr-16">
-                    <div class="dropdown dropdown-end">
-                        <label tabindex="0" class="btn btn-ghost btn-circle">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
-                            </svg>
-
-                        </label>
-                        <ul tabindex="0"
-                            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-max">
-                            <li><span class="text-right">{{ user.username }}</span></li>
-                            <li><a href="{% url 'register' %}">Register New User</a></li>
-                            <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
-                        </ul>
-                    </div>
-                </div>
             </div>
-        {% endif %}
-
-        {#        <nav>#}
-        {#            <ul class="flex justify-start bg-white relative">#}
-        {#                {% block navbar %}#}
-        {#                    <li class="w-12 h-12 mx-12">#}
-        {#                        <a class=" object-contain" href="{% url 'home' %}">#}
-        {#                            <img src="{% static 'logo.png' %}">#}
-        {#                        </a>#}
-        {#                    </li>#}
-        {#                    <li class="mx-12 my-3 border-white font-semibold">#}
-        {#                        <a href="{% url 'home' %}">#}
-        {#                            <span>Home</span>#}
-        {#                        </a>#}
-        {#                    </li>#}
-        {#                    <li class="mx-12 my-3">#}
-        {#                        <a href="{% url 'database' %}">#}
-        {#                            <span>Database</span>#}
-        {#                        </a>#}
-        {#                    </li>#}
-        {#                    <li class="mx-12 my-3">#}
-        {#                        <a href="{% url 'register' %}">#}
-        {#                            <span>Register</span>#}
-        {#                        </a>#}
-        {#                    </li>#}
-        {#                    <li class="mx-12 my-3">#}
-        {#                        <a href="{% url 'logout' %}">#}
-        {#                            <span>Logout</span>#}
-        {#                        </a>#}
-        {#                    </li>#}
-        {#                    <!-- end left side -->#}
-        {#                {% endblock %}#}
-        {#            </ul>#}
-        {#        </nav>#}
-
+        </div>
     </div> <!-- end nav -->
 
     <main class="px-16 py-6">
