@@ -4,14 +4,14 @@
 
 {% block content %}
 
-        <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
+    <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
 
-        <div>
-            <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
-        </div>
+    <div>
+        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+    </div>
 
     <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
     </script>
     <script>
         let labels = [
