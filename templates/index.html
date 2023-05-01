@@ -3,38 +3,40 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
+    <div class="py-6"> <!-- wrapper -->
 
-    <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
+        <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
 
-    <div>
-        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+        <div>
+            <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+        </div>
+
+        <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+        </script>
+        <script>
+            let labels = [
+                {% for month in number_registered_by_month %}
+                    '{{ month.certificate_date__month}} -{{ month.certificate_date__year}}',
+                {% endfor %}
+            ]
+            let data = [
+                {% for month in number_registered_by_month %}
+                    {{ month.count }},
+                {% endfor %}
+            ]
+            const myChart = new Chart("myChart", {
+                type: "line",
+                data: {
+                    labels: labels.slice(-12),
+                    datasets: [{
+                        label: "Number of car registered in all area",
+                        data: data.slice(-12),
+                        lineTension: 0.2,
+                    }]
+                },
+                options: {}
+            });
+        </script>
     </div>
-
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
-    </script>
-    <script>
-        let labels = [
-            {% for month in number_registered_by_month %}
-                '{{ month.certificate_date__month}} -{{ month.certificate_date__year}}',
-            {% endfor %}
-        ]
-        let data = [
-            {% for month in number_registered_by_month %}
-                {{ month.count }},
-            {% endfor %}
-        ]
-        const myChart = new Chart("myChart", {
-            type: "line",
-            data: {
-                labels: labels.slice(-12),
-                datasets: [{
-                    label: "Number of car registered in all area",
-                    data: data.slice(-12),
-                    lineTension: 0.2,
-                }]
-            },
-            options: {}
-        });
-    </script>
 {% endblock %}

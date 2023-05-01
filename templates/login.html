@@ -1,13 +1,26 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <h2>Login</h2>
+    <div class="flex flex-col items-center justify-center px-6 py-0 mx-auto md:h-screen"> <!-- wrapper -->
+        <img class="h-16" src="{% static "logo.png" %}">
+        <h1 class="mb-6 text-2xl font-semibold">Registry Total</h1>
 
-    <form class="center-block" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Login">
-    </form>
+        <!-- form wrapper -->
+        <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md p-10">
+            <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl ">
+                  Login to your account
+              </h1>
+
+            <form class="space-y-4 md:space-y-6" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class=" w-full h-fit btn btn-active btn-primary">
+                    <input type="submit" value="Login">
+                </button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
