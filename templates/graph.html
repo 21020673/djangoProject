@@ -1,0 +1,74 @@
+{% extends "report.html" %}
+
+{% block graph %}
+    <script>
+        const ctx = document.getElementById('myChart');
+        let labels = [
+            {% if number_registered_by_month %}
+                {% for month in number_registered_by_month %}
+                    'T{{ month.certificate_date__month}} - {{ month.certificate_date__year}}',
+                {% endfor %}
+            {% elif number_registered_by_quarter %}
+                {% for quarter in number_registered_by_quarter %}
+                    'Q{{ quarter.certificate_date__quarter}} - {{ quarter.certificate_date__year}}',
+                {% endfor %}
+            {% elif number_registered_by_year %}
+                {% for year in number_registered_by_year %}
+                    '{{ year.certificate_date__year}}',
+                {% endfor %}
+            {% else %}
+                {% for month in number_expired_by_month %}
+                    'T{{ month.expiry_date__month}} - {{ month.expiry_date__year}}',
+                {% endfor %}
+            {% endif %}
+        ]
+        let data = [
+            {% for month in number_registered_by_month %}
+                {{ month.count }},
+            {% endfor %}
+            {% for month in number_expired_by_month %}
+                {{ month.count }},
+            {% endfor %}
+            {% for quarter in number_registered_by_quarter %}
+                {{ quarter.count }},
+            {% endfor %}
+            {% for year in number_registered_by_year %}
+                {{ year.count }},
+            {% endfor %}
+        ]
+        const myChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                {% if number_registered_by_month %}
+                    labels: labels.slice(-12),
+                {% elif number_registered_by_quarter %}
+                    labels: labels.slice(-8),
+                {% elif number_registered_by_year%}
+                    labels: labels.slice(-5),
+                {% else %}
+                    labels: labels,
+                {% endif %}
+                datasets: [
+                    {
+                        label: "{{ label }}",
+                        {% if number_registered_by_month %}
+                            data: data.slice(-12),
+                        {% elif number_registered_by_quarter %}
+                            data: data.slice(-8),
+                        {% elif number_registered_by_year %}
+                            data: data.slice(-5),
+                        {% else %}
+                            data: data,
+                        {% endif %}
+                        lineTension: 0.2,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 1,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+{% endblock %}

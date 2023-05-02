@@ -1,4 +1,4 @@
-<html data-theme="">
+<html data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css"/>
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body class="text-gray-600 bg-gray-100">
@@ -15,7 +15,7 @@
         <div class="navbar bg-base-100 max-h-16">
             <a class="pl-12" href="{% url 'home' %}">
                 <img class="h-16" src="{% static "logo.png" %}">
-                <h1 class="">Register Total</h1>
+                <h1 class="">RegistryTotal</h1>
             </a>
             <div class="flex-none">
                 <ul class="menu menu-horizontal px-1">
@@ -25,11 +25,14 @@
                                 class="font-semibold" {% endif %}>Database</span>
                         </a>
                     </li>
-                    <li class="mx-12"><a href="#">Report</a></li>
+                        <li class="mx-12"><a href="{% url 'report_month' %}">
+                        <span {% if '/report/' in request.path %}
+                            class="font-semibold" {% endif %}>Report</span>
+                    </a></li>
                 </ul>
             </div>
             <!-- profile btn -->
-            <div class="flex-none navbar-end">
+            <div class="flex-1 navbar-end">
                 <div class="dropdown dropdown-end px-16">
                     <label tabindex="0" class="btn btn-ghost btn-circle">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -39,7 +42,7 @@
                         </svg>
                     </label>
                     <ul tabindex="0"
-                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-fit">
+                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box">
                         <li><span class="text-right">{{ user.username }}</span></li>
                         <li><a href="{% url 'register' %}">Register New User</a></li>
                         <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
@@ -51,9 +54,7 @@
 
     <main class="px-16 py-6">
         <header>
-            {% block content %}
-
-            {% endblock %}
+            {% block content %}{% endblock %}
         </header>
     </main>
 </div>

@@ -4,6 +4,10 @@
 
 {% block title %}Database{% endblock %}
 {% block content %}
+    Add to sidebar:
+    <a href="{% url "database" %}">Register data</a>
+    <a href="{% url "owner" %}">Owner</a>
+    <a href="{% url "cars" %}">Car</a>
     <div class="flex justify-between items-baseline">
         <form method="get">
             <div class="form-control">

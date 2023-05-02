@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
+from .models import RegisterData, Owners, CarSpecs, RegisterCenter
 
-from .models import RegisterData, Owners, CarSpecs
+city_list = RegisterCenter.objects.values_list('city_province', flat=True).distinct()
+register_center_list = RegisterCenter.objects.values_list('name', flat=True).distinct()
 
 
 # Create your views here.
@@ -76,3 +78,118 @@ class CarDetail(DetailView):
     model = CarSpecs
     template_name = 'car_detail.html'
     context_object_name = 'car'
+
+
+def report_month(request):
+    query = 'default'
+    label = 'Number of cars registered in all areas'
+    number_registered_by_month = RegisterData.objects.values('certificate_date__year',
+                                                             'certificate_date__month').annotate(
+        count=Count('certificate_date__month')).order_by('certificate_date__year', 'certificate_date__month')
+    if request.GET.get('select'):
+        query = request.GET.get('select')
+        if query != 'default':
+            label = 'Number of cars registered in ' + query
+            if query in city_list:
+                number_registered_by_month = RegisterData.objects.filter(register_center__city_province=query).values(
+                    'certificate_date__year', 'certificate_date__month').annotate(
+                    count=Count('certificate_date__month')).order_by('certificate_date__year',
+                                                                     'certificate_date__month')
+            elif query in register_center_list:
+                number_registered_by_month = RegisterData.objects.filter(register_center__name=query).values(
+                    'certificate_date__year', 'certificate_date__month').annotate(
+                    count=Count('certificate_date__month')).order_by('certificate_date__year',
+                                                                     'certificate_date__month')
+    context = {
+        'number_registered_by_month': number_registered_by_month,
+        'cities': city_list,
+        'register_centers': register_center_list,
+        'label': label,
+        'select': query
+    }
+    return render(request, 'graph.html', context)
+
+
+def report_quarter(request):
+    query = 'default'
+    label = 'Number of cars registered in all areas'
+    number_registered_by_quarter = RegisterData.objects.values('certificate_date__year',
+                                                               'certificate_date__quarter').annotate(
+        count=Count('certificate_date__quarter')).order_by('certificate_date__year', 'certificate_date__quarter')
+    if request.GET.get('select'):
+        query = request.GET.get('select')
+        if query != 'default':
+            label = 'Number of cars registered in ' + query
+            if query in city_list:
+                number_registered_by_quarter = RegisterData.objects.filter(
+                    register_center__city_province=query).values(
+                    'certificate_date__year', 'certificate_date__quarter').annotate(
+                    count=Count('certificate_date__quarter')).order_by('certificate_date__year',
+                                                                       'certificate_date__quarter')
+            elif query in register_center_list:
+                number_registered_by_quarter = RegisterData.objects.filter(register_center__name=query).values(
+                    'certificate_date__year', 'certificate_date__quarter').annotate(
+                    count=Count('certificate_date__quarter')).order_by('certificate_date__year',
+                                                                       'certificate_date__quarter')
+    context = {
+        'number_registered_by_quarter': number_registered_by_quarter,
+        'cities': city_list,
+        'register_centers': register_center_list,
+        'label': label,
+        'select': query
+    }
+    return render(request, 'graph.html', context)
+
+
+def report_year(request):
+    query = 'default'
+    label = 'Number of cars registered in all areas'
+    number_registered_by_year = RegisterData.objects.values('certificate_date__year').annotate(
+        count=Count('certificate_date__year')).order_by('certificate_date__year')
+    if request.GET.get('select'):
+        query = request.GET.get('select')
+        if query != 'default':
+            label = 'Number of cars registered in ' + query
+            if query in city_list:
+                number_registered_by_year = RegisterData.objects.filter(register_center__city_province=query).values(
+                    'certificate_date__year').annotate(
+                    count=Count('certificate_date__year')).order_by('certificate_date__year')
+            elif query in register_center_list:
+                number_registered_by_year = RegisterData.objects.filter(register_center__name=query).values(
+                    'certificate_date__year').annotate(
+                    count=Count('certificate_date__year')).order_by('certificate_date__year')
+    context = {
+        'number_registered_by_year': number_registered_by_year,
+        'cities': city_list,
+        'register_centers': register_center_list,
+        'label': label,
+        'select': query
+    }
+    return render(request, 'graph.html', context)
+
+
+def report_expiry(request):
+    query = 'default'
+    label = 'Number of certificates to expire in all areas'
+    number_expired_by_month = RegisterData.objects.values('expiry_date__year', 'expiry_date__month').annotate(
+        count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
+    if request.GET.get('select'):
+        query = request.GET.get('select')
+        if query != 'default':
+            label = 'Number of certificates to expire in ' + query
+            if query in city_list:
+                number_expired_by_month = RegisterData.objects.filter(register_center__city_province=query).values(
+                    'expiry_date__year', 'expiry_date__month').annotate(
+                    count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
+            elif query in register_center_list:
+                number_expired_by_month = RegisterData.objects.filter(register_center__name=query).values(
+                    'expiry_date__year', 'expiry_date__month').annotate(
+                    count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
+    context = {
+        'number_expired_by_month': number_expired_by_month[:12],
+        'cities': city_list,
+        'register_centers': register_center_list,
+        'label': label,
+        'select': query
+    }
+    return render(request, 'graph.html', context)

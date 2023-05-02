@@ -16,16 +16,12 @@ def home(request):
     if request.user.has_perm('UserManagement.add_user'):
         context = {
             'user': request.user,
-            'number_registered_by_year': RegisterData.objects.values('certificate_date__year').annotate(
-                count=Count('certificate_date__year')).order_by('certificate_date__year'),
             'number_registered_by_month': RegisterData.objects.values('certificate_date__year',
                                                                       'certificate_date__month').annotate(
                 count=Count('certificate_date__month')).order_by('certificate_date__year', 'certificate_date__month'),
-            'number_expired_by_year': RegisterData.objects.values('expiry_date__year').annotate(
-                count=Count('expiry_date__year')).order_by('expiry_date__year'),
             'number_expired_by_month': RegisterData.objects.values('expiry_date__year',
                                                                    'expiry_date__month').annotate(
-                count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month'),
+                count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')[:12],
         }
     else:
         context = {'user': request.user}

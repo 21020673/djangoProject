@@ -7,16 +7,19 @@
     <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
 
     <div>
-        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+        <canvas id="myChart" class="h-2/3 w-1/2"></canvas>
+    </div>
+    <div>
+        <canvas id="myChart2" class="h-2/3 w-1/2"></canvas>
     </div>
 
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+
     <script>
+        const ctx = document.getElementById('myChart');
         let labels = [
             {% for month in number_registered_by_month %}
-                '{{ month.certificate_date__month}} -{{ month.certificate_date__year}}',
+                'T{{ month.certificate_date__month}} - {{ month.certificate_date__year}}',
             {% endfor %}
         ]
         let data = [
@@ -24,17 +27,54 @@
                 {{ month.count }},
             {% endfor %}
         ]
-        const myChart = new Chart("myChart", {
+        const myChart = new Chart(ctx, {
             type: "line",
             data: {
                 labels: labels.slice(-12),
-                datasets: [{
-                    label: "Number of car registered in all area",
-                    data: data.slice(-12),
-                    lineTension: 0.2,
-                }]
+                datasets: [
+                    {
+                        label: "Number of cars registered in all areas",
+                        data: data.slice(-12),
+                        lineTension: 0.2,
+                    }
+                ]
             },
-            options: {}
+            options: {
+                responsive: true,
+                aspectRatio: 1,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+    <script>
+        const ctx2 = document.getElementById('myChart2');
+        let labels2 = [
+            {% for month in number_expired_by_month %}
+                'T{{ month.expiry_date__month}} - {{ month.expiry_date__year}}',
+            {% endfor %}
+        ]
+        let data2 = [
+            {% for month in number_expired_by_month %}
+                {{ month.count }},
+            {% endfor %}
+        ]
+        const myChart2 = new Chart(ctx2, {
+            type: "line",
+            data: {
+                labels: labels2,
+                datasets: [
+                    {
+                        label: "Number of certificates to expire in all areas",
+                        data: data2,
+                        lineTension: 0.2,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 1,
+                maintainAspectRatio: false
+            }
         });
     </script>
 {% endblock %}
