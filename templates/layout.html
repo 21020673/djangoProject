@@ -11,7 +11,7 @@
 </head>
 <body class="text-gray-600 bg-gray-100">
 <div class="drawer"> <!-- root container -->
-    <input id="my-drawer-3" type="checkbox" class="drawer-toggle"/>
+    <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
     <div class="drawer-content flex flex-col"> <!-- content wrapper -->
 
         <div class="overflow-x-hidden">
@@ -35,8 +35,7 @@
                         </div>
 
                         <!-- visible on small screen -->
-
-                        <label for="my-drawer-3" class="md:hidden btn btn-square btn-ghost">
+                        <label for="my-drawer" class="md:hidden btn btn-square btn-ghost">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  class="inline-block w-6 h-6 stroke-current">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -75,7 +74,7 @@
                 </div>
             {% endif %} <!-- end navbar -->
 
-            <main class="px-16">
+            <main class="px-16 overflow-x-auto">
                 <header>
                     {% block content %}
 
@@ -83,10 +82,11 @@
                 </header>
             </main>
         </div>
-    </div> <!-- end drawer content -->
+    </div>
+    <!-- end drawer content -->
 
     <div class="drawer-side md:hidden">
-        <label for="my-drawer-3" class="drawer-overlay"></label>
+        <label for="my-drawer" class="drawer-overlay"></label>
         <ul class="menu p-4 w-60 bg-base-100 text-base-content">
             <!-- Sidebar content here -->
             <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl mb-5">
