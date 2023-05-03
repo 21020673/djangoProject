@@ -5,11 +5,11 @@
 {% block title %}Database{% endblock %}
 {% block content %}
     <div class="py-6"> <!-- wrapper -->
-        <div class="flex justify-between items-baseline">
+        <div class="flex justify-between items-end">
             <form method="get">
                 <div class="form-control">
                     <div class="input-group">
-                        <input name="search" type="text" placeholder="Search…" class="input input-bordered w-96 pt-3"/>
+                        <input name="search" type="text" placeholder="Search…" class="input input-bordered w-96"/>
                         <button class="btn btn-square">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
@@ -21,7 +21,7 @@
                 </div>
             </form>
 
-            <div class="pagination mt-10">
+            <div class="pagination mt-10 pb-4">
                 <div class="step-links btn-group">
                     {% if page_obj.has_previous %}
                         <button class="btn"><a href="?{% url_replace request 'page' 1 %}">
