@@ -5,57 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% load static %}
-    <link rel="stylesheet" href="{% static "output.css" %}">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body class="text-gray-600 bg-gray-100">
-<div> <!-- content wrapper -->
-    <div>
-        <div class="navbar bg-base-100 max-h-16">
-            <a class="pl-12" href="{% url 'home' %}">
-                <img class="h-16" src="{% static "logo.png" %}" alt="">
-                <h1 class="">RegistryTotal</h1>
-            </a>
-            <div class="flex-none">
-                <ul class="menu menu-horizontal px-1">
-                    <li class="mx-12" tabindex="0">
-                        <a href="{% url 'database' %}">
+<div class="drawer"> <!-- root container -->
+    <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
+    <div class="drawer-content flex flex-col"> <!-- content wrapper -->
+
+        <div class="overflow-x-hidden">
+            {% if user.is_authenticated %}
+                <div> <!-- navbar -->
+                    <div class="navbar bg-base-100 max-h-16">
+                        <a class="hidden md:flex pl-12" href="{% url 'home' %}">
+                            <img class="h-16" src="{% static "logo.png" %}" alt="">
+                            <h1 class="mr-7">RegistryTotal</h1>
+                        </a>
+                        <div class="hidden md:flex">
+                            <ul class="menu menu-horizontal px-1">
+                                <li class="mx-12" tabindex="0">
+                                    <a href="{% url 'database' %}">
                             <span {% if '/database/' in request.path %}
                                 class="font-semibold" {% endif %}>Database</span>
-                        </a>
-                    </li>
-                        <li class="mx-12"><a href="{% url 'report_month' %}">
-                        <span {% if '/report/' in request.path %}
-                            class="font-semibold" {% endif %}>Report</span>
-                    </a></li>
-                </ul>
-            </div>
-            <!-- profile btn -->
-            <div class="flex-1 navbar-end">
-                <div class="dropdown dropdown-end px-16">
-                    <label tabindex="0" class="btn btn-ghost btn-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
-                        </svg>
-                    </label>
-                    <ul tabindex="0"
-                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box">
-                        <li><span class="text-right">{{ user.username }}</span></li>
-                        <li><a href="{% url 'register' %}">Register New User</a></li>
-                        <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div> <!-- end nav -->
+                                    </a>
+                                </li>
+                                <li class="mx-12"><a href="#">Report</a></li>
+                            </ul>
+                        </div>
 
-    <main class="px-16 py-6">
-        <header>
-            {% block content %}{% endblock %}
-        </header>
-    </main>
+                        <!-- visible on small screen -->
+                        <label for="my-drawer" class="md:hidden btn btn-square btn-ghost">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 class="inline-block w-6 h-6 stroke-current">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </label>
+
+                        <div class="md:hidden mx-auto">
+                            <a href="{% url 'home' %}"><img class="h-16" src="{% static "logo.png" %}" alt=""></a>
+                        </div>
+
+                        <!-- profile btn -->
+                        <div class="hidden md:flex navbar-end">
+                            <div>
+                                <div class="dropdown px-10">
+                                    <label tabindex="0" class="btn btn-ghost btn-circle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke-width="1.5"
+                                             stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                                        </svg>
+                                    </label>
+                                    <ul tabindex="0"
+                                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-44">
+                                        {% if perms.UserManagement.add_user %}
+                                            <li><a href="{% url 'register' %}">Register User</a></li>
+                                        {% endif %}
+                                        <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <span class="text-right mr-10">{{ user.username }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %} <!-- end navbar -->
+
+            <main class="px-16 overflow-x-auto">
+                <header>
+                    {% block content %}
+
+                    {% endblock %}
+                </header>
+            </main>
+        </div>
+    </div>
+    <!-- end drawer content -->
+
+    <div class="drawer-side md:hidden">
+        <label for="my-drawer" class="drawer-overlay"></label>
+        <ul class="menu p-4 w-60 bg-base-100 text-base-content">
+            <!-- Sidebar content here -->
+            <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl mb-5">
+                RegistryTotal
+            </h1>
+            <div class="flex pb-5 border-b">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                     stroke-width="1.5"
+                     stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                </svg>
+
+                <span class="text-right ml-3">{{ user.username }}</span>
+            </div>
+
+            <li tabindex="0">
+                <a href="{% url 'database' %}">
+                    <span {% if '/database/' in request.path %}
+                        class="font-semibold" {% endif %}>Database</span>
+                </a>
+            </li>
+            <li><a href="#">Report</a></li>
+            <span class="border-b"></span>
+
+            {% if perms.UserManagement.add_user %}
+                <li><a href="{% url 'register' %}">Register User</a></li>
+            {% endif %}
+            <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
+
+        </ul>
+    </div>
 </div>
 </body>
 </html>

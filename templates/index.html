@@ -3,79 +3,80 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
+    <div class="py-6"> <!-- wrapper -->
+        <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
+        <div class="flex">
+            <div class="w-1/2">
+                <canvas id="myChart" class="h-full"></canvas>
+            </div>
+            <div class="w-1/2">
+                <canvas id="myChart2" class="h-full"></canvas>
+            </div>
+        </div>
 
-    <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
-    <div class="flex">
-        <div class="w-1/2">
-            <canvas id="myChart" class="h-full"></canvas>
-        </div>
-        <div class="w-1/2">
-            <canvas id="myChart2" class="h-full"></canvas>
-        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+
+        <script>
+            const ctx = document.getElementById('myChart');
+            let labels = [
+                {% for month in number_registered_by_month %}
+                    'T{{ month.certificate_date__month}} - {{ month.certificate_date__year}}',
+                {% endfor %}
+            ]
+            let data = [
+                {% for month in number_registered_by_month %}
+                    {{ month.count }},
+                {% endfor %}
+            ]
+            const myChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels.slice(-12),
+                    datasets: [
+                        {
+                            label: "Number of cars registered in all areas",
+                            data: data.slice(-12),
+                            lineTension: 0.2,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    aspectRatio: 1,
+                    maintainAspectRatio: false
+                }
+            });
+        </script>
+        <script>
+            const ctx2 = document.getElementById('myChart2');
+            let labels2 = [
+                {% for month in number_expired_by_month %}
+                    'T{{ month.expiry_date__month}} - {{ month.expiry_date__year}}',
+                {% endfor %}
+            ]
+            let data2 = [
+                {% for month in number_expired_by_month %}
+                    {{ month.count }},
+                {% endfor %}
+            ]
+            const myChart2 = new Chart(ctx2, {
+                type: "line",
+                data: {
+                    labels: labels2,
+                    datasets: [
+                        {
+                            label: "Number of certificates to expire in all areas",
+                            data: data2,
+                            lineTension: 0.2,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    aspectRatio: 1,
+                    maintainAspectRatio: false
+                }
+            });
+        </script>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
-
-    <script>
-        const ctx = document.getElementById('myChart');
-        let labels = [
-            {% for month in number_registered_by_month %}
-                'T{{ month.certificate_date__month}} - {{ month.certificate_date__year}}',
-            {% endfor %}
-        ]
-        let data = [
-            {% for month in number_registered_by_month %}
-                {{ month.count }},
-            {% endfor %}
-        ]
-        const myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: labels.slice(-12),
-                datasets: [
-                    {
-                        label: "Number of cars registered in all areas",
-                        data: data.slice(-12),
-                        lineTension: 0.2,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                aspectRatio: 1,
-                maintainAspectRatio: false
-            }
-        });
-    </script>
-    <script>
-        const ctx2 = document.getElementById('myChart2');
-        let labels2 = [
-            {% for month in number_expired_by_month %}
-                'T{{ month.expiry_date__month}} - {{ month.expiry_date__year}}',
-            {% endfor %}
-        ]
-        let data2 = [
-            {% for month in number_expired_by_month %}
-                {{ month.count }},
-            {% endfor %}
-        ]
-        const myChart2 = new Chart(ctx2, {
-            type: "line",
-            data: {
-                labels: labels2,
-                datasets: [
-                    {
-                        label: "Number of certificates to expire in all areas",
-                        data: data2,
-                        lineTension: 0.2,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                aspectRatio: 1,
-                maintainAspectRatio: false
-            }
-        });
-    </script>
 {% endblock %}
