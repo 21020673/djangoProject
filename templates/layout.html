@@ -1,12 +1,11 @@
-<html data-theme="light">
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% load static %}
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="{% static "output.css" %}">
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body class="text-gray-600 bg-gray-100">
@@ -14,7 +13,7 @@
     <div>
         <div class="navbar bg-base-100 max-h-16">
             <a class="pl-12" href="{% url 'home' %}">
-                <img class="h-16" src="{% static "logo.png" %}">
+                <img class="h-16" src="{% static "logo.png" %}" alt="">
                 <h1 class="">RegistryTotal</h1>
             </a>
             <div class="flex-none">
@@ -38,7 +37,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
                         </svg>
                     </label>
                     <ul tabindex="0"

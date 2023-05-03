@@ -5,12 +5,13 @@
 {% block content %}
 
     <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
-
-    <div>
-        <canvas id="myChart" class="h-2/3 w-1/2"></canvas>
-    </div>
-    <div>
-        <canvas id="myChart2" class="h-2/3 w-1/2"></canvas>
+    <div class="flex">
+        <div class="w-1/2">
+            <canvas id="myChart" class="h-full"></canvas>
+        </div>
+        <div class="w-1/2">
+            <canvas id="myChart2" class="h-full"></canvas>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
