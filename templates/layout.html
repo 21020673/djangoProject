@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <title>{% block title %} {% endblock %}</title>
 </head>
@@ -30,7 +31,10 @@
                                 class="font-semibold" {% endif %}>Database</span>
                                     </a>
                                 </li>
-                                <li class="mx-12"><a href="{% url 'report_month' %}">Report</a></li>
+                                <li class="mx-12"><a href="{% url 'report_month' %}">
+                                    <span {% if '/report/' in request.path %}
+                                        class="font-semibold" {% endif %}>Report</span></a>
+                                </li>
                             </ul>
                         </div>
 
@@ -74,7 +78,7 @@
                 </div>
             {% endif %} <!-- end navbar -->
 
-            <main class="px-16 overflow-x-auto">
+            <main class="px-6 md:px-16 overflow-x-auto">
                 <header>
                     {% block content %}
 
