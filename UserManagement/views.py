@@ -1,9 +1,13 @@
+from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
+from crispy_forms.utils import render_crispy_form
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Count
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.context_processors import csrf
 
 from Registration.models import RegisterData
 from .forms import RegisterForm
@@ -61,9 +65,23 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Your account has been created. You can log in now!')
-            return redirect('register')
+            messages.success(request, f'User created successfully.')
+            form = RegisterForm()
+        ctx = {}
+        ctx.update(csrf(request))
+        form_html = render_crispy_form(form, context=ctx)
+        return HttpResponse(form_html)
     else:
         form = RegisterForm()
-    context = {'form': form}
-    return render(request, 'register.html', context)
+        context = {'form': form}
+        return render(request, 'register.html', context)
+
+
+def check_username(request):
+    form = RegisterForm(request.GET)
+    return HttpResponse(as_crispy_field(form['username']))
+
+
+def check_register_center(request):
+    form = RegisterForm(request.GET)
+    return HttpResponse(as_crispy_field(form['register_center']))
