@@ -17,15 +17,18 @@ class RegisterDataView(ListView):
     template_name = 'register_data.html'
 
     def get_queryset(self):
-        cars = RegisterData.objects.all()
+        if self.request.user.has_perm('UserManagement.add_user'):
+            cars = RegisterData.objects.all()
+        else:
+            cars = RegisterData.objects.filter(register_center__user_id=self.request.user.id)
         if self.request.GET.get('search'):
             search_item = self.request.GET.get('search')
-            cars = RegisterData.objects.filter(Q(owner__name__icontains=search_item) |
-                                               Q(license_plate__license_plate__icontains=search_item) |
-                                               Q(license_plate__model__make__icontains=search_item) |
-                                               Q(license_plate__model__model__icontains=search_item) |
-                                               Q(register_center__city_province__icontains=search_item)
-                                               )
+            cars = cars.filter(Q(owner__name__icontains=search_item) |
+                               Q(license_plate__license_plate__icontains=search_item) |
+                               Q(license_plate__model__make__icontains=search_item) |
+                               Q(license_plate__model__model__icontains=search_item) |
+                               Q(register_center__city_province__icontains=search_item)
+                               )
         return cars
 
 
@@ -36,15 +39,18 @@ class OwnerView(ListView):
     template_name = 'owner.html'
 
     def get_queryset(self):
-        owners = Owners.objects.all()
+        if self.request.user.has_perm('UserManagement.add_user'):
+            owners = Owners.objects.all()
+        else:
+            owners = Owners.objects.filter(registerdata__register_center__user_id=self.request.user.id)
         if self.request.GET.get('search'):
             search_item = self.request.GET.get('search')
-            owners = Owners.objects.filter(Q(name__icontains=search_item) |
-                                           Q(type__icontains=search_item) |
-                                           Q(address__icontains=search_item) |
-                                           Q(phone__icontains=search_item) |
-                                           Q(city_province__icontains=search_item)
-                                           )
+            owners = owners.filter(Q(name__icontains=search_item) |
+                                   Q(type__icontains=search_item) |
+                                   Q(address__icontains=search_item) |
+                                   Q(phone__icontains=search_item) |
+                                   Q(city_province__icontains=search_item)
+                                   )
         return owners
 
 
@@ -81,11 +87,18 @@ class CarDetail(DetailView):
 
 
 def report_month(request):
-    query = 'default'
-    label = 'Number of cars registered in all areas'
-    number_registered_by_month = RegisterData.objects.values('certificate_date__year',
-                                                             'certificate_date__month').annotate(
-        count=Count('certificate_date__month')).order_by('certificate_date__year', 'certificate_date__month')
+    if request.user.has_perm('UserManagement.add_user'):
+        query = 'default'
+        label = 'Number of cars registered in all areas'
+        number_registered_by_month = RegisterData.objects.values('certificate_date__year',
+                                                                 'certificate_date__month').annotate(
+            count=Count('certificate_date__month')).order_by('certificate_date__year', 'certificate_date__month')
+    else:
+        query = RegisterCenter.objects.get(user_id=request.user.id).name
+        label = 'Number of cars registered in ' + query
+        number_registered_by_month = RegisterData.objects.filter(register_center__name=query).values(
+            'certificate_date__year', 'certificate_date__month').annotate(
+            count=Count('certificate_date__month')).order_by('certificate_date__year', 'certificate_date__month')
     if request.GET.get('select'):
         query = request.GET.get('select')
         if query != 'default':
@@ -111,11 +124,18 @@ def report_month(request):
 
 
 def report_quarter(request):
-    query = 'default'
-    label = 'Number of cars registered in all areas'
-    number_registered_by_quarter = RegisterData.objects.values('certificate_date__year',
-                                                               'certificate_date__quarter').annotate(
-        count=Count('certificate_date__quarter')).order_by('certificate_date__year', 'certificate_date__quarter')
+    if request.user.has_perm('UserManagement.add_user'):
+        query = 'default'
+        label = 'Number of cars registered in all areas'
+        number_registered_by_quarter = RegisterData.objects.values('certificate_date__year',
+                                                                   'certificate_date__quarter').annotate(
+            count=Count('certificate_date__quarter')).order_by('certificate_date__year', 'certificate_date__quarter')
+    else:
+        query = RegisterCenter.objects.get(user_id=request.user.id).name
+        label = 'Number of cars registered in ' + query
+        number_registered_by_quarter = RegisterData.objects.filter(register_center__name=query).values(
+            'certificate_date__year', 'certificate_date__quarter').annotate(
+            count=Count('certificate_date__quarter')).order_by('certificate_date__year', 'certificate_date__quarter')
     if request.GET.get('select'):
         query = request.GET.get('select')
         if query != 'default':
@@ -142,10 +162,16 @@ def report_quarter(request):
 
 
 def report_year(request):
-    query = 'default'
-    label = 'Number of cars registered in all areas'
-    number_registered_by_year = RegisterData.objects.values('certificate_date__year').annotate(
-        count=Count('certificate_date__year')).order_by('certificate_date__year')
+    if request.user.has_perm('UserManagement.add_user'):
+        query = 'default'
+        label = 'Number of cars registered in all areas'
+        number_registered_by_year = RegisterData.objects.values('certificate_date__year').annotate(
+            count=Count('certificate_date__year')).order_by('certificate_date__year')
+    else:
+        query = RegisterCenter.objects.get(user_id=request.user.id).name
+        label = 'Number of cars registered in ' + query
+        number_registered_by_year = RegisterData.objects.filter(register_center__name=query).values(
+            'certificate_date__year').annotate(count=Count('certificate_date__year')).order_by('certificate_date__year')
     if request.GET.get('select'):
         query = request.GET.get('select')
         if query != 'default':
@@ -169,10 +195,17 @@ def report_year(request):
 
 
 def report_expiry(request):
-    query = 'default'
-    label = 'Number of certificates to expire in all areas'
-    number_expired_by_month = RegisterData.objects.values('expiry_date__year', 'expiry_date__month').annotate(
-        count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
+    if request.user.has_perm('UserManagement.add_user'):
+        query = 'default'
+        label = 'Number of cars registered in all areas'
+        number_expired_by_month = RegisterData.objects.values('expiry_date__year', 'expiry_date__month').annotate(
+            count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
+    else:
+        query = RegisterCenter.objects.get(user_id=request.user.id).name
+        label = 'Number of cars registered in ' + query
+        number_expired_by_month = RegisterData.objects.filter(register_center__name=query).values(
+            'expiry_date__year', 'expiry_date__month').annotate(count=Count('expiry_date__month')).order_by(
+            'expiry_date__year', 'expiry_date__month')
     if request.GET.get('select'):
         query = request.GET.get('select')
         if query != 'default':

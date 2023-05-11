@@ -62,11 +62,11 @@
             const myChart2 = new Chart(ctx2, {
                 type: "line",
                 data: {
-                    labels: labels2,
+                    labels: labels2.slice(-12),
                     datasets: [
                         {
                             label: "Number of certificates to expire in all areas",
-                            data: data2,
+                            data: data2.slice(-12),
                             lineTension: 0.2,
                         }
                     ]

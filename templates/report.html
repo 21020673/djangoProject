@@ -12,22 +12,23 @@
     <a href="{% url "report_expire" %}">Expire</a>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
     <form method="get">
-    <div class="form-control max-w-xs">
-        <label class="label">
-            <span class="label-text">Option</span>
-        </label>
-        <select class="select w-full max-w-xs" name="select" onchange="this.form.submit()">
-            <option value="default">All areas</option>
-            <option disabled>City</option>
-            {% for city in cities %}
-                <option value="{{ city }}">{{ city }}</option>
-            {% endfor %}
-            <option disabled>Register Center</option>
-            {% for center in register_centers %}
-                <option value="{{ center }}">Trung tâm {{ center }}</option>
-            {% endfor %}
-        </select>
-    </div>
+        <div class="form-control max-w-xs">
+            <label class="label">
+                <span class="label-text">Option</span>
+            </label>
+            <select class="select w-full max-w-xs" name="select" onchange="this.form.submit()"
+                    {% if not perms.UserManagement.add_user %}disabled{% endif %}>
+                <option value="default">All areas</option>
+                <option disabled>City</option>
+                {% for city in cities %}
+                    <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+                <option disabled>Register Center</option>
+                {% for center in register_centers %}
+                    <option value="{{ center }}">Trung tâm {{ center }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </form>
     <div class="h-2/3">
         <canvas id="myChart"></canvas>
