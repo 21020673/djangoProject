@@ -5,27 +5,26 @@
 {% block table %}
 
     <div class="center-block">
-        <table class="table w-full">
+        <table class="table w-full table-compact md:table-normal">
             <thead>
             <tr>
-                <th><a href="{% url 'owner' %}">Owner</a></th>
-                <th>License Plate</th>
-                <th><a href="{% url 'cars' %}">Model</a></th>
-                <th>Certificate Date</th>
-                <th>Expiry Date</th>
-                <th>City</th>
+                <th class="bg-neutral text-neutral-content"><a href="{% url 'owner' %}">Owner</a></th>
+                <th class="bg-neutral text-neutral-content">License Plate</th>
+                <th class="bg-neutral text-neutral-content">Effective Period</th>
+                <th class="bg-neutral text-neutral-content">City</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody class="overflow-auto">
             {% for car in page_obj %}
                 <tr class="hover">
                     <td><a href="{% url 'owner' car.owner.owner_id %}">{{ car.owner.name }}</a></td>
-                    <td>{{ car.license_plate.license_plate }}</td>
                     <td>
-                        <a href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a>
+                        <div>
+                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                            <div class="text-sm opacity-50"><a href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a></div>
+                        </div>
                     </td>
-                    <td>{{ car.certificate_date }}</td>
-                    <td>{{ car.expiry_date }}</td>
+                    <td>{{ car.certificate_date }} - {{ car.expiry_date }}</td>
                     <td>{{ car.register_center.city_province }}</td>
                 </tr>
             {% endfor %}

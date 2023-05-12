@@ -3,13 +3,14 @@
 {% block title %}Car{% endblock %}
 
 {% block table %}
-<table class="table w-full">
+<table class="table table-compact w-full">
     <thead>
     <tr>
-        <th>Make</th>
-        <th>Model</th>
-        <th>Year</th>
-        <th>Body Type</th>
+        <th class="bg-neutral text-neutral-content">Make</th>
+        <th class="bg-neutral text-neutral-content">Model</th>
+        <th class="bg-neutral text-neutral-content">Year</th>
+        <th class="bg-neutral text-neutral-content">Body Type</th>
+        <th class="bg-neutral text-neutral-content w-40"></th>
     </tr>
     </thead>
     <tbody>
@@ -19,7 +20,7 @@
             <td>{{ car.model }}</td>
             <td>{{ car.year_from }}</td>
             <td>{{ car.body_type }}</td>
-        </tr>
+            <td><a href="{% url 'car_detail' car.id %}" class="btn btn-ghost">View</a></tr>
     {% endfor %}
     </tbody>
 </table>

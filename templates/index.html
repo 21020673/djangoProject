@@ -4,12 +4,12 @@
 
 {% block content %}
     <div class="py-6"> <!-- wrapper -->
-        <h2>Hello, {{ user.username|default:'Guest' }}!</h2>
-        <div class="flex">
-            <div class="w-1/2">
+        <div class="md:flex mb-10">
+            <div class="md:w-1/2">
                 <canvas id="myChart" class="h-5/6"></canvas>
             </div>
-            <div class="w-1/2">
+
+            <div class="md:w-1/2">
                 <canvas id="myChart2" class="h-5/6"></canvas>
             </div>
         </div>

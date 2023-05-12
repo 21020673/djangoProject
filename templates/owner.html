@@ -3,26 +3,29 @@
 {% block title %}Owner{% endblock %}
 
 {% block table %}
-    <table class="table w-full">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Phone</th>
-        <th>Address</th>
-        <th>City</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for owner in page_obj%}
-        <tr class="hover">
-            <td>{{ owner.name }}</td>
-            <td>{{ owner.type }}</td>
-            <td>{{ owner.phone }}</td>
-            <td>{{ owner.address }}</td>
-            <td>{{ owner.city_province }}</td>
+    <table class="table table-compact w-full">
+        <thead>
+        <tr>
+            <th class="bg-neutral text-neutral-content">Name</th>
+            <th class="bg-neutral text-neutral-content">Type</th>
+            <th class="bg-neutral text-neutral-content">Phone</th>
+            <th class="bg-neutral text-neutral-content">Address</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {% for owner in page_obj %}
+            <tr class="hover">
+                <td>{{ owner.name }}</td>
+                <td>{{ owner.type }}</td>
+                <td>{{ owner.phone }}</td>
+                <td>
+                    <div>
+                        <div>{{ owner.address }}</div>
+                        <div class="font-bold">{{ owner.city_province }}</div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

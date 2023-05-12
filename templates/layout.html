@@ -8,10 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.2"
+            integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
+            crossorigin="anonymous"></script>
     <title>{% block title %} {% endblock %}</title>
 </head>
-<body class="text-gray-600 bg-gray-100">
+<body class="text-base-content bg-base-200">
 <div class="drawer"> <!-- root container -->
     <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
     <div class="drawer-content flex flex-col"> <!-- content wrapper -->
@@ -19,7 +21,7 @@
         <div class="overflow-x-hidden">
             {% if user.is_authenticated %}
                 <div> <!-- navbar -->
-                    <div class="navbar bg-base-100 max-h-16">
+                    <div class="navbar bg-base-100 max-h-16 relative">
                         <a class="hidden md:flex px-12" href="{% url 'home' %}">
                             <img class="h-16" src="{% static "logo.png" %}" alt="">
                             <h1 class="mr-7">RegistryTotal</h1>
@@ -40,7 +42,7 @@
                         </div>
 
                         <!-- visible on small screen -->
-                        <label for="my-drawer" class="md:hidden btn btn-square btn-ghost">
+                        <label for="my-drawer" class="md:hidden btn btn-square btn-ghost absolute">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  class="inline-block w-6 h-6 stroke-current">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -66,6 +68,12 @@
                                     </label>
                                     <ul tabindex="0"
                                         class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-44">
+                                        <li class="border-b border-base-200 text-sm px-4 py-2">
+                                            Dark mode
+                                            <input type="checkbox" id="dark-mode"
+                                                   class="toggle absolute right-2 bottom-2"
+                                                   onchange="darken()"/>
+                                        </li>
                                         {% if perms.UserManagement.add_user %}
                                             <li><a href="{% url 'register' %}">Register User</a></li>
                                         {% endif %}
@@ -79,13 +87,15 @@
                 </div>
             {% endif %} <!-- end navbar -->
 
-            <main class="px-6 md:px-16 overflow-x-auto">
+            <!------- MAIN CONTENT ------->
+            <main class="px-5 md:px-16 py-6 overflow-x-auto">
                 <header>
                     {% block content %}
 
                     {% endblock %}
                 </header>
             </main>
+            <!------- END MAIN CONTENT ------->
         </div>
     </div>
     <!-- end drawer content -->
@@ -95,9 +105,9 @@
         <ul class="menu p-4 w-60 bg-base-100 text-base-content">
             <!-- Sidebar content here -->
             <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl mb-5">
-                RegistryTotal
+                Registry Total
             </h1>
-            <div class="flex pb-5 border-b">
+            <div class="flex pb-5 border-b border-base-200">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                      stroke-width="1.5"
                      stroke="currentColor" class="w-6 h-6">
@@ -108,6 +118,19 @@
                 <span class="text-right ml-3">{{ user.username }}</span>
             </div>
 
+            {#            <div class="border-b border-base-200 text-sm px-4 py-2 relative">#}
+            {#                Dark mode#}
+            {#                <input id="dark-mode" type="checkbox"#}
+            {#                       class="toggle save-cb-state absolute right-2 bottom-2 save-cb-state"#}
+            {#                       onchange="darken()"/>#}
+            {#            </div>#}
+
+            <li tabindex="0">
+                <a href="{% url 'home' %}">
+                    <span {% if 'home' in request.path %}
+                        class="font-semibold" {% endif %}>Home</span>
+                </a>
+            </li>
             <li tabindex="0">
                 <a href="{% url 'database' %}">
                     <span {% if '/database/' in request.path %}
@@ -117,7 +140,7 @@
             <li><a href="{% url 'report_month' %}">
                 <span {% if '/report/' in request.path %}
                     class="font-semibold" {% endif %}>Report</span></a></li>
-            <span class="border-b"></span>
+            <span class="border-b border-base-200"></span>
 
             {% if perms.UserManagement.add_user %}
                 <li><a href="{% url 'register' %}">Register User</a></li>
@@ -127,5 +150,39 @@
         </ul>
     </div>
 </div>
+<script>
+    const container = document.querySelector("html");
+    const switcher = document.getElementById("dark-mode");
+    if (localStorage.getItem("data-theme")) {
+        container.setAttribute("data-theme", localStorage.getItem("data-theme"));
+        darken(1)
+    }
+
+    function darken(r) {
+        const dataTheme = container.getAttribute("data-theme");
+        const switcher = document.getElementById("dark-mode");
+        let theme_switch;
+
+        if (dataTheme === "light") {
+            theme_switch = 1
+        } else {
+            theme_switch = 0
+        }
+        if (r) {
+            theme_switch = !theme_switch
+        } //so the oppisite of the theme stored is used when calling this function
+        if (theme_switch) {
+            container.setAttribute("data-theme", "dark");
+            localStorage.setItem("data-theme", "dark");
+            switcher.checked = true;
+            container.classList.add(dark);
+        } else {
+            container.setAttribute("data-theme", "light");
+            localStorage.setItem("data-theme", "light");
+            switcher.checked = false;
+            container.classList.remove(dark);
+        }
+    }
+</script>
 </body>
 </html>

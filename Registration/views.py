@@ -12,7 +12,7 @@ register_center_list = RegisterCenter.objects.values_list('name', flat=True).dis
 # Create your views here.
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class RegisterDataView(ListView):
-    paginate_by = 20
+    paginate_by = 9
     model = RegisterData
     template_name = 'register_data.html'
 
@@ -31,7 +31,7 @@ class RegisterDataView(ListView):
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class OwnerView(ListView):
-    paginate_by = 20
+    paginate_by = 9
     model = Owners
     template_name = 'owner.html'
 
@@ -50,7 +50,7 @@ class OwnerView(ListView):
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class CarsView(ListView):
-    paginate_by = 20
+    paginate_by = 9
     model = CarSpecs
     template_name = 'cars.html'
 
