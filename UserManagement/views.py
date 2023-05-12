@@ -28,7 +28,17 @@ def home(request):
                 count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')[:12],
         }
     else:
-        context = {'user': request.user}
+        context = {'user': request.user,
+                   'number_registered_by_month': RegisterData.objects.filter(
+                       register_center__user_id=request.user.id).values('certificate_date__year',
+                                                                        'certificate_date__month').annotate(
+                       count=Count('certificate_date__month')).order_by('certificate_date__year',
+                                                                        'certificate_date__month'),
+                   'number_expired_by_month': RegisterData.objects.filter(
+                       register_center__user_id=request.user.id).values('expiry_date__year',
+                                                                        'expiry_date__month').annotate(
+                       count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
+                   }
     return render(request, 'index.html', context)
 
 
