@@ -81,6 +81,15 @@
 
             <main class="px-6 md:px-16 overflow-x-auto">
                 <header>
+                    {% block messages %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div id="message" class='alert {% if message.tags %}alert-{{ message.tags }}{% endif %}'>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endblock %}
                     {% block content %}
 
                     {% endblock %}
@@ -127,5 +136,12 @@
         </ul>
     </div>
 </div>
+<script>
+    let message_ele = document.getElementById("message");
+
+    setTimeout(function () {
+        message_ele.style.display = "none";
+    }, 3000);
+</script>
 </body>
 </html>
