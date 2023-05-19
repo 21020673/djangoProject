@@ -68,12 +68,12 @@
                                     </label>
                                     <ul tabindex="0"
                                         class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-44">
-                                        <li class="border-b border-base-200 text-sm px-4 py-2">
-                                            Dark mode
-                                            <input type="checkbox" id="dark-mode"
-                                                   class="toggle absolute right-2 bottom-2"
-                                                   onchange="darken()"/>
-                                        </li>
+{#                                        <li class="border-b border-base-200 text-sm px-4 py-2">#}
+{#                                            Dark mode#}
+{#                                            <input type="checkbox" id="dark-mode"#}
+{#                                                   class="toggle absolute right-2 bottom-2"#}
+{#                                                   onchange="darken()"/>#}
+{#                                        </li>#}
                                         {% if perms.UserManagement.add_user %}
                                             <li><a href="{% url 'register' %}">Register User</a></li>
                                         {% endif %}
@@ -90,6 +90,16 @@
             <!------- MAIN CONTENT ------->
             <main class="px-5 md:px-16 py-6 overflow-x-auto">
                 <header>
+                    {% block messages %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div id="message"
+                                     class='alert {% if message.tags %}alert-{{ message.tags }}{% endif %}'>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endblock %}
                     {% block content %}
 
                     {% endblock %}
@@ -127,7 +137,7 @@
 
             <li tabindex="0">
                 <a href="{% url 'home' %}">
-                    <span {% if 'home' in request.path %}
+                    <span {% if '/' in request.path %}
                         class="font-semibold" {% endif %}>Home</span>
                 </a>
             </li>
@@ -175,14 +185,22 @@
             container.setAttribute("data-theme", "dark");
             localStorage.setItem("data-theme", "dark");
             switcher.checked = true;
-            container.classList.add(dark);
+            container.classList.add("dark");
         } else {
             container.setAttribute("data-theme", "light");
             localStorage.setItem("data-theme", "light");
             switcher.checked = false;
-            container.classList.remove(dark);
+            container.classList.remove("dark");
         }
     }
+</script>
+
+<script>
+    let message_ele = document.getElementById("message");
+
+    setTimeout(function () {
+        message_ele.style.display = "none";
+    }, 3000);
 </script>
 </body>
 </html>

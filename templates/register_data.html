@@ -21,7 +21,7 @@
             {% for car in page_obj %}
                 <tr class="hover">
                     <td><a href="{% url 'owner' car.owner.owner_id %}">{{ car.owner.name }}</a></td>
-                    <td>{{ car.license_plate.license_plate }}</td>
+
                     <td>
                         <div>
                             <div class="font-bold">{{ car.license_plate.license_plate }}</div>
