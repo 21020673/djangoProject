@@ -46,11 +46,14 @@ class CarSpecs(models.Model):
 
 class Cars(models.Model):
     license_plate = models.CharField(primary_key=True, max_length=20)
-    model = models.ForeignKey(CarSpecs, models.DO_NOTHING, blank=True, null=True)
+    model = models.ForeignKey(CarSpecs, models.DO_NOTHING, blank=False, null=True)
 
     class Meta:
         managed = False
         db_table = 'cars'
+
+    def __str__(self):
+        return self.license_plate
 
 
 class Owners(models.Model):
@@ -65,6 +68,9 @@ class Owners(models.Model):
         managed = False
         db_table = 'owners'
 
+    def __str__(self):
+        return self.name
+
 
 class RegisterCenter(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -77,15 +83,17 @@ class RegisterCenter(models.Model):
         managed = False
         db_table = 'register_center'
 
+    def __str__(self):
+        return "Trung tâm " + self.name
+
 
 class RegisterData(models.Model):
     certificate_id = models.IntegerField(primary_key=True)
     certificate_date = models.DateField(blank=True, null=True)
-    expiry_date = models.DateField(blank=True, null=True)
-    register_center = models.ForeignKey(RegisterCenter, models.DO_NOTHING, db_column='register_center', blank=True,
-                                        null=True)
-    owner = models.ForeignKey(Owners, models.DO_NOTHING, db_column='owner', blank=True, null=True)
-    license_plate = models.ForeignKey(Cars, models.DO_NOTHING, db_column='license_plate', blank=True, null=True)
+    expiry_date = models.DateField(blank=False, null=True)
+    register_center = models.ForeignKey(RegisterCenter, models.DO_NOTHING, db_column='register_center', blank=False)
+    owner = models.ForeignKey(Owners, models.DO_NOTHING, db_column='owner', blank=False)
+    license_plate = models.ForeignKey(Cars, models.DO_NOTHING, db_column='license_plate', blank=False)
 
     class Meta:
         managed = False
