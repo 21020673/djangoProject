@@ -1,8 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Count
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
+
+from UserManagement.forms import CertificateForm
 from .models import RegisterData, Owners, CarSpecs, RegisterCenter
 
 city_list = RegisterCenter.objects.values_list('city_province', flat=True).distinct()
@@ -226,3 +229,22 @@ def report_expiry(request):
         'select': query
     }
     return render(request, 'graph.html', context)
+
+
+@login_required(login_url='login')
+def register_certificate(request, certificate_id):
+    certificate = get_object_or_404(RegisterData, pk=certificate_id)
+    if certificate.register_center.user_id != request.user.id:
+        raise PermissionDenied
+    if request.method == 'POST':
+        form = CertificateForm(request.POST, instance=certificate)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = CertificateForm(instance=certificate, initial={'register_center': certificate.register_center})
+    context = {
+        'form': form,
+        'certificate': certificate
+    }
+    return render(request, 'register.html', context)

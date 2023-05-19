@@ -10,6 +10,7 @@
         <th>Model</th>
         <th>Year</th>
         <th>Body Type</th>
+        <th class="w-40"></th>
     </tr>
     </thead>
     <tbody>
@@ -19,7 +20,7 @@
             <td>{{ car.model }}</td>
             <td>{{ car.year_from }}</td>
             <td>{{ car.body_type }}</td>
-        </tr>
+            <td><a href="{% url 'car_detail' car.id %}" class="btn btn-ghost btn-xs">View</a></tr>
     {% endfor %}
     </tbody>
 </table>

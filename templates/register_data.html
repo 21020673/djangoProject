@@ -10,23 +10,31 @@
             <tr>
                 <th><a href="{% url 'owner' %}">Owner</a></th>
                 <th>License Plate</th>
-                <th><a href="{% url 'cars' %}">Model</a></th>
-                <th>Certificate Date</th>
-                <th>Expiry Date</th>
                 <th>City</th>
+                <th>Effective Period</th>
+                {% if not user.is_superuser %}
+                    <th></th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
             {% for car in page_obj %}
                 <tr class="hover">
                     <td><a href="{% url 'owner' car.owner.owner_id %}">{{ car.owner.name }}</a></td>
-                    <td>{{ car.license_plate.license_plate }}</td>
                     <td>
-                        <a href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a>
+                        <div>
+                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                            <div class="text-sm opacity-50"><a
+                                    href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a>
+                            </div>
+                        </div>
                     </td>
-                    <td>{{ car.certificate_date }}</td>
-                    <td>{{ car.expiry_date }}</td>
                     <td>{{ car.register_center.city_province }}</td>
+                    <td>{{ car.certificate_date }} - {{ car.expiry_date }}</td>
+                    {% if not user.is_superuser %}
+                        <td><a href="{% url 'renew-certificate' car.certificate_id %}" class="btn btn-ghost btn-xs">Renew</a>
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>

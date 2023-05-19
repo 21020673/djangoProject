@@ -11,4 +11,5 @@ urlpatterns = [
     path('report/quarter/', views.report_quarter, name='report_quarter'),
     path('report/year/', views.report_year, name='report_year'),
     path('report/expire/', views.report_expiry, name='report_expire'),
+    path('certificate/<int:certificate_id>/renew/', views.register_certificate, name='renew-certificate'),
 ]
