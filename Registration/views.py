@@ -77,7 +77,7 @@ class CarsView(ListView):
 
 @login_required(login_url='login')
 def owner(request, owner_id):
-    owner_data = Owners.objects.filter(owner_id=owner_id)
+    owner_data = Owners.objects.filter(id=owner_id)
     context = {'page_obj': owner_data}
     return render(request, 'owner.html', context)
 
