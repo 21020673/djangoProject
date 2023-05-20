@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 
-from UserManagement.forms import CertificateForm
+from .forms import CertificateRenewalForm, CertificateForm
 from .models import RegisterData, Owners, CarSpecs, RegisterCenter
 
 city_list = RegisterCenter.objects.values_list('city_province', flat=True).distinct()
@@ -232,19 +232,38 @@ def report_expiry(request):
 
 
 @login_required(login_url='login')
-def register_certificate(request, certificate_id):
+def renew_certificate(request, certificate_id):
     certificate = get_object_or_404(RegisterData, pk=certificate_id)
     if certificate.register_center.user_id != request.user.id:
         raise PermissionDenied
     if request.method == 'POST':
-        form = CertificateForm(request.POST, instance=certificate)
+        form = CertificateRenewalForm(request.POST, instance=certificate)
         if form.is_valid():
             form.save()
             return redirect('home')
     else:
-        form = CertificateForm(instance=certificate, initial={'register_center': certificate.register_center})
+        form = CertificateRenewalForm(instance=certificate, initial={'register_center': certificate.register_center})
     context = {
         'form': form,
         'certificate': certificate
+    }
+    return render(request, 'register.html', context)
+
+
+@login_required(login_url='login')
+def register_certificate(request):
+    if request.user.has_perm('UserManagement.add_user'):
+        raise PermissionDenied
+    if request.method == 'POST':
+        form = CertificateForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.register_center = RegisterCenter.objects.get(user_id=request.user.id)
+            form.save()
+            return redirect('home')
+    else:
+        form = CertificateForm()
+    context = {
+        'form': form
     }
     return render(request, 'register.html', context)

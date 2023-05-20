@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 
 
 class CarSpecs(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     make = models.CharField(max_length=45, blank=True, null=True)
     model = models.CharField(max_length=200, blank=True, null=True)
     generation = models.CharField(max_length=45, blank=True, null=True)
@@ -45,7 +45,7 @@ class CarSpecs(models.Model):
 
 
 class Cars(models.Model):
-    license_plate = models.CharField(primary_key=True, max_length=20)
+    license_plate = models.CharField(primary_key=True, max_length=9)
     model = models.ForeignKey(CarSpecs, models.DO_NOTHING, blank=False, null=True)
 
     class Meta:
@@ -57,7 +57,6 @@ class Cars(models.Model):
 
 
 class Owners(models.Model):
-    owner_id = models.IntegerField(primary_key=True)
     type = models.CharField(max_length=40, blank=True, null=True)
     name = models.CharField(max_length=45, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
@@ -74,7 +73,6 @@ class Owners(models.Model):
 
 class RegisterCenter(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    center_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
     city_province = models.CharField(max_length=45, blank=True, null=True)
@@ -88,7 +86,6 @@ class RegisterCenter(models.Model):
 
 
 class RegisterData(models.Model):
-    certificate_id = models.IntegerField(primary_key=True)
     certificate_date = models.DateField(blank=True, null=True)
     expiry_date = models.DateField(blank=False, null=True)
     register_center = models.ForeignKey(RegisterCenter, models.DO_NOTHING, db_column='register_center', blank=False)

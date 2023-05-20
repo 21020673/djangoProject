@@ -1,13 +1,11 @@
-from datetime import date
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Div, Field
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import ModelForm
 from django.urls import reverse_lazy
 
-from Registration.models import RegisterCenter, RegisterData
+from Registration.models import RegisterCenter
 
 
 class RegisterForm(UserCreationForm):
@@ -61,10 +59,10 @@ class RegisterForm(UserCreationForm):
         user = super(RegisterForm, self).save(commit=False)
         if commit:
             user.save()
-            RegisterCenter.objects.create(center_id=RegisterCenter.objects.count() + 1,
-                                          name=self.cleaned_data["register_center"],
+            register_center = RegisterCenter(name=self.cleaned_data["register_center"],
                                           address=self.cleaned_data["address"], city_province=self.cleaned_data["city"],
                                           user=user)
+            register_center.save()
         return user
 
     def clean_username(self):
@@ -78,21 +76,3 @@ class RegisterForm(UserCreationForm):
         if RegisterCenter.objects.filter(name=register_center).exists():
             raise forms.ValidationError("Register Center already exists")
         return register_center
-
-
-class CertificateForm(ModelForm):
-    class Meta:
-        model = RegisterData
-        fields = ['expiry_date', 'register_center']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.add_input(Submit('submit', 'Renew'))
-
-    def save(self, commit=True):
-        certificate = super(CertificateForm, self).save(commit=False)
-        if commit:
-            certificate.certificate_date = date.today()
-            certificate.save()
-        return certificate

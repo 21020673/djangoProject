@@ -20,7 +20,7 @@
             <tbody class="overflow-auto">
             {% for car in page_obj %}
                 <tr class="hover">
-                    <td><a href="{% url 'owner' car.owner.owner_id %}">{{ car.owner.name }}</a></td>
+                    <td><a href="{% url 'owner' car.owner.id %}">{{ car.owner.name }}</a></td>
 
                     <td>
                         <div>
@@ -33,7 +33,7 @@
                     <td>{{ car.register_center.city_province }}</td>
                     <td>{{ car.certificate_date }} - {{ car.expiry_date }}</td>
                     {% if not user.is_superuser %}
-                        <td><a href="{% url 'renew-certificate' car.certificate_id %}" class="btn btn-ghost btn-xs">Renew</a>
+                        <td><a href="{% url 'renew-certificate' car.id %}" class="btn btn-ghost btn-xs">Renew</a>
                         </td>
                     {% endif %}
                 </tr>
