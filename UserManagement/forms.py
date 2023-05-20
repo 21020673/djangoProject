@@ -60,8 +60,8 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
             register_center = RegisterCenter(name=self.cleaned_data["register_center"],
-                                          address=self.cleaned_data["address"], city_province=self.cleaned_data["city"],
-                                          user=user)
+                                             address=self.cleaned_data["address"],
+                                             city_province=self.cleaned_data["city"], user=user)
             register_center.save()
         return user
 

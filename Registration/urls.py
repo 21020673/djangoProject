@@ -13,4 +13,6 @@ urlpatterns = [
     path('report/expire/', views.report_expiry, name='report_expire'),
     path('certificate/<int:certificate_id>/renew/', views.renew_certificate, name='renew-certificate'),
     path('register/certificate', views.register_certificate, name='register-certificate'),
+    path('upload/', views.upload_file, name='upload'),
+    path('upload/result/', views.upload_result, name='upload-result'),
 ]

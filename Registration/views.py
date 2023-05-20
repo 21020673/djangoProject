@@ -1,11 +1,12 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 
-from .forms import CertificateRenewalForm, CertificateForm
+from .forms import CertificateRenewalForm, CertificateForm, FileUploadForm
 from .models import RegisterData, Owners, CarSpecs, RegisterCenter
 
 city_list = RegisterCenter.objects.values_list('city_province', flat=True).distinct()
@@ -267,3 +268,29 @@ def register_certificate(request):
         'form': form
     }
     return render(request, 'register.html', context)
+
+
+@login_required(login_url='login')
+@permission_required('UserManagement.add_user', raise_exception=True)
+def upload_file(request):
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            request.session['upload_result'] = form.cleaned_data['file']
+            return redirect('upload-result')
+    else:
+        form = FileUploadForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'upload.html', context)
+
+
+@login_required(login_url='login')
+@permission_required('UserManagement.add_user', raise_exception=True)
+def upload_result(request):
+    result = RegisterData.objects.filter(id__in=request.session['upload_result'])
+    paginator = Paginator(result, 9)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'register_data.html', {'page_obj': page_obj})
