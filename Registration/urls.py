@@ -16,4 +16,5 @@ urlpatterns = [
     path('register/certificate', views.register_certificate, name='register-certificate'),
     path('upload/', views.upload_file, name='upload'),
     path('upload/result/', views.upload_result, name='upload-result'),
+    path('predict/', views.predict, name='predict'),
 ]

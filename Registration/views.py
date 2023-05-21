@@ -1,5 +1,5 @@
 import json
-
+import pandas as pd
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
+from prophet import Prophet
 
 from .forms import CertificateRenewalForm, CertificateForm, FileUploadForm
 from .models import RegisterData, Owners, CarSpecs, RegisterCenter
@@ -120,9 +121,9 @@ def report_month(request):
                     count=Count('certificate_date__month')).order_by('certificate_date__year',
                                                                      'certificate_date__month')
     data = json.dumps({
-        'data': [item['count'] for item in number_registered_by_month][-12:],
+        'data': [item['count'] for item in number_registered_by_month],
         'labels': ['T' + str(item['certificate_date__month']) + '-' + str(item['certificate_date__year']) for item in
-                   number_registered_by_month][-12:],
+                   number_registered_by_month],
         'label': label,
     })
     return HttpResponse(data, content_type='application/json')
@@ -291,9 +292,35 @@ def upload_result(request):
 
 
 def report(request):
+    if request.user.has_perm('UserManagement.add_user'):
+        query = 'default'
+    else:
+        query = RegisterCenter.objects.get(user_id=request.user.id).name
     context = {
         'cities': city_list,
         'register_centers': register_center_list,
-        'select': 'default'
+        'select': query
     }
     return render(request, 'report.html', context)
+
+
+def predict(request):
+    number_registered_by_month = RegisterData.objects.values('certificate_date').annotate(
+        count=Count('certificate_date'))
+    query = request.GET.get('select')
+    if query != 'default':
+        if query in city_list:
+            number_registered_by_month = RegisterData.objects.filter(
+                register_center__city_province=query).values().annotate(count=Count('certificate_date'))
+        elif query in register_center_list:
+            number_registered_by_month = RegisterData.objects.filter(register_center__name=query).values().annotate(
+                count=Count('certificate_date'))
+    df = pd.DataFrame.from_records(number_registered_by_month).rename({'certificate_date': 'ds', 'count': 'y'}, axis=1)
+    m = Prophet(seasonality_mode='multiplicative').fit(df)
+    future = m.make_future_dataframe(periods=365)
+    forecast = m.predict(future).groupby(pd.Grouper(key='ds', freq='M')).sum().reset_index()
+    data = json.dumps({
+        'data': [item['yhat'] for item in forecast.to_dict('records')],
+        'labels': ['T' + str(item['ds'].month) + '-' + str(item['ds'].year) for item in forecast.to_dict('records')],
+    })
+    return HttpResponse(data, content_type='application/json')

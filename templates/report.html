@@ -11,6 +11,7 @@
             <button value='{% url "report_year" %}' class="tab tab-lg text-base">Year</button>
             <button value='{% url "report_quarter" %}' class="tab tab-lg text-base">Quarter</button>
             <button value='{% url "report_expire" %}' class="tab tab-lg text-base">Expire</button>
+            <button class="btn" id="predict" onclick="predict()">Predict</button>
         </div>
 
         <form method="get">
@@ -39,7 +40,7 @@
     </div>
     <script>
         let select = $(".select");
-        select.value = "{{ select }}";
+        select.val("{{ select }}");
         const ctx = document.getElementById('myChart');
         let myChart;
         let url = "{% url 'report_month' %}";
@@ -47,7 +48,7 @@
             url: url,
             type: "GET",
             data: {
-                'select': "default",
+                'select': select.val(),
             },
             success: function (data) {
                 myChart = new Chart(ctx, {
@@ -80,6 +81,11 @@
                 this.classList.add("tab-active");
                 url = this.value;
                 getdata()
+                if (tab.textContent === "Month") {
+                    $("#predict").attr("disabled", false);
+                } else {
+                    $("#predict").attr("disabled", true);
+                }
             })
         })
 
@@ -92,10 +98,12 @@
                 },
                 success: function (data) {
                     myChart.data.labels = data.labels;
-                    myChart.data.datasets.forEach((dataset) => {
-                        dataset.data = data.data;
-                        dataset.label = data.label;
-                    });
+                    myChart.data.datasets = [];
+                    myChart.data.datasets.push({
+                        label: data.label,
+                        data: data.data,
+                        lineTension: 0.2,
+                    })
                     myChart.update();
                 }
             });
@@ -103,6 +111,33 @@
 
         select.change(function () {
             getdata()
+            if ($('.tab-active').text() === 'Month') {
+                $("#predict").attr("disabled", false);
+            } else {
+                $("#predict").attr("disabled", true);
+            }
         });
+
+        function predict() {
+            $.ajax({
+                url: "{% url 'predict' %}",
+                type: "GET",
+                data: {
+                    'select': select.val(),
+                },
+                success: function (data) {
+                    myChart.data.labels = data.labels;
+                    myChart.data.datasets.push({
+                        label: 'Prediction',
+                        data: data.data,
+                        lineTension: 0.2,
+                        borderColor: '#FF6384',
+                        backgroundColor: '#FFB1C1',
+                    })
+                    myChart.update();
+                }
+            });
+            $("#predict").attr("disabled", true);
+        }
     </script>
 {% endblock %}
