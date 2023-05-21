@@ -1,7 +1,10 @@
+import json
+
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
@@ -92,7 +95,6 @@ class CarDetail(DetailView):
 
 def report_month(request):
     if request.user.has_perm('UserManagement.add_user'):
-        query = 'default'
         label = 'Number of cars registered in all areas'
         number_registered_by_month = RegisterData.objects.values('certificate_date__year',
                                                                  'certificate_date__month').annotate(
@@ -117,19 +119,17 @@ def report_month(request):
                     'certificate_date__year', 'certificate_date__month').annotate(
                     count=Count('certificate_date__month')).order_by('certificate_date__year',
                                                                      'certificate_date__month')
-    context = {
-        'number_registered_by_month': number_registered_by_month,
-        'cities': city_list,
-        'register_centers': register_center_list,
+    data = json.dumps({
+        'data': [item['count'] for item in number_registered_by_month][-12:],
+        'labels': ['T' + str(item['certificate_date__month']) + '-' + str(item['certificate_date__year']) for item in
+                   number_registered_by_month][-12:],
         'label': label,
-        'select': query
-    }
-    return render(request, 'graph.html', context)
+    })
+    return HttpResponse(data, content_type='application/json')
 
 
 def report_quarter(request):
     if request.user.has_perm('UserManagement.add_user'):
-        query = 'default'
         label = 'Number of cars registered in all areas'
         number_registered_by_quarter = RegisterData.objects.values('certificate_date__year',
                                                                    'certificate_date__quarter').annotate(
@@ -155,19 +155,17 @@ def report_quarter(request):
                     'certificate_date__year', 'certificate_date__quarter').annotate(
                     count=Count('certificate_date__quarter')).order_by('certificate_date__year',
                                                                        'certificate_date__quarter')
-    context = {
-        'number_registered_by_quarter': number_registered_by_quarter,
-        'cities': city_list,
-        'register_centers': register_center_list,
+    data = json.dumps({
+        'data': [item['count'] for item in number_registered_by_quarter][-12:],
+        'labels': ['Q' + str(item['certificate_date__quarter']) + '-' + str(item['certificate_date__year']) for item in
+                   number_registered_by_quarter][-12:],
         'label': label,
-        'select': query
-    }
-    return render(request, 'graph.html', context)
+    })
+    return HttpResponse(data, content_type='application/json')
 
 
 def report_year(request):
     if request.user.has_perm('UserManagement.add_user'):
-        query = 'default'
         label = 'Number of cars registered in all areas'
         number_registered_by_year = RegisterData.objects.values('certificate_date__year').annotate(
             count=Count('certificate_date__year')).order_by('certificate_date__year')
@@ -188,20 +186,17 @@ def report_year(request):
                 number_registered_by_year = RegisterData.objects.filter(register_center__name=query).values(
                     'certificate_date__year').annotate(
                     count=Count('certificate_date__year')).order_by('certificate_date__year')
-    context = {
-        'number_registered_by_year': number_registered_by_year,
-        'cities': city_list,
-        'register_centers': register_center_list,
+    data = json.dumps({
+        'data': [item['count'] for item in number_registered_by_year],
+        'labels': [str(item['certificate_date__year']) for item in number_registered_by_year],
         'label': label,
-        'select': query
-    }
-    return render(request, 'graph.html', context)
+    })
+    return HttpResponse(data, content_type='application/json')
 
 
 def report_expiry(request):
     if request.user.has_perm('UserManagement.add_user'):
-        query = 'default'
-        label = 'Number of cars registered in all areas'
+        label = 'Number of certificates to expire in all areas'
         number_expired_by_month = RegisterData.objects.values('expiry_date__year', 'expiry_date__month').annotate(
             count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
     else:
@@ -222,14 +217,13 @@ def report_expiry(request):
                 number_expired_by_month = RegisterData.objects.filter(register_center__name=query).values(
                     'expiry_date__year', 'expiry_date__month').annotate(
                     count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
-    context = {
-        'number_expired_by_month': number_expired_by_month[:12],
-        'cities': city_list,
-        'register_centers': register_center_list,
+    data = json.dumps({
+        'data': [item['count'] for item in number_expired_by_month][:12],
+        'labels': ['T' + str(item['expiry_date__month']) + '-' + str(item['expiry_date__year']) for item in
+                   number_expired_by_month][:12],
         'label': label,
-        'select': query
-    }
-    return render(request, 'graph.html', context)
+    })
+    return HttpResponse(data, content_type='application/json')
 
 
 @login_required(login_url='login')
@@ -294,3 +288,12 @@ def upload_result(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(request, 'register_data.html', {'page_obj': page_obj})
+
+
+def report(request):
+    context = {
+        'cities': city_list,
+        'register_centers': register_center_list,
+        'select': 'default'
+    }
+    return render(request, 'report.html', context)

@@ -11,6 +11,7 @@ urlpatterns = [
     path('report/quarter/', views.report_quarter, name='report_quarter'),
     path('report/year/', views.report_year, name='report_year'),
     path('report/expire/', views.report_expiry, name='report_expire'),
+    path('report/', views.report, name='report'),
     path('certificate/<int:certificate_id>/renew/', views.renew_certificate, name='renew-certificate'),
     path('register/certificate', views.register_certificate, name='register-certificate'),
     path('upload/', views.upload_file, name='upload'),

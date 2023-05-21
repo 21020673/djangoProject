@@ -34,7 +34,7 @@
                                 class="font-semibold" {% endif %}>Database</span>
                                     </a>
                                 </li>
-                                <li class="mx-12"><a href="{% url 'report_month' %}">
+                                <li class="mx-12"><a href="{% url 'report' %}">
                                     <span {% if '/report/' in request.path %}
                                         class="font-semibold" {% endif %}>Report</span></a>
                                 </li>
@@ -141,7 +141,7 @@
                         class="font-semibold" {% endif %}>Database</span>
                 </a>
             </li>
-            <li><a href="{% url 'report_month' %}">
+            <li><a href="{% url 'report' %}">
                 <span {% if '/report/' in request.path %}
                     class="font-semibold" {% endif %}>Report</span></a></li>
             <span class="border-b border-base-200"></span>
