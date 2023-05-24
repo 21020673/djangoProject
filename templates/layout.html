@@ -11,6 +11,8 @@
     <script src="https://unpkg.com/htmx.org@1.9.2"
             integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body class="text-base-content bg-base-200">
@@ -36,7 +38,7 @@
                                     </a>
                                 </li>
                                 <li class="mx-12">
-                                    <a hx-get="{% url 'report_month' %}"
+                                    <a hx-get="{% url 'report' %}"
                                        hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
                                     <span {% if '/report/' in request.path %}
                                         class="font-semibold" {% endif %}>Report</span></a>
@@ -152,7 +154,7 @@
                         class="font-semibold" {% endif %}>Database</span>
                 </a>
             </li>
-            <li><a href="{% url 'report_month' %}">
+            <li><a href="{% url 'report' %}">
                 <span {% if '/report/' in request.path %}
                     class="font-semibold" {% endif %}>Report</span></a></li>
             <span class="border-b border-base-200"></span>

@@ -14,71 +14,67 @@
             </div>
         </div>
 
-    <a href="{% url 'register-certificate' %}">Register new car</a>
-
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
-
-        <script>
-            const ctx = document.getElementById('myChart');
-            let labels = [
-                {% for month in number_registered_by_month %}
-                    'T{{ month.certificate_date__month}} - {{ month.certificate_date__year}}',
-                {% endfor %}
-            ]
-            let data = [
-                {% for month in number_registered_by_month %}
-                    {{ month.count }},
-                {% endfor %}
-            ]
-            const myChart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: labels.slice(-12),
-                    datasets: [
-                        {
-                            label: "Number of cars registered in all areas",
-                            data: data.slice(-12),
-                            lineTension: 0.2,
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    aspectRatio: 1,
-                    maintainAspectRatio: false
-                }
-            });
-        </script>
-        <script>
-            const ctx2 = document.getElementById('myChart2');
-            let labels2 = [
-                {% for month in number_expired_by_month %}
-                    'T{{ month.expiry_date__month}} - {{ month.expiry_date__year}}',
-                {% endfor %}
-            ]
-            let data2 = [
-                {% for month in number_expired_by_month %}
-                    {{ month.count }},
-                {% endfor %}
-            ]
-            const myChart2 = new Chart(ctx2, {
-                type: "line",
-                data: {
-                    labels: labels2.slice(-12),
-                    datasets: [
-                        {
-                            label: "Number of certificates to expire in all areas",
-                            data: data2.slice(-12),
-                            lineTension: 0.2,
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    aspectRatio: 1,
-                    maintainAspectRatio: false
-                }
-            });
-        </script>
+        <a href="{% url 'register-certificate' %}">Register new car (for normal user)</a>
+        <br>
+        <a href="{% url 'upload' %}">Upload file (for admin)</a>
     </div>
+    <script>
+        const ctx = document.getElementById('myChart');
+        $.ajax({
+            url: '{% url 'report_month' %}',
+            type: "GET",
+            data: {
+                'select': "default",
+            },
+            success: function (data) {
+                myChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: data.labels,
+                        datasets: [
+                            {
+                                label: data.label,
+                                data: data.data,
+                                lineTension: 0.2,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        aspectRatio: 1,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        });
+
+        const ctx2 = document.getElementById('myChart2');
+        $.ajax({
+            url: '{% url 'report_expire' %}',
+            type: "GET",
+            data: {
+                'select': "default",
+            },
+            success: function (data) {
+                myChart = new Chart(ctx2, {
+                    type: "line",
+                    data: {
+                        labels: data.labels,
+                        datasets: [
+                            {
+                                label: data.label,
+                                data: data.data,
+                                lineTension: 0.2,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        aspectRatio: 1,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}

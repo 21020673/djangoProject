@@ -1,3 +1,4 @@
+import csv
 import re
 from datetime import date, timedelta
 
@@ -7,7 +8,7 @@ from django import forms
 from django.db.models import Q
 from django.forms import ModelForm
 
-from .models import RegisterData, Cars, Owners, CarSpecs
+from .models import RegisterData, Cars, Owners, CarSpecs, RegisterCenter
 
 
 class CertificateRenewalForm(ModelForm):
@@ -52,7 +53,7 @@ class CertificateForm(ModelForm):
 
     def clean_license_plate(self):
         license_plate = self.cleaned_data['license_plate']
-        pattern = re.compile(r'^[0-9]{2}[A-Z]{1}-[0-9]{5}$')
+        pattern = re.compile(r'^[0-9]{2}[A-Z]-[0-9]{5}$')
         if not pattern.match(license_plate):
             raise forms.ValidationError("License Plate is not valid")
         if Cars.objects.filter(license_plate=license_plate).exists():
@@ -89,3 +90,37 @@ class CertificateForm(ModelForm):
     class Meta:
         model = RegisterData
         fields = ['expiry_date']
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
+
+    def clean_file(self):
+        id_list = []
+        csv_file = self.cleaned_data['file']
+        if not csv_file.name.endswith('.csv'):
+            raise forms.ValidationError('File is not a CSV file')
+        # Read the CSV file
+        try:
+            data = csv_file.read().decode('utf-8').splitlines()
+            reader = csv.reader(data)
+            next(reader)
+            for row in reader:
+                register_center = RegisterCenter.objects.get(id=row[0])
+                car = Cars.objects.get_or_create(license_plate=row[1])[0]
+                car.model_id = row[2]
+                car.save()
+                temp = RegisterData.objects.filter(license_plate__license_plate=row[1])
+                if temp.count() > 0:
+                    temp.delete()
+                owner = Owners.objects.get_or_create(name=row[3], type=row[4], phone=row[5], address=row[6],
+                                                     city_province=row[7])[0]
+                register_data = RegisterData.objects.get_or_create(register_center=register_center,
+                                                                   license_plate=car, owner=owner,
+                                                                   certificate_date=row[8],
+                                                                   expiry_date=row[9])[0]
+                id_list.append(register_data.id)
+        except csv.Error as e:
+            raise forms.ValidationError(e)
+        return id_list
+

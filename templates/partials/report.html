@@ -4,18 +4,13 @@
 
 
 {% block content %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
-
     <div class="lg:flex justify-between items-end">
         <div class="tabs tabs-boxed pb-4">
-            <a href="{% url "report_month" %}" class="tab tab-lg text-base
-                {% if '/month/' in request.path %} tab-active {% endif %}">Month</a>
-            <a href="{% url "report_year" %}" class="tab tab-lg text-base
-                {% if '/year/' in request.path %} tab-active {% endif %}">Year</a>
-            <a href="{% url "report_quarter" %}" class="tab tab-lg text-base
-                {% if '/quarter/' in request.path %} tab-active {% endif %}">Quarter</a>
-            <a href="{% url "report_expire" %}" class="tab tab-lg text-base
-            {% if '/expire/' in request.path %} tab-active {% endif %}">Expire</a>
+            <button value='{% url "report_month" %}' class="tab tab-lg text-base tab-active">Month</button>
+            <button value='{% url "report_year" %}' class="tab tab-lg text-base">Year</button>
+            <button value='{% url "report_quarter" %}' class="tab tab-lg text-base">Quarter</button>
+            <button value='{% url "report_expire" %}' class="tab tab-lg text-base">Expire</button>
+            <button class="btn" id="predict" onclick="predict()">Predict</button>
         </div>
 
         <form method="get">
@@ -23,18 +18,18 @@
                 {#                <label class="label">#}
                 {#                    <span class="label-text">Option</span>#}
                 {#                </label>#}
-            <select class="select w-full max-w-xs" name="select" onchange="this.form.submit()"
-                    {% if not perms.UserManagement.add_user %}disabled{% endif %}>
-                <option value="default">All areas</option>
-                <option disabled>City</option>
-                {% for city in cities %}
-                    <option value="{{ city }}">{{ city }}</option>
-                {% endfor %}
-                <option disabled>Register Center</option>
-                {% for center in register_centers %}
-                    <option value="{{ center }}">Trung tâm {{ center }}</option>
-                {% endfor %}
-            </select>
+                <select class="select w-full max-w-xs" name="select" onchange=""
+                        {% if not perms.UserManagement.add_user %}disabled{% endif %}>
+                    <option value="default">All areas</option>
+                    <option disabled>City</option>
+                    {% for city in cities %}
+                        <option value="{{ city }}">{{ city }}</option>
+                    {% endfor %}
+                    <option disabled>Register Center</option>
+                    {% for center in register_centers %}
+                        <option value="{{ center }}">Trung tâm {{ center }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </form>
     </div>
@@ -42,9 +37,106 @@
     <div class="h-2/3">
         <canvas id="myChart"></canvas>
     </div>
-    {% block graph %}{% endblock %}
     <script>
-        let select = document.querySelector('select');
-        select.value = "{{ select }}";
+        let select = $(".select");
+        select.val("{{ select }}");
+        const ctx = document.getElementById('myChart');
+        let myChart;
+        let url = "{% url 'report_month' %}";
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: {
+                'select': select.val(),
+            },
+            success: function (data) {
+                myChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: data.labels,
+                        datasets: [
+                            {
+                                label: data.label,
+                                data: data.data,
+                                lineTension: 0.2,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        aspectRatio: 3 / 5,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        });
+
+        let tabs = document.querySelectorAll(".tab");
+        tabs.forEach(tab => {
+            tab.addEventListener("click", function () {
+                tabs.forEach(tab => {
+                    tab.classList.remove("tab-active");
+                })
+                this.classList.add("tab-active");
+                url = this.value;
+                getdata()
+                if (tab.textContent === "Month") {
+                    $("#predict").attr("disabled", false);
+                } else {
+                    $("#predict").attr("disabled", true);
+                }
+            })
+        })
+
+        function getdata() {
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: {
+                    'select': select.val(),
+                },
+                success: function (data) {
+                    myChart.data.labels = data.labels;
+                    myChart.data.datasets = [];
+                    myChart.data.datasets.push({
+                        label: data.label,
+                        data: data.data,
+                        lineTension: 0.2,
+                    })
+                    myChart.update();
+                }
+            });
+        }
+
+        select.change(function () {
+            getdata()
+            if ($('.tab-active').text() === 'Month') {
+                $("#predict").attr("disabled", false);
+            } else {
+                $("#predict").attr("disabled", true);
+            }
+        });
+
+        function predict() {
+            $.ajax({
+                url: "{% url 'predict' %}",
+                type: "GET",
+                data: {
+                    'select': select.val(),
+                },
+                success: function (data) {
+                    myChart.data.labels = data.labels;
+                    myChart.data.datasets.push({
+                        label: 'Prediction',
+                        data: data.data,
+                        lineTension: 0.2,
+                        borderColor: '#FF6384',
+                        backgroundColor: '#FFB1C1',
+                    })
+                    myChart.update();
+                }
+            });
+            $("#predict").attr("disabled", true);
+        }
     </script>
 {% endblock %}
