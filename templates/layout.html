@@ -29,12 +29,15 @@
                         <div class="hidden md:flex">
                             <ul class="menu menu-horizontal px-1">
                                 <li class="mx-12" tabindex="0">
-                                    <a href="{% url 'database' %}">
+                                    <a hx-get="{% url 'database' %}"
+                                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
                             <span {% if '/database/' in request.path %}
                                 class="font-semibold" {% endif %}>Database</span>
                                     </a>
                                 </li>
-                                <li class="mx-12"><a href="{% url 'report_month' %}">
+                                <li class="mx-12">
+                                    <a hx-get="{% url 'report_month' %}"
+                                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
                                     <span {% if '/report/' in request.path %}
                                         class="font-semibold" {% endif %}>Report</span></a>
                                 </li>
@@ -67,7 +70,13 @@
                                         </svg>
                                     </label>
                                     <ul tabindex="0"
-                                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-44">
+                                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-44 shadow-lg">
+                                        <div class="border-b border-base-200 text-sm px-4 py-2 relative">
+                                            Dark mode
+                                            <input id="dark-mode-navbar" type="checkbox"
+                                                   class="toggle save-cb-state absolute right-2 bottom-2 save-cb-state"
+                                                   onchange="darken()"/>
+                                        </div>
                                         {% if perms.UserManagement.add_user %}
                                             <li><a href="{% url 'register' %}">Register User</a></li>
                                         {% endif %}
@@ -94,9 +103,11 @@
                             {% endfor %}
                         {% endif %}
                     {% endblock %}
-                    {% block content %}
+                    <div id="main-content">
+                        {% block content %}
 
-                    {% endblock %}
+                        {% endblock %}
+                    </div>
                 </header>
             </main>
             <!------- END MAIN CONTENT ------->
@@ -122,16 +133,16 @@
                 <span class="text-right ml-3">{{ user.username }}</span>
             </div>
 
-            {#            <div class="border-b border-base-200 text-sm px-4 py-2 relative">#}
-            {#                Dark mode#}
-            {#                <input id="dark-mode" type="checkbox"#}
-            {#                       class="toggle save-cb-state absolute right-2 bottom-2 save-cb-state"#}
-            {#                       onchange="darken()"/>#}
-            {#            </div>#}
+            <div class="border-b border-base-200 text-sm px-4 py-2 relative">
+                Dark mode
+                <input id="dark-mode-sidebar" type="checkbox"
+                       class="toggle save-cb-state absolute right-2 bottom-2 save-cb-state"
+                       onchange="darken()"/>
+            </div>
 
             <li tabindex="0">
                 <a href="{% url 'home' %}">
-                    <span {% if '/' in request.path %}
+                    <span {% if request.path == '/' %}
                         class="font-semibold" {% endif %}>Home</span>
                 </a>
             </li>
@@ -156,15 +167,15 @@
 </div>
 <script>
     const container = document.querySelector("html");
-    const switcher = document.getElementById("dark-mode");
+    const switcher_navbar = document.getElementById("dark-mode-navbar");
+    const switcher_sidebar = document.getElementById("dark-mode-navbar");
     if (localStorage.getItem("data-theme")) {
         container.setAttribute("data-theme", localStorage.getItem("data-theme"));
         darken(1)
     }
 
     function darken(r) {
-        const dataTheme = container.getAttribute("data-theme");
-        const switcher = document.getElementById("dark-mode");
+        let dataTheme = container.getAttribute("data-theme");
         let theme_switch;
 
         if (dataTheme === "light") {
@@ -178,12 +189,14 @@
         if (theme_switch) {
             container.setAttribute("data-theme", "dark");
             localStorage.setItem("data-theme", "dark");
-            switcher.checked = true;
+            switcher_navbar.checked = true;
+            switcher_sidebar.checked = true;
             container.classList.add("dark");
         } else {
             container.setAttribute("data-theme", "light");
             localStorage.setItem("data-theme", "light");
-            switcher.checked = false;
+            switcher_navbar.checked = false;
+            switcher_sidebar.checked = false;
             container.classList.remove("dark");
         }
     }

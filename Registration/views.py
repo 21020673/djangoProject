@@ -17,7 +17,7 @@ register_center_list = RegisterCenter.objects.values_list('name', flat=True).dis
 class RegisterDataView(ListView):
     paginate_by = 9
     model = RegisterData
-    template_name = 'register_data.html'
+    template_name = 'partials/register_data.html'
 
     def get_queryset(self):
         if self.request.user.has_perm('UserManagement.add_user'):
@@ -39,7 +39,7 @@ class RegisterDataView(ListView):
 class OwnerView(ListView):
     paginate_by = 9
     model = Owners
-    template_name = 'owner.html'
+    template_name = 'partials/owner.html'
 
     def get_queryset(self):
         if self.request.user.has_perm('UserManagement.add_user'):
@@ -61,7 +61,7 @@ class OwnerView(ListView):
 class CarsView(ListView):
     paginate_by = 9
     model = CarSpecs
-    template_name = 'cars.html'
+    template_name = 'partials/cars.html'
 
     def get_queryset(self):
         cars = CarSpecs.objects.all()
@@ -79,13 +79,13 @@ class CarsView(ListView):
 def owner(request, owner_id):
     owner_data = Owners.objects.filter(id=owner_id)
     context = {'page_obj': owner_data}
-    return render(request, 'owner.html', context)
+    return render(request, 'partials/owner.html', context)
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class CarDetail(DetailView):
     model = CarSpecs
-    template_name = 'car_detail.html'
+    template_name = 'partials/car_detail.html'
     context_object_name = 'car'
 
 
@@ -123,7 +123,7 @@ def report_month(request):
         'label': label,
         'select': query
     }
-    return render(request, 'graph.html', context)
+    return render(request, 'partials/graph.html', context)
 
 
 def report_quarter(request):
@@ -161,7 +161,7 @@ def report_quarter(request):
         'label': label,
         'select': query
     }
-    return render(request, 'graph.html', context)
+    return render(request, 'partials/graph.html', context)
 
 
 def report_year(request):
@@ -194,7 +194,7 @@ def report_year(request):
         'label': label,
         'select': query
     }
-    return render(request, 'graph.html', context)
+    return render(request, 'partials/graph.html', context)
 
 
 def report_expiry(request):
@@ -228,7 +228,7 @@ def report_expiry(request):
         'label': label,
         'select': query
     }
-    return render(request, 'graph.html', context)
+    return render(request, 'partials/graph.html', context)
 
 
 @login_required(login_url='login')
@@ -247,7 +247,7 @@ def renew_certificate(request, certificate_id):
         'form': form,
         'certificate': certificate
     }
-    return render(request, 'register.html', context)
+    return render(request, 'partials/register.html', context)
 
 
 @login_required(login_url='login')
@@ -266,4 +266,4 @@ def register_certificate(request):
     context = {
         'form': form
     }
-    return render(request, 'register.html', context)
+    return render(request, 'partials/register.html', context)

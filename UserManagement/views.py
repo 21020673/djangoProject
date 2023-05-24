@@ -39,7 +39,7 @@ def home(request):
                                                                         'expiry_date__month').annotate(
                        count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
                    }
-    return render(request, 'index.html', context)
+    return render(request, 'partials/index.html', context)
 
 
 def login_request(request):
@@ -59,7 +59,7 @@ def login_request(request):
             messages.error(request, "Invalid username or password.")
     else:
         form = AuthenticationForm()
-    return render(request=request, template_name="login.html", context={"form": form})
+    return render(request=request, template_name="partials/login.html", context={"form": form})
 
 
 def logout_request(request):
@@ -84,7 +84,7 @@ def register(request):
     else:
         form = RegisterForm()
         context = {'form': form}
-        return render(request, 'register.html', context)
+        return render(request, 'partials/register.html', context)
 
 
 def check_username(request):
