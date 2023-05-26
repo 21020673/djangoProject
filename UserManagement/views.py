@@ -17,7 +17,7 @@ from .forms import RegisterForm
 def home(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'index.html')
+    return render(request, 'partials/index.html')
 
 
 def login_request(request):

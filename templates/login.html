@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    {% load tailwind_filters %}
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Login</title>
+</head>
+<body class="text-gray-600 bg-gray-100">
+
+<main class="px-16 overflow-x-auto">
+    <header>
+        <div class="flex flex-col items-center justify-center px-6 py-0 mx-auto h-screen"> <!-- wrapper -->
+            <img class="h-16" src="{% static "logo.png" %}">
+            <h1 class="mb-6 text-2xl font-semibold">Registry Total</h1>
+
+            <!-- form wrapper -->
+            <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md p-10">
+                <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl ">
+                    Login to your account
+                </h1>
+
+                <form class="space-y-4 md:space-y-6" method="post">
+                    {% csrf_token %}
+                    {{ form |crispy }}
+                    <button class=" w-full h-fit btn btn-primary">
+                        <input class="h-fit" type="submit" value="Login">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+</main>

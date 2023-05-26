@@ -1,0 +1,45 @@
+
+
+{% extends "database.html" %}
+
+{% block title %}Register Data{% endblock %}
+
+{% block table %}
+
+    <div class="center-block">
+        <table class="table w-full table-compact md:table-normal">
+            <thead>
+            <tr class="text-neutral-content">
+                <th class="bg-neutral ">Owner</th>
+                <th class="bg-neutral">License Plate</th>
+                <th class="bg-neutral">City</th>
+                <th class="bg-neutral">Effective Period</th>
+                {% if not user.is_superuser %}
+                    <th class="bg-neutral"></th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody class="overflow-auto">
+            {% for car in page_obj %}
+                <tr class="hover">
+                    <td><a href="{% url 'owner' car.owner.id %}">{{ car.owner.name }}</a></td>
+
+                    <td>
+                        <div>
+                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                            <div class="text-sm opacity-50"><a
+                                    href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ car.register_center.city_province }}</td>
+                    <td>{{ car.certificate_date }} - {{ car.expiry_date }}</td>
+                    {% if not user.is_superuser %}
+                        <td><a href="{% url 'renew-certificate' car.id %}" class="btn btn-ghost btn-xs">Renew</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

@@ -39,6 +39,12 @@ class RegisterDataView(ListView):
                                )
         return cars
 
+    def get_template_names(self):
+        if self.request.META.get("HTTP_HX_REQUEST") == 'true':
+            return ['partials/register_data.html']
+        else:
+            return ['register_data.html']
+
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class OwnerView(ListView):
@@ -61,6 +67,11 @@ class OwnerView(ListView):
                                    )
         return owners
 
+    def get_template_names(self):
+        if self.request.META.get("HTTP_HX_REQUEST") == 'true':
+            return ['partials/owner.html']
+        else:
+            return ['owner.html']
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class CarsView(ListView):
@@ -79,6 +90,12 @@ class CarsView(ListView):
                                            )
         return cars
 
+    def get_template_names(self):
+        if self.request.META.get("HTTP_HX_REQUEST") == 'true':
+            return ['partials/cars.html']
+        else:
+            return ['cars.html']
+
 
 @login_required(login_url='login')
 def owner(request, owner_id):
@@ -92,6 +109,12 @@ class CarDetail(DetailView):
     model = CarSpecs
     template_name = 'partials/car_detail.html'
     context_object_name = 'car'
+
+    def get_template_names(self):
+        if self.request.META.get("HTTP_HX_REQUEST") == 'true':
+            return ['partials/car_detail.html']
+        else:
+            return ['car_detail.html']
 
 
 def report_month(request):
@@ -301,7 +324,7 @@ def report(request):
         'register_centers': register_center_list,
         'select': query
     }
-    return render(request, 'report.html', context)
+    return render(request, 'partials/report.html', context)
 
 
 def predict(request):

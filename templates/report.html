@@ -1,3 +1,4 @@
+{% extends "layout.html" %}
 
 {% load static %}
 {% load tailwind_filters %}
@@ -41,7 +42,7 @@
     <script>
         let select = $(".select");
         select.val("{{ select }}");
-        let ctx = document.getElementById('myChart');
+        let ctx_report = document.getElementById('myChart');
         let myChart;
         let url = "{% url 'report_month' %}";
         $.ajax({
@@ -51,7 +52,7 @@
                 'select': select.val(),
             },
             success: function (data) {
-                myChart = new Chart(ctx, {
+                myChart = new Chart(ctx_report, {
                     type: "line",
                     data: {
                         labels: data.labels,
