@@ -7,6 +7,7 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.db.models import Q
 from django.forms import ModelForm
+from django.urls import reverse_lazy
 
 from .models import RegisterData, Cars, Owners, CarSpecs, RegisterCenter
 
@@ -35,8 +36,10 @@ class CertificateForm(ModelForm):
     expiry_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     license_plate = forms.CharField(max_length=9, required=True)
     owner_name = forms.CharField(max_length=100, required=True)
-    make = forms.CharField(max_length=100, required=True)
-    model = forms.CharField(max_length=100, required=True)
+    make_choices = [(make, make) for make in CarSpecs.objects.values_list('make', flat=True).distinct()]
+    make = forms.ChoiceField(choices=make_choices, required=True, widget=forms.Select(
+        attrs={'hx-get': reverse_lazy('get-models'), 'hx-target': '#models_select', 'hx-trigger': 'change'}))
+    model = forms.CharField(required=True, widget=forms.Select(attrs={'id': 'models_select'}))
     type = forms.ChoiceField(choices=[('Individual', 'Individual'), ('Company', 'Company')], required=True)
     address = forms.CharField(max_length=200, required=True)
     city = forms.ChoiceField(choices=[('Hà Nội', 'Hà Nội'), ('Hồ Chí Minh', 'Hồ Chí Minh'), ('Đà Nẵng', 'Đà Nẵng'),
@@ -73,11 +76,18 @@ class CertificateForm(ModelForm):
             raise forms.ValidationError("Phone Number is not valid")
         return phone_number
 
+    def clean_model(self):
+        model = self.cleaned_data['model']
+        if not CarSpecs.objects.filter(model=model).exists():
+            raise forms.ValidationError("Model is not valid")
+        return model
+
     def save(self, commit=True):
         certificate = super().save(commit=False)
         owner = Owners.objects.get_or_create(name=self.cleaned_data["owner_name"], type=self.cleaned_data["type"],
-                                      address=self.cleaned_data["address"], city_province=self.cleaned_data["city"],
-                                      phone=self.cleaned_data["phone_number"])[0]
+                                             address=self.cleaned_data["address"],
+                                             city_province=self.cleaned_data["city"],
+                                             phone=self.cleaned_data["phone_number"])[0]
         car = Cars.objects.create(license_plate=self.cleaned_data["license_plate"], model_id=CarSpecs.objects.get(
             Q(make=self.cleaned_data["make"]) & Q(model=self.cleaned_data["model"])).id)
         certificate.license_plate = car
@@ -123,4 +133,3 @@ class FileUploadForm(forms.Form):
         except csv.Error as e:
             raise forms.ValidationError(e)
         return id_list
-

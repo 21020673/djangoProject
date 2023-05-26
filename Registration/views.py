@@ -22,7 +22,6 @@ register_center_list = RegisterCenter.objects.values_list('name', flat=True).dis
 class RegisterDataView(ListView):
     paginate_by = 9
     model = RegisterData
-    template_name = 'partials/register_data.html'
 
     def get_queryset(self):
         if self.request.user.has_perm('UserManagement.add_user'):
@@ -50,7 +49,6 @@ class RegisterDataView(ListView):
 class OwnerView(ListView):
     paginate_by = 9
     model = Owners
-    template_name = 'partials/owner.html'
 
     def get_queryset(self):
         if self.request.user.has_perm('UserManagement.add_user'):
@@ -73,11 +71,11 @@ class OwnerView(ListView):
         else:
             return ['owner.html']
 
+
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class CarsView(ListView):
     paginate_by = 9
     model = CarSpecs
-    template_name = 'partials/cars.html'
 
     def get_queryset(self):
         cars = CarSpecs.objects.all()
@@ -107,7 +105,6 @@ def owner(request, owner_id):
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class CarDetail(DetailView):
     model = CarSpecs
-    template_name = 'partials/car_detail.html'
     context_object_name = 'car'
 
     def get_template_names(self):
@@ -144,9 +141,9 @@ def report_month(request):
                     count=Count('certificate_date__month')).order_by('certificate_date__year',
                                                                      'certificate_date__month')
     data = json.dumps({
-        'data': [item['count'] for item in number_registered_by_month],
+        'data': [item['count'] for item in number_registered_by_month][-12:],
         'labels': ['T' + str(item['certificate_date__month']) + '-' + str(item['certificate_date__year']) for item in
-                   number_registered_by_month],
+                   number_registered_by_month][-12:],
         'label': label,
     })
     return HttpResponse(data, content_type='application/json')
@@ -225,7 +222,7 @@ def report_expiry(request):
             count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
     else:
         query = RegisterCenter.objects.get(user_id=request.user.id).name
-        label = 'Number of cars registered in ' + query
+        label = 'Number of certificates to expire in ' + query
         number_expired_by_month = RegisterData.objects.filter(register_center__name=query).values(
             'expiry_date__year', 'expiry_date__month').annotate(count=Count('expiry_date__month')).order_by(
             'expiry_date__year', 'expiry_date__month')
@@ -324,7 +321,9 @@ def report(request):
         'register_centers': register_center_list,
         'select': query
     }
-    return render(request, 'partials/report.html', context)
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/report.html', context)
+    return render(request, 'report.html', context)
 
 
 def predict(request):
@@ -334,16 +333,24 @@ def predict(request):
     if query != 'default':
         if query in city_list:
             number_registered_by_month = RegisterData.objects.filter(
-                register_center__city_province=query).values().annotate(count=Count('certificate_date'))
-        elif query in register_center_list:
-            number_registered_by_month = RegisterData.objects.filter(register_center__name=query).values().annotate(
+                register_center__city_province=query).values('certificate_date').annotate(
                 count=Count('certificate_date'))
+        elif query in register_center_list:
+            number_registered_by_month = RegisterData.objects.filter(register_center__name=query).values(
+                'certificate_date').annotate(count=Count('certificate_date'))
     df = pd.DataFrame.from_records(number_registered_by_month).rename({'certificate_date': 'ds', 'count': 'y'}, axis=1)
     m = Prophet(seasonality_mode='multiplicative').fit(df)
     future = m.make_future_dataframe(periods=365)
     forecast = m.predict(future).groupby(pd.Grouper(key='ds', freq='M')).sum().reset_index()
     data = json.dumps({
-        'data': [item['yhat'] for item in forecast.to_dict('records')],
-        'labels': ['T' + str(item['ds'].month) + '-' + str(item['ds'].year) for item in forecast.to_dict('records')],
+        'data': [item['yhat'] for item in forecast.to_dict('records')][-24:],
+        'labels': ['T' + str(item['ds'].month) + '-' + str(item['ds'].year) for item in forecast.to_dict('records')][
+                  -24:],
     })
     return HttpResponse(data, content_type='application/json')
+
+
+def get_models(request):
+    make = request.GET.get('make')
+    models = CarSpecs.objects.filter(make=make).values_list('model', flat=True).distinct()
+    return render(request, 'partials/model_options.html', {'models': models})

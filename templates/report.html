@@ -35,16 +35,15 @@
         </form>
     </div>
 
-    <div class="h-2/3">
-        <canvas id="myChart"></canvas>
+    <div>
+        <canvas id="myChart" height="480" width="600"></canvas>
     </div>
 
     <script>
-        let select = $(".select");
+        var select = $(".select");
         select.val("{{ select }}");
-        let ctx_report = document.getElementById('myChart');
-        let myChart;
-        let url = "{% url 'report_month' %}";
+        var ctx_report = document.getElementById('myChart');
+        var url = "{% url 'report_month' %}";
         $.ajax({
             url: url,
             type: "GET",
@@ -66,14 +65,13 @@
                     },
                     options: {
                         responsive: true,
-                        aspectRatio: 3 / 5,
                         maintainAspectRatio: false
                     }
                 });
             }
         });
 
-        let tabs = document.querySelectorAll(".tab");
+        var tabs = document.querySelectorAll(".tab");
         tabs.forEach(tab => {
             tab.addEventListener("click", function () {
                 tabs.forEach(tab => {

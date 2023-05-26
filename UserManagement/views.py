@@ -4,12 +4,10 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 
-from Registration.models import RegisterData
 from .forms import RegisterForm
 
 
@@ -17,7 +15,9 @@ from .forms import RegisterForm
 def home(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'partials/index.html')
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/index.html')
+    return render(request, 'index.html')
 
 
 def login_request(request):

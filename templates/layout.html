@@ -24,7 +24,8 @@
             {% if user.is_authenticated %}
                 <div> <!-- navbar -->
                     <div class="navbar bg-base-100 max-h-16 relative">
-                        <a class="hidden md:flex px-12" href="{% url 'home' %}">
+                        <a class="hidden md:flex px-12" href hx-get="{% url 'home' %}"
+                                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
                             <img class="h-16" src="{% static "logo.png" %}" alt="">
                             <h1 class="mr-7">RegistryTotal</h1>
                         </a>

@@ -6,11 +6,11 @@
     <div class="py-6"> <!-- wrapper -->
         <div class="md:flex mb-10">
             <div class="md:w-1/2">
-                <canvas id="myChart" class="h-5/6"></canvas>
+                <canvas id="myChart" height="480" width="600"></canvas>
             </div>
 
             <div class="md:w-1/2">
-                <canvas id="myChart2" class="h-5/6"></canvas>
+                <canvas id="myChart2" height="480" width="600"></canvas>
             </div>
         </div>
 
@@ -19,7 +19,7 @@
         <a href="{% url 'upload' %}">Upload file (for admin)</a>
     </div>
     <script>
-        let ctx = document.getElementById('myChart');
+        var ctx = document.getElementById('myChart');
         $.ajax({
             url: '{% url 'report_month' %}',
             type: "GET",
@@ -27,7 +27,7 @@
                 'select': "default",
             },
             success: function (data) {
-                myChart = new Chart(ctx, {
+                new Chart(ctx, {
                     type: "line",
                     data: {
                         labels: data.labels,
@@ -41,14 +41,13 @@
                     },
                     options: {
                         responsive: true,
-                        aspectRatio: 1,
                         maintainAspectRatio: false
                     }
                 });
             }
         });
 
-        const ctx2 = document.getElementById('myChart2');
+        var ctx2 = document.getElementById('myChart2');
         $.ajax({
             url: '{% url 'report_expire' %}',
             type: "GET",
@@ -56,7 +55,7 @@
                 'select': "default",
             },
             success: function (data) {
-                myChart = new Chart(ctx2, {
+                new Chart(ctx2, {
                     type: "line",
                     data: {
                         labels: data.labels,
@@ -70,7 +69,6 @@
                     },
                     options: {
                         responsive: true,
-                        aspectRatio: 1,
                         maintainAspectRatio: false
                     }
                 });
