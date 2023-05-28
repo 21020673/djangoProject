@@ -1,11 +1,13 @@
 import json
 import pandas as pd
+from crispy_forms.utils import render_crispy_form
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.context_processors import csrf
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 from prophet import Prophet
@@ -99,7 +101,9 @@ class CarsView(ListView):
 def owner(request, owner_id):
     owner_data = Owners.objects.filter(id=owner_id)
     context = {'page_obj': owner_data}
-    return render(request, 'partials/owner.html', context)
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/owner.html', context)
+    return render(request, 'owner.html', context)
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
@@ -256,14 +260,21 @@ def renew_certificate(request, certificate_id):
         form = CertificateRenewalForm(request.POST, instance=certificate)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('database')
+        ctx = {}
+        ctx.update(csrf(request))
+        form_html = render_crispy_form(form, context=ctx)
+        return HttpResponse(form_html)
     else:
         form = CertificateRenewalForm(instance=certificate, initial={'register_center': certificate.register_center})
     context = {
         'form': form,
-        'certificate': certificate
+        'owner': certificate.owner.name,
+        'license_plate': certificate.license_plate,
     }
-    return render(request, 'partials/register.html', context)
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/modal.html', context)
+    return redirect('home')
 
 
 @login_required(login_url='login')
@@ -277,12 +288,15 @@ def register_certificate(request):
             form.register_center = RegisterCenter.objects.get(user_id=request.user.id)
             form.save()
             return redirect('home')
+        ctx = {}
+        ctx.update(csrf(request))
+        form_html = render_crispy_form(form, context=ctx)
+        return HttpResponse(form_html)
     else:
         form = CertificateForm()
-    context = {
-        'form': form
-    }
-    return render(request, 'partials/register.html', context)
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/register.html', {'form': form, 'title': 'Register Certificate'})
+    return render(request, 'register.html', {'form': form})
 
 
 @login_required(login_url='login')
@@ -293,12 +307,15 @@ def upload_file(request):
         if form.is_valid():
             request.session['upload_result'] = form.cleaned_data['file']
             return redirect('upload-result')
+        ctx = {}
+        ctx.update(csrf(request))
+        form_html = render_crispy_form(form, context=ctx)
+        return HttpResponse(form_html)
     else:
         form = FileUploadForm()
-    context = {
-        'form': form
-    }
-    return render(request, 'upload.html', context)
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/register.html', {'form': form, 'title': 'Upload File'})
+    return render(request, 'register.html', {'form': form})
 
 
 @login_required(login_url='login')
@@ -308,6 +325,8 @@ def upload_result(request):
     paginator = Paginator(result, 9)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/register_data.html', {'page_obj': page_obj})
     return render(request, 'register_data.html', {'page_obj': page_obj})
 
 
@@ -353,4 +372,6 @@ def predict(request):
 def get_models(request):
     make = request.GET.get('make')
     models = CarSpecs.objects.filter(make=make).values_list('model', flat=True).distinct()
-    return render(request, 'partials/model_options.html', {'models': models})
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/model_options.html', {'models': models})
+    return redirect('home')

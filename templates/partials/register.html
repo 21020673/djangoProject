@@ -1,12 +1,8 @@
-{% extends "layout.html" %}
+<title id="title" hx-swap-oob="true">{{ title }}</title>
+
 {% load tailwind_filters %}
 {% load crispy_forms_tags %}
 
-{% block title %}Register{% endblock %}
-
 {% block content %}
-
-    {#    <h2>Register here</h2>#}
     {% crispy form %}
-
 {% endblock %}

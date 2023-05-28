@@ -14,9 +14,11 @@
             </div>
         </div>
 
-        <a href="{% url 'register-certificate' %}">Register new car (for normal user)</a>
+        <a href hx-get="{% url 'register-certificate' %}" hx-push-url="true" hx-target="#main-content"
+           hx-swap="innerHTML">Register new car (for normal user)</a>
         <br>
-        <a href="{% url 'upload' %}">Upload file (for admin)</a>
+        <a href hx-get="{% url 'upload' %}" hx-push-url="true" hx-target="#main-content"
+           hx-swap="innerHTML">Upload file (for admin)</a>
     </div>
     <script>
         var ctx = document.getElementById('myChart');

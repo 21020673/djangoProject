@@ -37,7 +37,7 @@ def login_request(request):
             messages.error(request, "Invalid username or password.")
     else:
         form = AuthenticationForm()
-    return render(request=request, template_name="partials/login.html", context={"form": form})
+    return render(request=request, template_name="login.html", context={"form": form})
 
 
 def logout_request(request):
@@ -61,8 +61,9 @@ def register(request):
         return HttpResponse(form_html)
     else:
         form = RegisterForm()
-        context = {'form': form}
-        return render(request, 'partials/register.html', context)
+        if request.META.get("HTTP_HX_REQUEST") == 'true':
+            return render(request, 'partials/register.html', {'form': form, 'title': 'Register'})
+        return render(request, 'register.html', {'form': form})
 
 
 def check_username(request):

@@ -3,7 +3,7 @@ import re
 from datetime import date, timedelta
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import HTML, Layout, Field, Div
 from django import forms
 from django.db.models import Q
 from django.forms import ModelForm
@@ -22,7 +22,21 @@ class CertificateRenewalForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
-        self.helper.add_input(Submit('submit', 'Renew'))
+        self.helper.form_id = 'renew-form'
+        self.helper.attrs = {
+            'hx-post': reverse_lazy('renew-certificate', kwargs={'certificate_id': self.instance.id}),
+            'hx-target': '#renew-form',
+            'hx-swap': 'outerHTML'
+        }
+        self.helper.layout = Layout(Field('expiry_date'), Field('register_center'),
+                                    HTML('<button class="btn btn-primary">Renew</button>'),
+                                    )
+
+    def clean_expiry_date(self):
+        expiry_date = self.cleaned_data['expiry_date']
+        if expiry_date - date.today() < timedelta(days=365):
+            raise forms.ValidationError("Expiry Date is not valid")
+        return expiry_date
 
     def save(self, commit=True):
         certificate = super(CertificateRenewalForm, self).save(commit=False)
@@ -51,8 +65,16 @@ class CertificateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
-
-        self.helper.add_input(Submit('submit', 'Register'))
+        self.helper.form_id = 'certificate-form'
+        self.helper.attrs = {
+            'hx-post': reverse_lazy('register-certificate'),
+            'hx-target': '#certificate-form',
+            'hx-swap': 'outerHTML'
+        }
+        self.helper.layout = Layout(Div(Field('license_plate'), Field('expiry_date'), Field('owner_name'),
+                                        Field('make'), Field('model'), Field('type'), Field('address'),
+                                        Field('city'), Field('phone_number'), css_class='md:grid grid-cols-2 gap-x-10'),
+                                    HTML('<button class="btn btn-primary">Submit</button>'))
 
     def clean_license_plate(self):
         license_plate = self.cleaned_data['license_plate']
@@ -103,7 +125,19 @@ class CertificateForm(ModelForm):
 
 
 class FileUploadForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(widget=forms.FileInput(attrs={'accept': '.csv', 'class': 'file-input w-full max-w-md'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'upload-form'
+        self.helper.attrs = {
+            'hx-post': reverse_lazy('upload'),
+            'hx-target': '#upload-form',
+            'hx-swap': 'outerHTML',
+            'enctype': 'multipart/form-data',
+        }
+        self.helper.layout = Layout(Field('file'), HTML('<button class="btn btn-primary">Upload</button>'))
 
     def clean_file(self):
         id_list = []

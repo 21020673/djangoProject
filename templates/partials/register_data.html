@@ -1,3 +1,5 @@
+<title id="title" hx-swap-oob="true">Database</title>
+
 {% extends "partials/database.html" %}
 
 {% block table %}
@@ -28,14 +30,27 @@
                             </div>
                         </div>
                     </td>
-                    <td>{{ car.register_center.city_province }}</td>
+                    <td>
+                        <div>{{ car.register_center }}</div>
+                        <div class="font-bold">{{ car.register_center.city_province }}</div>
+                    </td>
                     <td>{{ car.certificate_date }} - {{ car.expiry_date }}</td>
                     {% if not user.is_superuser %}
-                        <td><a href="{% url 'renew-certificate' car.id %}" class="btn btn-ghost btn-xs">Renew</a>
+                        <td>
+                            <!-- The button to open modal -->
+                            <label for="my-modal-3" class="btn" hx-get="{% url 'renew-certificate' car.id %}"
+                                   hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click" hx-push-url="true"
+                                   hx-indicator="dots">Renew</label>
                         </td>
                     {% endif %}
                 </tr>
             {% endfor %}
         </table>
+    </div>
+    <!-- Put this part before </body> tag -->
+    <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box relative" id="modal-content">
+        </div>
     </div>
 {% endblock %}

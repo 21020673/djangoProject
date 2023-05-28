@@ -1,5 +1,5 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Div, Field
+from crispy_forms.layout import Layout, Div, Field, HTML
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -20,16 +20,16 @@ class RegisterForm(UserCreationForm):
             'hx-swap': 'outerHTML'
         }
         self.helper.layout = Layout(
-            Div(Field('username', ),
+            Div(Field('username'),
                 Field('email', wrapper_class='order-3'),
                 Field('password1', wrapper_class='order-5'),
                 Field('password2', wrapper_class='order-7'),
                 Field('register_center', wrapper_class='order-2'),
                 Field('city', wrapper_class='order-4'),
                 Field('address', wrapper_class='order-6'),
-                css_class='md:grid grid-cols-2 gap-x-10')
+                css_class='md:grid grid-cols-2 gap-x-10'),
+            HTML('<button class="btn btn-primary">Register</button>'),
         )
-        self.helper.add_input(Submit('submit', 'Register'))
 
     register_center = forms.CharField(max_length=100, required=True, widget=forms.TextInput(
         attrs={

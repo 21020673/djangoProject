@@ -13,7 +13,7 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <title>{% block title %} {% endblock %}</title>
+    <title id="title">{% block title %} {% endblock %}</title>
 </head>
 <body class="text-base-content bg-base-200">
 <div class="drawer"> <!-- root container -->
@@ -24,25 +24,26 @@
             {% if user.is_authenticated %}
                 <div> <!-- navbar -->
                     <div class="navbar bg-base-100 max-h-16 relative">
-                        <a class="hidden md:flex px-12" href hx-get="{% url 'home' %}"
-                                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
+                        <a class="hidden md:flex px-12 navbar-tab {% if request.path == '/' %} font-semibold{% endif %}"
+                           href hx-get="{% url 'home' %}" hx-push-url="true" hx-target="#main-content"
+                           hx-swap="innerHTML">
                             <img class="h-16" src="{% static "logo.png" %}" alt="">
                             <h1 class="mr-7">RegistryTotal</h1>
                         </a>
                         <div class="hidden md:flex">
                             <ul class="menu menu-horizontal px-1">
                                 <li class="mx-12" tabindex="0">
-                                    <a hx-get="{% url 'database' %}"
-                                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
-                            <span {% if '/database/' in request.path %}
-                                class="font-semibold" {% endif %}>Database</span>
+                                    <a class="navbar-tab {% if '/database/' in request.path %} font-semibold{% endif %}"
+                                       hx-get="{% url 'database' %}" hx-push-url="true"
+                                       hx-target="#main-content" hx-swap="innerHTML">
+                                        <span>Database</span>
                                     </a>
                                 </li>
                                 <li class="mx-12">
-                                    <a hx-get="{% url 'report' %}"
-                                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
-                                    <span {% if '/report/' in request.path %}
-                                        class="font-semibold" {% endif %}>Report</span></a>
+                                    <a class="navbar-tab{% if '/report/' in request.path %} font-semibold{% endif %}"
+                                       hx-get="{% url 'report' %}" hx-push-url="true" hx-target="#main-content"
+                                       hx-swap="innerHTML">
+                                        <span>Report</span></a>
                                 </li>
                             </ul>
                         </div>
@@ -81,7 +82,8 @@
                                                    onchange="darken()"/>
                                         </div>
                                         {% if perms.UserManagement.add_user %}
-                                            <li><a href="{% url 'register' %}">Register User</a></li>
+                                            <li><a hx-get="{% url 'register' %} " hx-push-url="true"
+                                                   hx-target="#main-content" hx-swap="innerHTML">Register User</a></li>
                                         {% endif %}
                                         <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
                                     </ul>
@@ -96,17 +98,17 @@
             <!------- MAIN CONTENT ------->
             <main class="px-5 md:px-16 py-6 overflow-x-auto">
                 <header>
-                    {% block messages %}
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div id="message"
-                                     class='alert {% if message.tags %}alert-{{ message.tags }}{% endif %}'>
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    {% endblock %}
                     <div id="main-content">
+                        {% block messages %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div id="message"
+                                         class='alert {% if message.tags %}alert-{{ message.tags }}{% endif %}'>
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endblock %}
                         {% block content %}
 
                         {% endblock %}
@@ -144,20 +146,20 @@
             </div>
 
             <li tabindex="0">
-                <a href="{% url 'home' %}">
-                    <span {% if request.path == '/' %}
-                        class="font-semibold" {% endif %}>Home</span>
+                <a class="navbar-tab{% if request.path == '/' %} font-semibold{% endif %}" href="{% url 'home' %}">
+                    <span>Home</span>
                 </a>
             </li>
             <li tabindex="0">
-                <a href="{% url 'database' %}">
-                    <span {% if '/database/' in request.path %}
-                        class="font-semibold" {% endif %}>Database</span>
+                <a class="navbar-tab{% if '/database/' in request.path %} font-semibold{% endif %}"
+                   href="{% url 'database' %}">
+                    <span>Database</span>
                 </a>
             </li>
-            <li><a href="{% url 'report' %}">
-                <span {% if '/report/' in request.path %}
-                    class="font-semibold" {% endif %}>Report</span></a></li>
+            <li><a class="navbar-tab{% if '/report/' in request.path %} font-semibold{% endif %}"
+                   href="{% url 'report' %}">
+                <span>Report</span></a>
+            </li>
             <span class="border-b border-base-200"></span>
 
             {% if perms.UserManagement.add_user %}
@@ -203,14 +205,22 @@
             container.classList.remove("dark");
         }
     }
-</script>
 
-<script>
     let message_ele = document.getElementById("message");
 
     setTimeout(function () {
         message_ele.style.display = "none";
     }, 3000);
+
+    var navbar_tabs = document.querySelectorAll(".navbar-tab");
+    navbar_tabs.forEach(tab => {
+        tab.addEventListener("click", function () {
+            navbar_tabs.forEach(tab => {
+                tab.classList.remove("font-semibold");
+            })
+            this.classList.add("font-semibold");
+        })
+    })
 </script>
 </body>
 </html>
