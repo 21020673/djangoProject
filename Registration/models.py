@@ -40,7 +40,6 @@ class CarSpecs(models.Model):
     fuel_grade = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'car_specs'
 
 
@@ -49,7 +48,6 @@ class Cars(models.Model):
     model = models.ForeignKey(CarSpecs, models.DO_NOTHING, blank=False, null=True)
 
     class Meta:
-        managed = False
         db_table = 'cars'
 
     def __str__(self):
@@ -64,7 +62,6 @@ class Owners(models.Model):
     address = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'owners'
 
     def __str__(self):
@@ -78,7 +75,6 @@ class RegisterCenter(models.Model):
     city_province = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'register_center'
 
     def __str__(self):
@@ -93,5 +89,4 @@ class RegisterData(models.Model):
     license_plate = models.ForeignKey(Cars, models.DO_NOTHING, db_column='license_plate', blank=False)
 
     class Meta:
-        managed = False
         db_table = 'register_data'
