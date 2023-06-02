@@ -3,25 +3,36 @@
 {% block title %}Car{% endblock %}
 
 {% block table %}
-<table class="table table-compact w-full">
-    <thead>
-    <tr>
-        <th class="bg-neutral text-neutral-content">Make</th>
-        <th class="bg-neutral text-neutral-content">Model</th>
-        <th class="bg-neutral text-neutral-content">Year</th>
-        <th class="bg-neutral text-neutral-content">Body Type</th>
-        <th class="bg-neutral text-neutral-content w-40"></th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for car in page_obj %}
-        <tr class="hover">
-            <td>{{ car.make }}</td>
-            <td>{{ car.model }}</td>
-            <td>{{ car.year_from }}</td>
-            <td>{{ car.body_type }}</td>
-            <td><a href="{% url 'car_detail' car.id %}" class="btn btn-ghost btn-xs">View</a></tr>
-    {% endfor %}
-    </tbody>
-</table>
+    <table class="table table-compact w-full">
+        <thead>
+        <tr>
+            <th class="bg-neutral text-neutral-content">Make</th>
+            <th class="bg-neutral text-neutral-content">Model</th>
+            <th class="bg-neutral text-neutral-content">Year</th>
+            <th class="bg-neutral text-neutral-content">Body Type</th>
+{#            <th class="bg-neutral text-neutral-content w-40"></th>#}
+        </tr>
+        </thead>
+        <tbody>
+        {% for car in page_obj %}
+            <tr class="hover">
+                <td>{{ car.make }}</td>
+                <td>{{ car.model }}</td>
+                <td>{{ car.year_from }}</td>
+                <td>{{ car.body_type }}</td>
+{#                <td>#}
+{#                    <button class="btn" onclick="my_modal_3.showModal()">View</button>#}
+{#                                    <a href="{% url 'car_detail' car.id %}" class="btn btn-xs">View</a>#}
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+    <!-- Modal content -->
+    <input type="checkbox" id="my-modal" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box relative" id="modal-content">
+        </div>
+    </div>
 {% endblock %}
+

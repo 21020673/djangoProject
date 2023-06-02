@@ -26,23 +26,23 @@
                     <div class="navbar bg-base-100 max-h-16 relative">
                         <a class="hidden md:flex px-12 navbar-tab {% if request.path == '/' %} font-semibold{% endif %}"
                            href hx-get="{% url 'home' %}" hx-push-url="true" hx-target="#main-content"
-                           hx-swap="innerHTML">
+                           hx-swap="innerHTML" href="{% url 'home' %}">
                             <img class="h-16" src="{% static "logo.png" %}" alt="">
                             <h1 class="mr-7">RegistryTotal</h1>
                         </a>
                         <div class="hidden md:flex">
-                            <ul class="menu menu-horizontal px-1">
+                            <ul class="menu menu-horizontal px-1 pl-2">
                                 <li class="mx-12" tabindex="0">
                                     <a class="navbar-tab {% if '/database/' in request.path %} font-semibold{% endif %}"
                                        hx-get="{% url 'database' %}" hx-push-url="true"
-                                       hx-target="#main-content" hx-swap="innerHTML">
+                                       hx-target="#main-content" hx-swap="innerHTML" href="{% url 'database' %}">
                                         <span>Database</span>
                                     </a>
                                 </li>
                                 <li class="mx-12">
                                     <a class="navbar-tab{% if '/report/' in request.path %} font-semibold{% endif %}"
                                        hx-get="{% url 'report' %}" hx-push-url="true" hx-target="#main-content"
-                                       hx-swap="innerHTML">
+                                       hx-swap="innerHTML" href="{% url 'report' %}">
                                         <span>Report</span></a>
                                 </li>
                             </ul>
@@ -95,6 +95,43 @@
                 </div>
             {% endif %} <!-- end navbar -->
 
+            <script>
+                const container = document.querySelector("html");
+                const switcher_navbar = document.getElementById("dark-mode-navbar");
+                const switcher_sidebar = document.getElementById("dark-mode-navbar");
+                if (localStorage.getItem("data-theme")) {
+                    container.setAttribute("data-theme", localStorage.getItem("data-theme"));
+                    darken(1)
+                }
+
+                function darken(r) {
+                    let dataTheme = container.getAttribute("data-theme");
+                    let theme_switch;
+
+                    if (dataTheme === "light") {
+                        theme_switch = 1
+                    } else {
+                        theme_switch = 0
+                    }
+                    if (r) {
+                        theme_switch = !theme_switch
+                    } //so the oppisite of the theme stored is used when calling this function
+                    if (theme_switch) {
+                        container.setAttribute("data-theme", "dark");
+                        localStorage.setItem("data-theme", "dark");
+                        switcher_navbar.checked = true;
+                        switcher_sidebar.checked = true;
+                        container.classList.add("dark");
+                    } else {
+                        container.setAttribute("data-theme", "light");
+                        localStorage.setItem("data-theme", "light");
+                        switcher_navbar.checked = false;
+                        switcher_sidebar.checked = false;
+                        container.classList.remove("dark");
+                    }
+                }
+            </script>
+
             <!------- MAIN CONTENT ------->
             <main class="px-5 md:px-16 py-6 overflow-x-auto">
                 <header>
@@ -146,17 +183,24 @@
             </div>
 
             <li tabindex="0">
-                <a class="navbar-tab{% if request.path == '/' %} font-semibold{% endif %}" href="{% url 'home' %}">
+                <a class="navbar-tab{% if request.path == '/' %} font-semibold{% endif %}" hx-get="{% url 'home' %}"
+                   hx-push-url="true" hx-target="#main-content"
+                   hx-swap="innerHTML"
+                   href="{% url 'home' %}">
                     <span>Home</span>
                 </a>
             </li>
             <li tabindex="0">
                 <a class="navbar-tab{% if '/database/' in request.path %} font-semibold{% endif %}"
+                   hx-get="{% url 'database' %}" hx-push-url="true"
+                   hx-target="#main-content" hx-swap="innerHTML"
                    href="{% url 'database' %}">
                     <span>Database</span>
                 </a>
             </li>
             <li><a class="navbar-tab{% if '/report/' in request.path %} font-semibold{% endif %}"
+                   hx-get="{% url 'report' %}" hx-push-url="true" hx-target="#main-content"
+                   hx-swap="innerHTML"
                    href="{% url 'report' %}">
                 <span>Report</span></a>
             </li>
@@ -171,41 +215,6 @@
     </div>
 </div>
 <script>
-    const container = document.querySelector("html");
-    const switcher_navbar = document.getElementById("dark-mode-navbar");
-    const switcher_sidebar = document.getElementById("dark-mode-navbar");
-    if (localStorage.getItem("data-theme")) {
-        container.setAttribute("data-theme", localStorage.getItem("data-theme"));
-        darken(1)
-    }
-
-    function darken(r) {
-        let dataTheme = container.getAttribute("data-theme");
-        let theme_switch;
-
-        if (dataTheme === "light") {
-            theme_switch = 1
-        } else {
-            theme_switch = 0
-        }
-        if (r) {
-            theme_switch = !theme_switch
-        } //so the oppisite of the theme stored is used when calling this function
-        if (theme_switch) {
-            container.setAttribute("data-theme", "dark");
-            localStorage.setItem("data-theme", "dark");
-            switcher_navbar.checked = true;
-            switcher_sidebar.checked = true;
-            container.classList.add("dark");
-        } else {
-            container.setAttribute("data-theme", "light");
-            localStorage.setItem("data-theme", "light");
-            switcher_navbar.checked = false;
-            switcher_sidebar.checked = false;
-            container.classList.remove("dark");
-        }
-    }
-
     let message_ele = document.getElementById("message");
 
     setTimeout(function () {
@@ -221,6 +230,7 @@
             this.classList.add("font-semibold");
         })
     })
+
 </script>
 </body>
 </html>

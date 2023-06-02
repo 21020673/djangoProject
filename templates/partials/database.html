@@ -12,6 +12,7 @@
                    class="tab tab-lg text-base">Car</a>
             </div>
 
+
             <form hx-get hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
                 <div class="form-control">
                     <div class="input-group">
@@ -27,77 +28,6 @@
                 </div>
             </form>
 
-
-            {#            <div class="pagination mt-10">#}
-            {#                <div class="step-links btn-group">#}
-            {#                    {% if page_obj.has_previous %}#}
-            {#                        <button class="btn"><a href="?{% url_replace request 'page' 1 %}">#}
-            {#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-            {#                                 stroke="currentColor" class="w-6 h-6">#}
-            {#                                <path stroke-linecap="round" stroke-linejoin="round"#}
-            {#                                      d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>#}
-            {#                            </svg>#}
-            {##}
-            {#                        </a></button>#}
-            {#                        <button class="btn"><a href="?{% url_replace request 'page' page_obj.previous_page_number %}">#}
-            {#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-            {#                                 stroke="currentColor" class="w-6 h-6">#}
-            {#                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>#}
-            {#                            </svg>#}
-            {#                        </a></button>#}
-            {#                    {% else %}#}
-            {#                        <button class="btn" disabled>#}
-            {#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-            {#                                 stroke="currentColor" class="w-6 h-6">#}
-            {#                                <path stroke-linecap="round" stroke-linejoin="round"#}
-            {#                                      d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>#}
-            {#                            </svg>#}
-            {#                        </button>#}
-            {#                        <button class="btn" disabled>#}
-            {#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-            {#                                 stroke="currentColor" class="w-6 h-6">#}
-            {#                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>#}
-            {#                            </svg>#}
-            {#                        </button>#}
-            {#                    {% endif %}#}
-            {##}
-            {#                    <button class="btn btn-active">#}
-            {#                        <span>#}
-            {#                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
-            {#                            </span>#}
-            {#                    </button>#}
-            {##}
-            {#                    {% if page_obj.has_next %}#}
-            {#                        <button class="btn"><a href="?{% url_replace request 'page' page_obj.next_page_number %}">#}
-            {#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-            {#                                 stroke="currentColor" class="w-6 h-6">#}
-            {#                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>#}
-            {#                            </svg>#}
-            {#                        </a></button>#}
-            {#                        <button class="btn"><a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">#}
-            {#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-            {#                                 stroke="currentColor" class="w-6 h-6">#}
-            {#                                <path stroke-linecap="round" stroke-linejoin="round"#}
-            {#                                      d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>#}
-            {#                            </svg>#}
-            {#                        </a></button>#}
-            {#                    {% else %}#}
-            {#                        <button class="btn" disabled>#}
-            {#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-            {#                                 stroke="currentColor" class="w-6 h-6">#}
-            {#                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>#}
-            {#                            </svg>#}
-            {#                        </button>#}
-            {#                        <button class="btn" disabled>#}
-            {#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-            {#                                 stroke="currentColor" class="w-6 h-6">#}
-            {#                                <path stroke-linecap="round" stroke-linejoin="round"#}
-            {#                                      d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>#}
-            {#                            </svg>#}
-            {#                        </button>#}
-            {#                    {% endif %}#}
-            {#                </div>#}
-            {#            </div>#}
         </div>
         <div class="overflow-auto">
             {% block table %}{% endblock %}
