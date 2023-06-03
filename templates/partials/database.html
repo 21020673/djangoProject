@@ -5,7 +5,7 @@
         <div class="lg:flex justify-between items-baseline">
             <div class="tabs tabs-boxed pb-4">
                 <a hx-get="{% url "database" %}" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
-                   class="tab tab-lg text-base">General</a>
+                   class="tab tab-lg text-base tab-active">General</a>
                 <a hx-get="{% url "owner" %}" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
                    class="tab tab-lg text-base">Owner</a>
                 <a hx-get="{% url "cars" %}" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
@@ -108,4 +108,6 @@
             </div>
         </div>
     </div>
+
+
 {% endblock %}
