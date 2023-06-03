@@ -25,7 +25,7 @@
                 <div> <!-- navbar -->
                     <div class="navbar bg-base-100 max-h-16 relative">
                         <a class="hidden md:flex px-12 navbar-tab {% if request.path == '/' %} font-semibold{% endif %}"
-                           href hx-get="{% url 'home' %}" hx-push-url="true" hx-target="#main-content"
+                           hx-get="{% url 'home' %}" hx-push-url="true" hx-target="#main-content"
                            hx-swap="innerHTML" href="{% url 'home' %}">
                             <img class="h-16" src="{% static "logo.png" %}" alt="">
                             <h1 class="mr-7">RegistryTotal</h1>
@@ -82,8 +82,9 @@
                                                    onchange="darken()"/>
                                         </div>
                                         {% if perms.UserManagement.add_user %}
-                                            <li><a hx-get="{% url 'register' %} " hx-push-url="true"
-                                                   hx-target="#main-content" hx-swap="innerHTML">Register User</a></li>
+                                            <li><a hx-get="{% url 'register' %}" hx-push-url="true"
+                                                   hx-target="#main-content" hx-swap="innerHTML"
+                                                   href="{% url 'register' %}">Register User</a></li>
                                         {% endif %}
                                         <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
                                     </ul>

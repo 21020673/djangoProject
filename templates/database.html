@@ -1,21 +1,22 @@
 {% extends "layout.html" %}
 
-{% load pagination_tags %}
-
 {% block title %}Database{% endblock %}
 {% block content %}
     <div class="overflow-hidden"> <!-- wrapper -->
         <div class="lg:flex justify-between items-baseline">
             <div class="tabs tabs-boxed pb-4">
-                <a hx-get="{% url "database" %}" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
+                <a href="{% url "database" %}" hx-get="{% url "database" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
+                   hx-select="#div-table"
                    class="tab tab-lg text-base{% if '/register_data/' in request.path %} tab-active {% endif %}">General</a>
-                <a hx-get="{% url "owner" %}" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
+                <a href="{% url "owner" %}" hx-get="{% url "owner" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
+                   hx-select="#div-table"
                    class="tab tab-lg text-base{% if '/owner/' in request.path %} tab-active {% endif %}">Owner</a>
-                <a hx-get="{% url "cars" %}" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
+                <a href="{% url "cars" %}" hx-get="{% url "cars" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
+                   hx-select="#div-table"
                    class="tab tab-lg text-base{% if '/cars/' in request.path %} tab-active {% endif %}">Car</a>
             </div>
 
-            <form hx-get hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
+            <form hx-get hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML" hx-select="#div-table">
                 <div class="form-control">
                     <div class="input-group">
                         <input name="search" type="text" placeholder="Search…" class="input input-bordered w-80 mb-4"/>
@@ -29,89 +30,26 @@
                     </div>
                 </div>
             </form>
-        </div>
-        <div class="overflow-auto">
-            {% block table %}{% endblock %}
-        </div>
-        <div class="mt-10">
-            <div class="pagination">
-                <div class="step-links btn-group">
-                    {% if page_obj.has_previous %}
-                        <button class="btn"><a hx-get="?{% url_replace request 'page' 1 %}" hx-push-url="true"
-                                               hx-target="#main-content" hx-swap="innerHTML">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>
-                            </svg>
-
-                        </a></button>
-                        <button class="btn"><a hx-get="?{% url_replace request 'page' page_obj.previous_page_number %}"
-                                               hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-                            </svg>
-                        </a></button>
-                    {% else %}
-                        <button class="btn" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>
-                            </svg>
-                        </button>
-                        <button class="btn" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-                            </svg>
-                        </button>
-                    {% endif %}
-
-                    <button class="btn btn-active">
-                        <span class="hidden md:block">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                        <span class="md:hidden w-6">{{ page_obj.number }}</span>
-                    </button>
-
-                    {% if page_obj.has_next %}
-                        <button class="btn"><a hx-get="?{% url_replace request 'page' page_obj.next_page_number %}"
-                                               hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                            </svg>
-                        </a></button>
-                        <button class="btn"><a hx-get="?{% url_replace request 'page' page_obj.paginator.num_pages %}"
-                                               hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>
-                            </svg>
-                        </a></button>
-                    {% else %}
-                        <button class="btn" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                            </svg>
-                        </button>
-                        <button class="btn" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>
-                            </svg>
-                        </button>
-                    {% endif %}
-                </div>
+            <div>
+                <span class="label-text">Filter</span>
+                <select class="select select-bordered select-sm" name="sort" hx-get="{% url "database" %}" hx-push-url="true"
+                        hx-target="#div-table"
+                        hx-swap="outerHTML" hx-select="#div-table">
+                    <option selected>All</option>
+                    <option value="month">Registered last month</option>
+                    <option value="quarter">Registered last quarter</option>
+                    <option value="year">Registered last year</option>
+                    <option value="expire">Expiring this month</option>
+                </select>
             </div>
+        </div>
+        <div class="overflow-auto" id="div-table">
+            {% block table %}{% endblock %}
         </div>
     </div>
 
     <script>
-    var tabs = document.querySelectorAll(".tab");
+        var tabs = document.querySelectorAll(".tab");
         tabs.forEach(tab => {
             tab.addEventListener("click", function () {
                 tabs.forEach(tab => {

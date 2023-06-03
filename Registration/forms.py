@@ -36,6 +36,8 @@ class CertificateRenewalForm(ModelForm):
         expiry_date = self.cleaned_data['expiry_date']
         if expiry_date - date.today() < timedelta(days=365):
             raise forms.ValidationError("Expiry Date is not valid")
+        if expiry_date <= self.instance.expiry_date:
+            raise forms.ValidationError("Expiry Date earlier than current expiry date")
         return expiry_date
 
     def save(self, commit=True):
@@ -52,7 +54,8 @@ class CertificateForm(ModelForm):
     owner_name = forms.CharField(max_length=100, required=True)
     make_choices = [(make, make) for make in CarSpecs.objects.values_list('make', flat=True).distinct()]
     make = forms.ChoiceField(choices=make_choices, required=True, widget=forms.Select(
-        attrs={'hx-get': reverse_lazy('get-models'), 'hx-target': '#models_select', 'hx-trigger': 'change', 'hx-swap': 'innerHTML'}))
+        attrs={'hx-get': reverse_lazy('get-models'), 'hx-target': '#models_select', 'hx-trigger': 'change',
+               'hx-swap': 'innerHTML'}))
     model = forms.CharField(required=True, widget=forms.Select(attrs={'id': 'models_select'}))
     type = forms.ChoiceField(choices=[('Individual', 'Individual'), ('Company', 'Company')], required=True)
     address = forms.CharField(max_length=200, required=True)
@@ -76,11 +79,10 @@ class CertificateForm(ModelForm):
                                         Field('city'), Field('phone_number'), css_class='md:grid grid-cols-2 gap-x-10'),
                                     HTML('<button class="btn btn-primary">Submit</button>'))
 
-        #help text
+        # help text
         self.fields['license_plate'].help_text = "Format: 00A-0000"
         self.fields['address'].help_text = "Format: [house number] [street], [ward], [district], [city]"
         self.fields['owner_name'].help_text = "Format: [family name] [middle name] [given name]"
-
 
     def clean_license_plate(self):
         license_plate = self.cleaned_data['license_plate']

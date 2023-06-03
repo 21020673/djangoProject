@@ -1,3 +1,5 @@
+from datetime import date
+
 from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
 from crispy_forms.utils import render_crispy_form
 from django.contrib import messages
@@ -9,15 +11,22 @@ from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 
 from .forms import RegisterForm
+from Registration.models import RegisterData
 
 
 # Create your views here.
 def home(request):
     if not request.user.is_authenticated:
         return redirect('login')
+    context = {'list_register': RegisterData.objects.filter(certificate_date__year=date.today().year,
+                                                            certificate_date__month=date.today().month),
+
+               'list_expired': RegisterData.objects.filter(expiry_date__year=date.today().year,
+                                                           expiry_date__month=date.today().month),
+               }
     if request.META.get("HTTP_HX_REQUEST") == 'true':
-        return render(request, 'partials/index.html')
-    return render(request, 'index.html')
+        return render(request, 'partials/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def login_request(request):

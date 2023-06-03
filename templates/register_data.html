@@ -1,5 +1,7 @@
 {% extends "database.html" %}
 
+{% load pagination_tags %}
+
 {% block table %}
 
     <div class="center-block">
@@ -16,34 +18,108 @@
             </tr>
             </thead>
             <tbody class="overflow-auto">
-            {% for car in page_obj %}
+            {% for row in page_obj %}
                 <tr class="hover">
-                    <td><a href="{% url 'owner' car.owner.id %}">{{ car.owner.name }}</a></td>
+                    <td><a href="{% url 'owner' row.owner.id %}">{{ row.owner.name }}</a></td>
 
                     <td>
                         <div>
-                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                            <div class="font-bold">{{ row.license_plate.license_plate }}</div>
                             <div class="text-sm opacity-50"><a
-                                    href="{% url 'car_detail' car.license_plate.model.id %}">{{ car.license_plate.model.make }} {{ car.license_plate.model.model }}</a>
+                                    href="{% url 'car_detail' row.license_plate.model.id %}">{{ row.license_plate.model.make }} {{ row.license_plate.model.model }}</a>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <div>{{ car.register_center }}</div>
-                        <div class="font-bold">{{ car.register_center.city_province }}</div>
+                        <div>{{ row.register_center }}</div>
+                        <div class="font-bold">{{ row.register_center.city_province }}</div>
                     </td>
-                    <td>{{ car.certificate_date }} - {{ car.expiry_date }}</td>
+                    <td>{{ row.certificate_date }} - {{ row.expiry_date }}</td>
                     {% if not user.is_superuser %}
                         <td>
                             <!-- The button to open modal -->
-                            <label for="my-modal-3" class="btn" hx-get="{% url 'renew-certificate' car.id %}"
-                                   hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click" hx-push-url="true"
-                                   hx-indicator="dots">Renew</label>
+                            <label for="my-modal-3" class="btn" hx-get="{% url 'renew-certificate' row.id %}"
+                                   hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click" hx-push-url="true">Renew</label>
                         </td>
                     {% endif %}
                 </tr>
             {% endfor %}
         </table>
+    </div>
+    <div class="mt-10">
+        <div class="pagination">
+            <div class="step-links btn-group">
+                {% if page_obj.has_previous %}
+                    <a class="btn" hx-get="?{% url_replace request 'page' 1 %}" hx-push-url="true"
+                       hx-target="#main-content" hx-swap="innerHTML">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>
+                        </svg>
+
+                    </a>
+                    <a class="btn" hx-get="?{% url_replace request 'page' page_obj.previous_page_number %}"
+                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                        </svg>
+                    </a>
+                {% else %}
+                    <button class="btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>
+                        </svg>
+                    </button>
+                    <button class="btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                        </svg>
+                    </button>
+                {% endif %}
+
+                <button class="btn btn-active">
+                    <span class="hidden md:block">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    <span class="md:hidden w-6">{{ page_obj.number }}</span>
+                </button>
+
+                {% if page_obj.has_next %}
+                    <a class="btn" hx-get="?{% url_replace request 'page' page_obj.next_page_number %}"
+                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                        </svg>
+                    </a>
+                    <a class="btn" hx-get="?{% url_replace request 'page' page_obj.paginator.num_pages %}"
+                       hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>
+                        </svg>
+                    </a>
+                {% else %}
+                    <button class="btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                        </svg>
+                    </button>
+                    <button class="btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>
+                        </svg>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
     </div>
     <!-- Modal content -->
     <input type="checkbox" id="my-modal-3" class="modal-toggle"/>

@@ -1,6 +1,9 @@
 import json
+from datetime import date
+
 import pandas as pd
 from crispy_forms.utils import render_crispy_form
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
@@ -22,23 +25,33 @@ register_center_list = RegisterCenter.objects.values_list('name', flat=True).dis
 # Create your views here.
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class RegisterDataView(ListView):
-    paginate_by = 9
+    paginate_by = 10
     model = RegisterData
 
     def get_queryset(self):
         if self.request.user.has_perm('UserManagement.add_user'):
-            cars = RegisterData.objects.all()
+            objects = RegisterData.objects.all()
         else:
-            cars = RegisterData.objects.filter(register_center__user_id=self.request.user.id)
+            objects = RegisterData.objects.filter(register_center__user_id=self.request.user.id)
         if self.request.GET.get('search'):
             search_item = self.request.GET.get('search')
-            cars = cars.filter(Q(owner__name__icontains=search_item) |
-                               Q(license_plate__license_plate__icontains=search_item) |
-                               Q(license_plate__model__make__icontains=search_item) |
-                               Q(license_plate__model__model__icontains=search_item) |
-                               Q(register_center__city_province__icontains=search_item)
-                               )
-        return cars
+            objects = objects.filter(Q(owner__name__icontains=search_item) |
+                                     Q(license_plate__license_plate__icontains=search_item) |
+                                     Q(license_plate__model__make__icontains=search_item) |
+                                     Q(license_plate__model__model__icontains=search_item) |
+                                     Q(register_center__city_province__icontains=search_item)
+                                     )
+        ordering = self.request.GET.get('sort')
+        if ordering == 'month':
+            objects = objects.filter(certificate_date__year=date.today().year, certificate_date__month=date.today().month)
+        elif ordering == 'quarter':
+            objects = objects.filter(certificate_date__year=date.today().year,
+                                     certificate_date__month__gte=date.today().month - 3)
+        elif ordering == 'year':
+            objects = objects.filter(certificate_date__year=date.today().year)
+        elif ordering == 'expire':
+            objects = objects.filter(expiry_date__year=date.today().year, expiry_date__month=date.today().month)
+        return objects
 
     def get_template_names(self):
         if self.request.META.get("HTTP_HX_REQUEST") == 'true':
@@ -49,7 +62,7 @@ class RegisterDataView(ListView):
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class OwnerView(ListView):
-    paginate_by = 9
+    paginate_by = 10
     model = Owners
 
     def get_queryset(self):
@@ -76,7 +89,7 @@ class OwnerView(ListView):
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class CarsView(ListView):
-    paginate_by = 9
+    paginate_by = 10
     model = CarSpecs
 
     def get_queryset(self):
@@ -221,19 +234,19 @@ def report_year(request):
 
 def report_expiry(request):
     if request.user.has_perm('UserManagement.add_user'):
-        label = 'Number of certificates to expire in all areas'
+        label = 'Number of certificates expiring in all areas'
         number_expired_by_month = RegisterData.objects.values('expiry_date__year', 'expiry_date__month').annotate(
             count=Count('expiry_date__month')).order_by('expiry_date__year', 'expiry_date__month')
     else:
         query = RegisterCenter.objects.get(user_id=request.user.id).name
-        label = 'Number of certificates to expire in ' + query
+        label = 'Number of certificates expiring in ' + query
         number_expired_by_month = RegisterData.objects.filter(register_center__name=query).values(
             'expiry_date__year', 'expiry_date__month').annotate(count=Count('expiry_date__month')).order_by(
             'expiry_date__year', 'expiry_date__month')
     if request.GET.get('select'):
         query = request.GET.get('select')
         if query != 'default':
-            label = 'Number of certificates to expire in ' + query
+            label = 'Number of certificates expiring in ' + query
             if query in city_list:
                 number_expired_by_month = RegisterData.objects.filter(register_center__city_province=query).values(
                     'expiry_date__year', 'expiry_date__month').annotate(
@@ -260,13 +273,14 @@ def renew_certificate(request, certificate_id):
         form = CertificateRenewalForm(request.POST, instance=certificate)
         if form.is_valid():
             form.save()
-            return redirect('database')
+            messages.success(request, 'Certificate renewed successfully')
+            return HttpResponse(status=204)
         ctx = {}
         ctx.update(csrf(request))
         form_html = render_crispy_form(form, context=ctx)
         return HttpResponse(form_html)
     else:
-        form = CertificateRenewalForm(instance=certificate, initial={'register_center': certificate.register_center})
+        form = CertificateRenewalForm(instance=certificate)
     context = {
         'form': form,
         'owner': certificate.owner.name,
@@ -287,6 +301,7 @@ def register_certificate(request):
             form = form.save(commit=False)
             form.register_center = RegisterCenter.objects.get(user_id=request.user.id)
             form.save()
+            messages.success(request, 'Certificate registered successfully')
             return redirect('home')
         ctx = {}
         ctx.update(csrf(request))
@@ -306,6 +321,7 @@ def upload_file(request):
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             request.session['upload_result'] = form.cleaned_data['file']
+            messages.success(request, 'File uploaded successfully')
             return redirect('upload-result')
         ctx = {}
         ctx.update(csrf(request))
@@ -322,7 +338,7 @@ def upload_file(request):
 @permission_required('UserManagement.add_user', raise_exception=True)
 def upload_result(request):
     result = RegisterData.objects.filter(id__in=request.session['upload_result'])
-    paginator = Paginator(result, 9)
+    paginator = Paginator(result, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     if request.META.get("HTTP_HX_REQUEST") == 'true':

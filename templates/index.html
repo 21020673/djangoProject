@@ -11,31 +11,77 @@
                         <h2 class="card-title">Welcome, {{ user.username }}</h2>
 
                         <div class="card-actions mt-10">
-                            <button class="btn btn-primary">Register new car</button>
-{#                            <button class="btn btn-primary">Upload file (for admin)</button>#}
+                            <a class="btn btn-primary">Register new car</a>
+                            {#                            <button class="btn btn-primary">Upload file (for admin)</button>#}
                         </div>
                     </div>
                 </div>
                 <div class="card bg-base-100 h-60 mt-10">
                     <div class="card-body">
-                        <h2 class="card-title">Whatever</h2>
+                        <h2 class="card-title"><a class="link link-hover" href="database/register_data/?sort=month"
+                                                  hx-get="database/register_data/?sort=month" hx-push-url="true"
+                                                  hx-target="#main-content" hx-swap="innerHTML">Cars registered this
+                            month</a></h2>
+                        <table class="table w-full table-compact md:table-normal">
+                            <thead>
+                            <tr class="text-neutral-content">
+                                <th class="bg-neutral ">Owner</th>
+                                <th class="bg-neutral">License Plate</th>
+                            </tr>
+                            </thead>
+                            <tbody class="overflow-auto">
+                            {% for car in list_register|slice:5 %}
+                                <tr class="hover">
+                                    <td>{{ car.owner.name }}</td>
 
+                                    <td>
+                                        <div>
+                                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="col-span-4 mx-5 ">
                 <div class="">
-                    <canvas id="myChart" height="480" width="600"></canvas>
+                    <canvas id="myChart1" height="240"></canvas>
                 </div>
 
                 <div class="mt-10">
-                    <canvas id="myChart2" height="480" width="600"></canvas>
+                    <canvas id="myChart2" height="240"></canvas>
                 </div>
             </div>
             <div class="col-span-2">
                 <div class="card bg-base-100 h-60">
                     <div class="card-body">
-                        <h2 class="card-title">Whatever</h2>
+                        <h2 class="card-title">
+                            <a class="link link-hover" href="database/register_data/?sort=expire"
+                               hx-get="database/register_data/?sort=expire" hx-push-url="true" hx-target="#main-content"
+                               hx-swap="innerHTML">Certificates expiring
+                                this month</a></h2>
+                        <table class="table w-full table-compact md:table-normal">
+                            <thead>
+                            <tr class="text-neutral-content">
+                                <th class="bg-neutral ">Owner</th>
+                                <th class="bg-neutral">License Plate</th>
+                            </tr>
+                            </thead>
+                            <tbody class="overflow-auto">
+                            {% for car in list_expired|slice:5 %}
+                                <tr class="hover">
+                                    <td>{{ car.owner.name }}</td>
+
+                                    <td>
+                                        <div>
+                                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
             </div>
@@ -51,7 +97,7 @@
            hx-swap="innerHTML">Upload file (for admin)</a>
     </div>
     <script>
-        var ctx = document.getElementById('myChart');
+        var ctx = document.getElementById('myChart1');
         $.ajax({
             url: '{% url 'report_month' %}',
             type: "GET",
