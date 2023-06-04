@@ -27,6 +27,7 @@
 
         <div class="overflow-x-hidden">
             {% if user.is_authenticated %}
+
                 <div> <!-- navbar -->
                     <div class="navbar bg-base-100 max-h-16 relative">
                         <a class="hidden md:flex px-12 navbar-tab {% if request.path == '/' %} font-semibold{% endif %}"
@@ -35,16 +36,16 @@
                             <img class="h-16" src="{% static "logo.png" %}" alt="">
                             <h1 class="absolute left-28 pl-2">RegistryTotal</h1>
                         </a>
-                        <div class="hidden md:flex ml-28">
+                        <div class="hidden md:flex ml-20 lg:ml-28">
                             <ul class="menu menu-horizontal px-1 pl-2">
-                                <li class="mx-12" tabindex="0">
+                                <li class="mx-4 lg:mx-12" tabindex="0">
                                     <a class="navbar-tab {% if '/database/' in request.path %} font-semibold{% endif %}"
                                        hx-get="{% url 'database' %}" hx-push-url="true"
                                        hx-target="#main-content" hx-swap="innerHTML" href="{% url 'database' %}">
                                         <span>Database</span>
                                     </a>
                                 </li>
-                                <li class="mx-12">
+                                <li class="mx-4 lg:mx-12">
                                     <a class="navbar-tab{% if '/report/' in request.path %} font-semibold{% endif %}"
                                        hx-get="{% url 'report' %}" hx-push-url="true" hx-target="#main-content"
                                        hx-swap="innerHTML" href="{% url 'report' %}">
@@ -147,9 +148,9 @@
                                 {% for message in messages %}
                                     <div id="message"
                                          class='z-10 fixed bottom-5 left-5 flex items-center w-full max-w-sm p-4 mb-4 text-gray-500 bg-base-100 rounded-lg shadow-xl
-                                                                  alert {% if message.tags %}alert-{{ message.tags }}{% endif %}'>
+                          alert {% if message.tags %}alert-{{ message.tags }}{% endif %}'>
                                         {{ message }}
-                                        {% if message.tag == 'success' %}
+                                        {% if message.tags == 'success' %}
                                             <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
                                                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
                                                      viewBox="0 0 20 20"
@@ -160,7 +161,7 @@
                                                 </svg>
                                                 <span class="sr-only">Check icon</span>
                                             </div>
-                                        {% elif message.tag == 'error' %}
+                                        {% elif message.tags == 'error' %}
                                             <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
                                                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
                                                      viewBox="0 0 20 20"
@@ -176,10 +177,6 @@
                                 {% endfor %}
                             {% endif %}
                         {% endblock %}
-
-                        {#                        <section id="message" hx-swap-oob="true" hx-swap="innerHTML">#}
-                        {#                            {% include 'partials/toast.html' %}#}
-                        {#                        </section>#}
 
                         {% block content %}
 
