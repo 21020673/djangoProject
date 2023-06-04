@@ -274,7 +274,7 @@ def renew_certificate(request, certificate_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Certificate renewed successfully')
-            return HttpResponse(status=204)
+            return HttpResponse(status=204, headers={'HX-Trigger': 'reload'})
         ctx = {}
         ctx.update(csrf(request))
         form_html = render_crispy_form(form, context=ctx)

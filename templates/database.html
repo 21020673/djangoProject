@@ -6,7 +6,7 @@
         <div class="lg:flex justify-between items-baseline">
             <div class="tabs tabs-boxed pb-4">
                 <a href="{% url "database" %}" hx-get="{% url "database" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
-                   hx-select="#div-table"
+                   hx-select="#div-table" hx-trigger="reload from:body"
                    class="tab tab-lg text-base{% if '/register_data/' in request.path %} tab-active {% endif %}">General</a>
                 <a href="{% url "owner" %}" hx-get="{% url "owner" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
                    hx-select="#div-table"

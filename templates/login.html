@@ -36,7 +36,8 @@
 
                 <form class="space-y-4 md:space-y-6" method="post">
                     {% csrf_token %}
-                    {{ form |crispy }}
+                    {{ form.username|as_crispy_field }}
+                    {{ form.password|as_crispy_field }}
                     <button class=" w-full h-fit btn btn-primary">
                         <input class="h-fit" type="submit" value="Login">
                     </button>
