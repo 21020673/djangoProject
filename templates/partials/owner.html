@@ -8,10 +8,10 @@
     <table class="table table-compact w-full">
         <thead>
         <tr>
-            <th class="bg-neutral text-neutral-content">Name</th>
-            <th class="bg-neutral text-neutral-content">Type</th>
-            <th class="bg-neutral text-neutral-content">Phone</th>
-            <th class="bg-neutral text-neutral-content">Address</th>
+            <th class="bg-base-300 text-base-content">Name</th>
+            <th class="bg-base-300 text-base-content">Type</th>
+            <th class="bg-base-300 text-base-content">Phone</th>
+            <th class="bg-base-300 text-base-content">Address</th>
         </tr>
         </thead>
         <tbody>
@@ -31,7 +31,7 @@
         </tbody>
     </table>
     <div class="mt-10">
-        <div class="pagination">
+        <div class="pagination mb-6">
             <div class="step-links btn-group">
                 {% if page_obj.has_previous %}
                     <a class="btn" hx-get="?{% url_replace request 'page' 1 %}" hx-push-url="true"

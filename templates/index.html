@@ -3,20 +3,96 @@
 {% block title %}RegistryTotal{% endblock %}
 
 {% block content %}
-    <div class="py-6"> <!-- wrapper -->
-        <div class="md:grid grid-cols-8 mb-10"> <!-- grid wrapper -->
-            <div class="col-span-2">
-                <div class="card bg-base-100 h-50">
+    <div class="mt-2"> <!-- wrapper -->
+        <div class="md:grid grid-cols-12 gap-3"> <!-- grid wrapper -->
+            <div class="col-span-3">
+                <div class="card bg-base-100 h-fit">
                     <div class="card-body">
+                    <div class="flex justify-between md:block">
                         <h2 class="card-title">Welcome, {{ user.username }}</h2>
 
-                        <div class="card-actions mt-10">
-                            <a class="btn btn-primary">Register new car</a>
-                            {#                            <button class="btn btn-primary">Upload file (for admin)</button>#}
+                        <div class="card-actions md:mt-5">
+                            {% if not user.is_superuser %}
+                                <button class="btn btn-primary" href="{% url 'register-certificate' %}"
+                                        hx-get="{% url 'register-certificate' %}" hx-push-url="true"
+                                        hx-target="#main-content"
+                                        hx-swap="innerHTML">Register new car
+                                </button>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                                <button class="btn btn-primary" href="{% url 'upload' %}"
+                                        hx-get="{% url 'upload' %}" hx-push-url="true"
+                                        hx-target="#main-content"
+                                        hx-swap="innerHTML">Upload file
+                                </button>
+                            {% endif %}
                         </div>
                     </div>
+                    </div>
                 </div>
-                <div class="card bg-base-100 h-60 mt-10">
+
+                <div class="card bg-base-100 h-fit md:h-80 my-10">
+                    <div class="card-body">
+                        <h2 class="card-title">Optional card</h2>
+
+{#                        <div class="card-actions mt-10">#}
+{##}
+{#                        </div>#}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-6 mx-5 mb-10 md:mb-0">
+                <div id="loading"
+                     class="absolute opacity-70 left-1/2 bottom-1/2 place-items-center h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                     role="status">
+                </div>
+                <script>
+                    var loading = document.getElementById('loading');
+                    loading.style.visibility = 'absolute';
+                </script>
+
+                <div class="">
+                    <canvas id="myChart2" height="240"></canvas>
+                </div>
+
+                <div class="mt-10">
+                    <canvas id="myChart1" height="240"></canvas>
+                </div>
+            </div>
+
+            <div class="col-span-3">
+                <div class="card bg-base-100 h-60 overflow-y-auto">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <a class="link link-hover" href="database/register_data/?sort=expire"
+                               hx-get="database/register_data/?sort=expire" hx-push-url="true" hx-target="#main-content"
+                               hx-swap="innerHTML">Certificates expiring
+                                this month</a></h2>
+                        <table class="table w-full table-compact md:table-normal">
+                            <thead>
+                            <tr class="text-neutral-content">
+                                <th class="bg-base-300 text-base-content">Owner</th>
+                                <th class="bg-base-300 text-base-content">LP</th>
+                            </tr>
+                            </thead>
+                            <tbody class="overflow-auto">
+                            {% for car in list_expired|slice:5 %}
+                                <tr class="hover">
+                                    <td>{{ car.owner.name }}</td>
+
+                                    <td>
+                                        <div>
+                                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card bg-base-100 h-60 overflow-y-auto mt-10">
                     <div class="card-body">
                         <h2 class="card-title"><a class="link link-hover" href="database/register_data/?sort=month"
                                                   hx-get="database/register_data/?sort=month" hx-push-url="true"
@@ -25,8 +101,8 @@
                         <table class="table w-full table-compact md:table-normal">
                             <thead>
                             <tr class="text-neutral-content">
-                                <th class="bg-neutral ">Owner</th>
-                                <th class="bg-neutral">License Plate</th>
+                                <th class="bg-base-300 text-base-content">Owner</th>
+                                <th class="bg-base-300 text-base-content">LP</th>
                             </tr>
                             </thead>
                             <tbody class="overflow-auto">
@@ -45,56 +121,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-span-4 mx-5 ">
-                <div class="">
-                    <canvas id="myChart1" height="240"></canvas>
-                </div>
-
-                <div class="mt-10">
-                    <canvas id="myChart2" height="240"></canvas>
-                </div>
-            </div>
-            <div class="col-span-2">
-                <div class="card bg-base-100 h-60">
-                    <div class="card-body">
-                        <h2 class="card-title">
-                            <a class="link link-hover" href="database/register_data/?sort=expire"
-                               hx-get="database/register_data/?sort=expire" hx-push-url="true" hx-target="#main-content"
-                               hx-swap="innerHTML">Certificates expiring
-                                this month</a></h2>
-                        <table class="table w-full table-compact md:table-normal">
-                            <thead>
-                            <tr class="text-neutral-content">
-                                <th class="bg-neutral ">Owner</th>
-                                <th class="bg-neutral">License Plate</th>
-                            </tr>
-                            </thead>
-                            <tbody class="overflow-auto">
-                            {% for car in list_expired|slice:5 %}
-                                <tr class="hover">
-                                    <td>{{ car.owner.name }}</td>
-
-                                    <td>
-                                        <div>
-                                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-            </div>
         </div>
-
-
-        <a href="{% url 'register-certificate' %}" hx-get="{% url 'register-certificate' %}" hx-push-url="true"
-           hx-target="#main-content"
-           hx-swap="innerHTML">Register new car (for normal user)</a>
-
-
-        <a href="{% url 'upload' %}" hx-get="{% url 'upload' %}" hx-push-url="true" hx-target="#main-content"
-           hx-swap="innerHTML">Upload file (for admin)</a>
     </div>
     <script>
         var ctx = document.getElementById('myChart1');
@@ -152,5 +179,9 @@
                 });
             }
         });
+
+        setTimeout(() => {
+            loading.style.visibility = 'hidden';
+        }, 800);
     </script>
 {% endblock %}

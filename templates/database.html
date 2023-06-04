@@ -30,9 +30,9 @@
                     </div>
                 </div>
             </form>
-            <div>
-                <span class="label-text">Filter</span>
-                <select class="select select-bordered select-sm" name="sort" hx-get="{% url "database" %}" hx-push-url="true"
+            <div class="mb-4">
+                <span class="label-text mr-2">Filter</span>
+                <select class="select select-bordered" name="sort" hx-get="{% url "database" %}" hx-push-url="true"
                         hx-target="#div-table"
                         hx-swap="outerHTML" hx-select="#div-table">
                     <option selected>All</option>

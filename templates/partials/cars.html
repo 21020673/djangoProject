@@ -8,11 +8,11 @@
     <table class="table table-compact w-full">
         <thead>
         <tr>
-            <th class="bg-neutral text-neutral-content">Make</th>
-            <th class="bg-neutral text-neutral-content">Model</th>
-            <th class="bg-neutral text-neutral-content">Year</th>
-            <th class="bg-neutral text-neutral-content">Body Type</th>
-            {#        <th class="bg-neutral text-neutral-content w-40"></th>#}
+            <th class="bg-base-300 text-base-content">Make</th>
+            <th class="bg-base-300 text-base-content">Model</th>
+            <th class="bg-base-300 text-base-content">Year</th>
+            <th class="bg-base-300 text-base-content">Body Type</th>
+                    <th class="bg-base-300 text-base-content w-40"></th>
         </tr>
         </thead>
         <tbody>
@@ -22,12 +22,12 @@
             <td>{{ car.model }}</td>
             <td>{{ car.year_from }}</td>
             <td>{{ car.body_type }}</td>
-            {#            <td><a href="{% url 'car_detail' car.id %}" class="btn btn-ghost btn-xs">View</a></tr>#}
+                        <td><a href="{% url 'car_detail' car.id %}" class="btn btn-ghost btn-xs">View</a></tr>
         {% endfor %}
         </tbody>
     </table>
     <div class="mt-10">
-        <div class="pagination">
+        <div class="pagination mb-6">
             <div class="step-links btn-group">
                 {% if page_obj.has_previous %}
                     <a class="btn" hx-get="?{% url_replace request 'page' 1 %}" hx-push-url="true"

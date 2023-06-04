@@ -8,12 +8,12 @@
         <table class="table w-full table-compact md:table-normal">
             <thead>
             <tr class="text-neutral-content">
-                <th class="bg-neutral ">Owner</th>
-                <th class="bg-neutral">License Plate</th>
-                <th class="bg-neutral">City</th>
-                <th class="bg-neutral">Effective Period</th>
+                <th class="bg-base-300 text-base-content">Owner</th>
+                <th class="bg-base-300 text-base-content">License Plate</th>
+                <th class="bg-base-300 text-base-content">City</th>
+                <th class="bg-base-300 text-base-content">Effective Period</th>
                 {% if not user.is_superuser %}
-                    <th class="bg-neutral"></th>
+                    <th class="bg-base-300 text-base-content pl-5">Action</th>
                 {% endif %}
             </tr>
             </thead>
@@ -47,7 +47,7 @@
         </table>
     </div>
     <div class="mt-10">
-        <div class="pagination">
+        <div class="pagination mb-6">
             <div class="step-links btn-group">
                 {% if page_obj.has_previous %}
                     <a class="btn" hx-get="?{% url_replace request 'page' 1 %}" hx-push-url="true"

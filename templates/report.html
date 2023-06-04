@@ -7,7 +7,7 @@
 
 {% block content %}
     <div class="lg:flex justify-between items-end">
-        <div class="tabs tabs-boxed pb-3">
+        <div class="tabs tabs-boxed pb-3 md:pb-0">
             <button value='{% url "report_month" %}' class="tab tab-lg text-base tab-active">Month</button>
             <button value='{% url "report_year" %}' class="tab tab-lg text-base">Year</button>
             <button value='{% url "report_quarter" %}' class="tab tab-lg text-base">Quarter</button>
@@ -15,7 +15,7 @@
             <button class="btn" id="predict" onclick="predict()">Predict</button>
         </div>
 
-        <form method="get" class="pb-3">
+        <form method="get" >
             <div class="form-control max-w-xs">
                 {#                <label class="label">#}
                 {#                    <span class="label-text">Option</span>#}
