@@ -20,13 +20,12 @@
             <tbody class="overflow-auto">
             {% for row in page_obj %}
                 <tr class="hover">
-                    <td><a href="{% url 'owner' row.owner.id %}">{{ row.owner.name }}</a></td>
+                    <td>{{ row.owner.name }}</td>
 
                     <td>
                         <div>
                             <div class="font-bold">{{ row.license_plate.license_plate }}</div>
-                            <div class="text-sm opacity-50"><a
-                                    href="{% url 'car_detail' row.license_plate.model.id %}">{{ row.license_plate.model.make }} {{ row.license_plate.model.model }}</a>
+                            <div class="text-sm opacity-50">{{ row.license_plate.model.make }} {{ row.license_plate.model.model }}
                             </div>
                         </div>
                     </td>

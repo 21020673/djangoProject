@@ -52,11 +52,14 @@ class CertificateForm(ModelForm):
     expiry_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     license_plate = forms.CharField(max_length=9, required=True)
     owner_name = forms.CharField(max_length=100, required=True)
-    make_choices = [(make, make) for make in CarSpecs.objects.values_list('make', flat=True).distinct()]
+    make_choices = [('', '---------')] + [(make, make) for make in
+                                          CarSpecs.objects.values_list('make', flat=True).distinct()]
     make = forms.ChoiceField(choices=make_choices, required=True, widget=forms.Select(
         attrs={'hx-get': reverse_lazy('get-models'), 'hx-target': '#models_select', 'hx-trigger': 'change',
                'hx-swap': 'innerHTML'}))
-    model = forms.CharField(required=True, widget=forms.Select(attrs={'id': 'models_select'}))
+    model = forms.CharField(required=True, widget=forms.Select(attrs={'id': 'models_select', 'hx-get': reverse_lazy(
+        'get-models'), 'hx-target': '#generations_select', 'hx-trigger': 'change', 'hx-swap': 'innerHTML'}))
+    generation = forms.CharField(required=True, widget=forms.Select(attrs={'id': 'generations_select'}))
     type = forms.ChoiceField(choices=[('Individual', 'Individual'), ('Company', 'Company')], required=True)
     address = forms.CharField(max_length=200, required=True)
     city = forms.ChoiceField(choices=[('Hà Nội', 'Hà Nội'), ('Hồ Chí Minh', 'Hồ Chí Minh'), ('Đà Nẵng', 'Đà Nẵng'),
@@ -74,15 +77,15 @@ class CertificateForm(ModelForm):
             'hx-target': '#certificate-form',
             'hx-swap': 'outerHTML'
         }
-        self.helper.layout = Layout(Div(Field('license_plate'), Field('expiry_date'), Field('owner_name'),
-                                        Field('make'), Field('model'), Field('type'), Field('address'),
-                                        Field('city'), Field('phone_number'), css_class='md:grid grid-cols-2 gap-x-10'),
-                                    HTML('<button class="btn btn-primary">Submit</button>'))
+        self.helper.layout = Layout(
+            Div(Field('license_plate'), Field('expiry_date'), Field('make'), Field('model'), Field('generation'),
+                Field('owner_name'), Field('type'), Field('address'), Field('city'), Field('phone_number'),
+                css_class='md:grid grid-cols-2 gap-x-10'),
+            HTML('<button class="btn btn-primary">Submit</button>'))
 
         # help text
-        self.fields['license_plate'].help_text = "Format: 00A-0000"
-        self.fields['address'].help_text = "Format: [house number] [street], [ward], [district], [city]"
-        self.fields['owner_name'].help_text = "Format: [family name] [middle name] [given name]"
+        self.fields['license_plate'].help_text = "Format: 00A-00000"
+        self.fields['phone_number'].help_text = "Format: 0123456789"
 
     def clean_license_plate(self):
         license_plate = self.cleaned_data['license_plate']
@@ -106,11 +109,26 @@ class CertificateForm(ModelForm):
             raise forms.ValidationError("Phone Number is not valid")
         return phone_number
 
+    def clean_make(self):
+        make = self.cleaned_data['make']
+        if not CarSpecs.objects.filter(make=make).exists():
+            raise forms.ValidationError("Please select a valid make")
+        return make
+
     def clean_model(self):
+        make = self.cleaned_data['make']
         model = self.cleaned_data['model']
-        if not CarSpecs.objects.filter(model=model).exists():
-            raise forms.ValidationError("Model is not valid")
+        if not CarSpecs.objects.filter(make=make, model=model).exists():
+            raise forms.ValidationError("Please select a valid model")
         return model
+
+    def clean_generation(self):
+        make = self.cleaned_data['make']
+        model = self.cleaned_data['model']
+        generation = self.cleaned_data['generation']
+        if not CarSpecs.objects.filter(make=make, model=model, generation=generation).exists():
+            raise forms.ValidationError("Please select a valid generation")
+        return generation
 
     def save(self, commit=True):
         certificate = super().save(commit=False)
@@ -119,7 +137,8 @@ class CertificateForm(ModelForm):
                                              city_province=self.cleaned_data["city"],
                                              phone=self.cleaned_data["phone_number"])[0]
         car = Cars.objects.create(license_plate=self.cleaned_data["license_plate"], model_id=CarSpecs.objects.get(
-            Q(make=self.cleaned_data["make"]) & Q(model=self.cleaned_data["model"])).id)
+            Q(make=self.cleaned_data["make"]) & Q(model=self.cleaned_data["model"]) & Q(
+                generation=self.cleaned_data["generation"])).id)
         certificate.license_plate = car
         certificate.certificate_date = date.today()
         certificate.owner = owner
@@ -144,6 +163,7 @@ class FileUploadForm(forms.Form):
             'hx-target': '#upload-form',
             'hx-swap': 'outerHTML',
             'enctype': 'multipart/form-data',
+            'hx-select': "#div-table"
         }
         self.helper.layout = Layout(Field('file'), HTML('<button class="btn btn-primary">Upload</button>'))
 

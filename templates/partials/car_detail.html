@@ -1,27 +1,27 @@
-{% block content %}
-    <div class="md:grid grid-cols-2 mt-20">
-        {% load static %}
-        <img class="opacity-60" src="{% static "generic-car.png" %}">
+<div class="md:grid grid-cols-2 mt-20">
+    {% load static %}
+    <img class="opacity-60" src="{% static "generic-car.png" %}">
 
-        <div>
-            <h1 class="mb-6 text-2xl font-bold border-b-3 border-base-content uppercase">{{ car.make }} {{ car.model }}
-                Key Specs</h1>
-            <ul>
-                <li><span class="font-semibold">Production years: </span> from {{ car.year_from }} to {{ car.year_to }}
-                </li>
-                <li><span class="font-semibold">Body type: </span> {{ car.body_type }}</li>
-                <li><span class="font-semibold">Maximum power - Output - Horsepower: </span>{{ car.engine_hp }} HP</li>
-                <li>
-                    <span class="font-semibold">Length: </span>{{ car.length_mm }} mm /
-                    <span class="font-semibold">Width: </span>{{ car.width_mm }} mm /
-                    <span class="font-semibold">Height: </span>{{ car.height_mm }} mm /
-                    <span class="font-semibold">Wheelbase: </span>{{ car.wheelbase_mm }} mm
-                </li>
-                <li><span class="font-semibold">Curb weight: </span> {{ car.curb_weight_kg }} kg</li>
-            </ul>
+    <div>
+        <h1 class="mb-6 text-2xl font-bold border-b-3 border-base-content uppercase">{{ car.make }} {{ car.model }}
+            Key Specs</h1>
+        <ul>
+            <li><span class="font-semibold">Production years: </span> from {{ car.year_from }} to {{ car.year_to }}
+            </li>
+            <li><span class="font-semibold">Body type: </span> {{ car.body_type }}</li>
+            <li><span class="font-semibold">Maximum power - Output - Horsepower: </span>{{ car.engine_hp }} HP</li>
+            <li>
+                <span class="font-semibold">Length: </span>{{ car.length_mm }} mm /
+                <span class="font-semibold">Width: </span>{{ car.width_mm }} mm /
+                <span class="font-semibold">Height: </span>{{ car.height_mm }} mm /
+                <span class="font-semibold">Wheelbase: </span>{{ car.wheelbase_mm }} mm
+            </li>
+            <li><span class="font-semibold">Curb weight: </span> {{ car.curb_weight_kg }} kg</li>
+        </ul>
 
 
-            {# example: https://www.ultimatespecs.com/car-specs/Acura/M11503/ILX-2019 #}
-        </div>
+        {# example: https://www.ultimatespecs.com/car-specs/Acura/M11503/ILX-2019 #}
     </div>
-{% endblock %}
+</div>
+<label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2" hx-get="{% url 'cars' %}"
+       hx-push-url="true">✕</label>

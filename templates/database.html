@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}Database{% endblock %}
 {% block content %}
@@ -6,7 +7,7 @@
         <div class="lg:flex justify-between items-baseline">
             <div class="tabs tabs-boxed pb-4">
                 <a href="{% url "database" %}" hx-get="{% url "database" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
-                   hx-select="#div-table" hx-trigger="reload from:body"
+                   hx-select="#div-table" hx-trigger="reload from:body, click"
                    class="tab tab-lg text-base{% if '/register_data/' in request.path %} tab-active {% endif %}">General</a>
                 <a href="{% url "owner" %}" hx-get="{% url "owner" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
                    hx-select="#div-table"
@@ -48,15 +49,5 @@
         </div>
     </div>
 
-    <script>
-        var tabs = document.querySelectorAll(".tab");
-        tabs.forEach(tab => {
-            tab.addEventListener("click", function () {
-                tabs.forEach(tab => {
-                    tab.classList.remove("tab-active");
-                })
-                this.classList.add("tab-active");
-            })
-        })
-    </script>
+    <script src="{% static 'js/database.js' %}"></script>
 {% endblock %}

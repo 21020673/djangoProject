@@ -1,9 +1,11 @@
-<title id="title" hx-swap-oob="true">Database</title>
-{% extends "partials/database.html" %}
+<title id="title" hx-swap-oob="true">Upload Result</title>
 
 {% load pagination_tags %}
 
-{% block table %}
+{% block content %}
+    <div id="messages" hx-swap-oob="true">
+        {% include 'partials/toast.html' %}
+    </div>
 
     <div class="center-block">
         <table class="table w-full table-compact md:table-normal">

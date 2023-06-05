@@ -1,31 +1,40 @@
+{% load static %}
 <title id="title" hx-swap-oob="true">RegistryTotal</title>
 
 {% block content %}
+    <div id="messages" hx-swap-oob="true">
+        {% include 'partials/toast.html' %}
+    </div>
     <div class="mt-2"> <!-- wrapper -->
         <div class="md:grid grid-cols-12 gap-3"> <!-- grid wrapper -->
             <div class="col-span-3">
                 <div class="card bg-base-100 h-fit">
                     <div class="card-body">
-                    <div class="flex justify-between md:block">
-                        <h2 class="card-title">Welcome, {{ user.username }}</h2>
+                        <div class="flex justify-between md:block">
+                            <h2 class="card-title">Welcome, {{ user.username }}</h2>
 
-                        <div class="card-actions md:mt-5">
-                            {% if not user.is_superuser %}
-                                <button class="btn btn-primary" href="{% url 'register-certificate' %}"
-                                        hx-get="{% url 'register-certificate' %}" hx-push-url="true"
-                                        hx-target="#main-content"
-                                        hx-swap="innerHTML">Register new car
-                                </button>
-                            {% endif %}
-                            {% if user.is_superuser %}
-                                <button class="btn btn-primary" href="{% url 'upload' %}"
-                                        hx-get="{% url 'upload' %}" hx-push-url="true"
-                                        hx-target="#main-content"
-                                        hx-swap="innerHTML">Upload file
-                                </button>
-                            {% endif %}
+                            <div class="card-actions md:mt-5">
+                                {% if not user.is_superuser %}
+                                    <button class="btn btn-primary" href="{% url 'register-certificate' %}"
+                                            hx-get="{% url 'register-certificate' %}" hx-push-url="true"
+                                            hx-target="#main-content"
+                                            hx-swap="innerHTML">Register new car
+                                    </button>
+                                {% endif %}
+                                {% if user.is_superuser %}
+                                    <!-- The button to open modal -->
+                                    <label for="my-modal-3" class="btn btn-primary" hx-get="{% url 'upload' %}"
+                                           hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click"
+                                           hx-push-url="true">Upload</label>
+                                    <!-- Modal content -->
+                                    <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
+                                    <div class="modal">
+                                        <div class="modal-box relative" id="modal-content">
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
 
@@ -33,9 +42,9 @@
                     <div class="card-body">
                         <h2 class="card-title">Optional card</h2>
 
-{#                        <div class="card-actions mt-10">#}
-{##}
-{#                        </div>#}
+                        {#                        <div class="card-actions mt-10">#}
+                        {##}
+                        {#                        </div>#}
                     </div>
                 </div>
             </div>
@@ -45,22 +54,19 @@
                      class="absolute opacity-70 left-1/2 bottom-1/2 place-items-center h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
                      role="status">
                 </div>
-                <script>
-                    var loading = document.getElementById('loading');
-                    loading.style.visibility = 'absolute';
-                </script>
+                <script src="{% static 'js/loading.js' %}"></script>
 
-                <div class="">
+                <div class="pb-5 h-1/2">
                     <canvas id="myChart2" height="240"></canvas>
                 </div>
 
-                <div class="mt-10">
+                <div class="pt-5 h-1/2">
                     <canvas id="myChart1" height="240"></canvas>
                 </div>
             </div>
 
             <div class="col-span-3">
-                <div class="card bg-base-100 h-60 overflow-y-auto">
+                <div class="card bg-base-100 h-1/2 overflow-y-auto">
                     <div class="card-body">
                         <h2 class="card-title">
                             <a class="link link-hover" href="database/register_data/?sort=expire"
@@ -90,7 +96,7 @@
                     </div>
                 </div>
 
-                <div class="card bg-base-100 h-60 overflow-y-auto mt-10">
+                <div class="card bg-base-100 h-1/2 overflow-y-auto mt-10 z-10">
                     <div class="card-body">
                         <h2 class="card-title"><a class="link link-hover" href="database/register_data/?sort=month"
                                                   hx-get="database/register_data/?sort=month" hx-push-url="true"
@@ -121,65 +127,5 @@
             </div>
         </div>
     </div>
-    <script>
-        var ctx = document.getElementById('myChart1');
-        $.ajax({
-            url: '{% url 'report_month' %}',
-            type: "GET",
-            data: {
-                'select': "default",
-            },
-            success: function (data) {
-                new Chart(ctx, {
-                    type: "line",
-                    data: {
-                        labels: data.labels,
-                        datasets: [
-                            {
-                                label: data.label,
-                                data: data.data,
-                                lineTension: 0.2,
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
-                    }
-                });
-            }
-        });
-
-        var ctx2 = document.getElementById('myChart2');
-        $.ajax({
-            url: '{% url 'report_expire' %}',
-            type: "GET",
-            data: {
-                'select': "default",
-            },
-            success: function (data) {
-                new Chart(ctx2, {
-                    type: "line",
-                    data: {
-                        labels: data.labels,
-                        datasets: [
-                            {
-                                label: data.label,
-                                data: data.data,
-                                lineTension: 0.2,
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
-                    }
-                });
-            }
-        });
-
-        setTimeout(() => {
-            loading.style.visibility = 'hidden';
-        }, 90);
-    </script>
+    <script src="{% static 'js/index.js' %}"></script>
 {% endblock %}

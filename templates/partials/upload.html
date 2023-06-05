@@ -4,8 +4,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div id="messages" hx-swap-oob="true">
-        {% include 'partials/toast.html' %}
-    </div>
+    <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2" hx-get="{% url 'home' %}"
+       hx-push-url="true">✕</label>
     {% crispy form %}
 {% endblock %}

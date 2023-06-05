@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
+<div id="messages" hx-swap-oob="true">
+    {% include 'partials/toast.html' %}
+</div>
 {% load tailwind_filters %}
 {% load crispy_forms_tags %}
 
-{% block title %}Register{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
     {% crispy form %}

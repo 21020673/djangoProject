@@ -20,7 +20,7 @@
         }
     </style>
 </head>
-<body class="text-base-content bg-base-200 ">
+<body class="text-base-content bg-base-200">
 <div class="drawer"> <!-- root container -->
     <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
     <div class="drawer-content flex flex-col"> <!-- content wrapper -->
@@ -64,7 +64,10 @@
                         </label>
 
                         <div class="md:hidden mx-auto">
-                            <a href="{% url 'home' %}"><img class="h-16" src="{% static "logo.png" %}" alt=""></a>
+                            <a hx-get="{% url 'home' %}" hx-push-url="true" hx-target="#main-content"
+                               hx-swap="innerHTML" href="{% url 'home' %}"><img class="h-16"
+                                                                                src="{% static "logo.png" %}"
+                                                                                alt=""></a>
                         </div>
 
                         <!-- profile btn -->
@@ -102,82 +105,15 @@
                 </div>
             {% endif %} <!-- end navbar -->
 
-            <script>
-                const container = document.querySelector("html");
-                const switcher_navbar = document.getElementById("dark-mode-navbar");
-                const switcher_sidebar = document.getElementById("dark-mode-navbar");
-                if (localStorage.getItem("data-theme")) {
-                    container.setAttribute("data-theme", localStorage.getItem("data-theme"));
-                    darken(1)
-                }
-
-                function darken(r) {
-                    let dataTheme = container.getAttribute("data-theme");
-                    let theme_switch;
-
-                    if (dataTheme === "light") {
-                        theme_switch = 1
-                    } else {
-                        theme_switch = 0
-                    }
-                    if (r) {
-                        theme_switch = !theme_switch
-                    } //so the oppisite of the theme stored is used when calling this function
-                    if (theme_switch) {
-                        container.setAttribute("data-theme", "dark");
-                        localStorage.setItem("data-theme", "dark");
-                        switcher_navbar.checked = true;
-                        switcher_sidebar.checked = true;
-                        container.classList.add("dark");
-                    } else {
-                        container.setAttribute("data-theme", "light");
-                        localStorage.setItem("data-theme", "light");
-                        switcher_navbar.checked = false;
-                        switcher_sidebar.checked = false;
-                        container.classList.remove("dark");
-                    }
-                }
-            </script>
+            <script src="{% static 'js/theme_switch.js' %}"></script>
 
             <!------- MAIN CONTENT ------->
             <main class="px-5 md:px-16 pt-6 overflow-x-auto">
                 <header>
+                    <div id="messages">
+                        {% include 'partials/toast.html' %}
+                    </div>
                     <div id="main-content">
-                        {% block messages %}
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <div id="message"
-                                         class='z-10 fixed bottom-5 left-5 flex items-center w-full max-w-sm p-4 mb-4 text-gray-500 bg-base-100 rounded-lg shadow-xl
-                          alert {% if message.tags %}alert-{{ message.tags }}{% endif %}'>
-                                        {{ message }}
-                                        {% if message.tags == 'success' %}
-                                            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-                                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
-                                                     viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd"
-                                                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                          clip-rule="evenodd"></path>
-                                                </svg>
-                                                <span class="sr-only">Check icon</span>
-                                            </div>
-                                        {% elif message.tags == 'error' %}
-                                            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-                                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
-                                                     viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd"
-                                                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                                          clip-rule="evenodd"></path>
-                                                </svg>
-                                                <span class="sr-only">Error icon</span>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                        {% endblock %}
-
                         {% block content %}
 
                         {% endblock %}
@@ -239,30 +175,17 @@
             <span class="border-b border-base-200"></span>
 
             {% if perms.UserManagement.add_user %}
-                <li><a href="{% url 'register' %}">Register User</a></li>
+                <li><a hx-get="{% url 'register' %}" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
+                       href="{% url 'register' %}">Register User</a></li>
             {% endif %}
             <li><a class="text-red-400" href="{% url 'logout' %}">Log out</a></li>
 
         </ul>
     </div>
+    <!-- trigger loading upload result -->
+    <div hx-get="{% url "upload-result" %}" hx-push-url="true" hx-target="#main-content"
+         hx-trigger="upload-result from:body"></div>
 </div>
-<script>
-    let message_ele = document.getElementById("message");
-
-    setTimeout(function () {
-        message_ele.style.display = "none";
-    }, 3000);
-
-    var navbar_tabs = document.querySelectorAll(".navbar-tab");
-    navbar_tabs.forEach(tab => {
-        tab.addEventListener("click", function () {
-            navbar_tabs.forEach(tab => {
-                tab.classList.remove("font-semibold");
-            })
-            this.classList.add("font-semibold");
-        })
-    })
-
-</script>
+<script src="{% static 'js/navbar.js' %}"></script>
 </body>
 </html>

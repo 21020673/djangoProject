@@ -1,14 +1,21 @@
+{% load static %}
 {% block content %}
+    <div id="messages" hx-swap-oob="true">
+        {% include 'partials/toast.html' %}
+    </div>
     <div class="overflow-hidden"> <!-- wrapper -->
         <div class="lg:flex justify-between items-baseline">
             <div class="tabs tabs-boxed pb-4">
-                <a href="{% url "database" %}" hx-get="{% url "database" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
-                   hx-select="#div-table" hx-trigger="reload from:body"
+                <a href="{% url "database" %}" hx-get="{% url "database" %}" hx-push-url="true" hx-target="#div-table"
+                   hx-swap="outerHTML"
+                   hx-select="#div-table" hx-trigger="reload from:body, click"
                    class="tab tab-lg text-base{% if '/register_data/' in request.path %} tab-active {% endif %}">General</a>
-                <a href="{% url "owner" %}" hx-get="{% url "owner" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
+                <a href="{% url "owner" %}" hx-get="{% url "owner" %}" hx-push-url="true" hx-target="#div-table"
+                   hx-swap="outerHTML"
                    hx-select="#div-table"
                    class="tab tab-lg text-base{% if '/owner/' in request.path %} tab-active {% endif %}">Owner</a>
-                <a href="{% url "cars" %}" hx-get="{% url "cars" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
+                <a href="{% url "cars" %}" hx-get="{% url "cars" %}" hx-push-url="true" hx-target="#div-table"
+                   hx-swap="outerHTML"
                    hx-select="#div-table"
                    class="tab tab-lg text-base{% if '/cars/' in request.path %} tab-active {% endif %}">Car</a>
             </div>
@@ -43,16 +50,5 @@
             {% block table %}{% endblock %}
         </div>
     </div>
-
-    <script>
-        var tabs = document.querySelectorAll(".tab");
-        tabs.forEach(tab => {
-            tab.addEventListener("click", function () {
-                tabs.forEach(tab => {
-                    tab.classList.remove("tab-active");
-                })
-                this.classList.add("tab-active");
-            })
-        })
-    </script>
+    <script src="{% static 'js/database.js' %}"></script>
 {% endblock %}

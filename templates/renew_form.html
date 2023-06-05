@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% load tailwind_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <span class="font-bold">Owner: </span>
+    <span>{{ owner }}</span>
+    <br>
+    <span class="font-bold">License plate:</span>
+    <span> {{ license_plate }}</span>
+    {% crispy form %}
+{% endblock %}

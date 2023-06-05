@@ -43,7 +43,8 @@ class RegisterDataView(ListView):
                                      )
         ordering = self.request.GET.get('sort')
         if ordering == 'month':
-            objects = objects.filter(certificate_date__year=date.today().year, certificate_date__month=date.today().month)
+            objects = objects.filter(certificate_date__year=date.today().year,
+                                     certificate_date__month=date.today().month)
         elif ordering == 'quarter':
             objects = objects.filter(certificate_date__year=date.today().year,
                                      certificate_date__month__gte=date.today().month - 3)
@@ -287,8 +288,8 @@ def renew_certificate(request, certificate_id):
         'license_plate': certificate.license_plate,
     }
     if request.META.get("HTTP_HX_REQUEST") == 'true':
-        return render(request, 'partials/modal.html', context)
-    return redirect('home')
+        return render(request, 'partials/renew_form.html', context)
+    return render(request, 'renew_form.html', context)
 
 
 @login_required(login_url='login')
@@ -311,7 +312,7 @@ def register_certificate(request):
         form = CertificateForm()
     if request.META.get("HTTP_HX_REQUEST") == 'true':
         return render(request, 'partials/register.html', {'form': form, 'title': 'Register Certificate'})
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'register.html', {'form': form, 'title': 'Register Certificate'})
 
 
 @login_required(login_url='login')
@@ -322,7 +323,7 @@ def upload_file(request):
         if form.is_valid():
             request.session['upload_result'] = form.cleaned_data['file']
             messages.success(request, 'File uploaded successfully')
-            return redirect('upload-result')
+            return HttpResponse(status=204, headers={'HX-Trigger': 'upload-result'})
         ctx = {}
         ctx.update(csrf(request))
         form_html = render_crispy_form(form, context=ctx)
@@ -330,8 +331,8 @@ def upload_file(request):
     else:
         form = FileUploadForm()
     if request.META.get("HTTP_HX_REQUEST") == 'true':
-        return render(request, 'partials/register.html', {'form': form, 'title': 'Upload File'})
-    return render(request, 'register.html', {'form': form})
+        return render(request, 'partials/upload.html', {'form': form, 'title': 'Upload File'})
+    return render(request, 'register.html', {'form': form, 'title': 'Upload File'})
 
 
 @login_required(login_url='login')
@@ -342,8 +343,8 @@ def upload_result(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     if request.META.get("HTTP_HX_REQUEST") == 'true':
-        return render(request, 'partials/register_data.html', {'page_obj': page_obj})
-    return render(request, 'register_data.html', {'page_obj': page_obj})
+        return render(request, 'partials/upload_result.html', {'page_obj': page_obj})
+    return render(request, 'upload_result.html', {'page_obj': page_obj})
 
 
 def report(request):
@@ -387,7 +388,27 @@ def predict(request):
 
 def get_models(request):
     make = request.GET.get('make')
-    models = CarSpecs.objects.filter(make=make).values_list('model', flat=True).distinct()
-    if request.META.get("HTTP_HX_REQUEST") == 'true':
-        return render(request, 'partials/model_options.html', {'models': models})
+    models = request.GET.get('model')
+    if models:
+        generations = CarSpecs.objects.filter(model=models).values_list('generation', flat=True).distinct()
+        if request.META.get("HTTP_HX_REQUEST") == 'true':
+            return render(request, 'partials/select_choices.html', {'choices': generations})
+    else:
+        models = CarSpecs.objects.filter(make=make).values_list('model', flat=True).distinct()
+        if request.META.get("HTTP_HX_REQUEST") == 'true':
+            return render(request, 'partials/select_choices.html', {'choices': models})
     return redirect('home')
+
+
+def home(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    context = {'list_register': RegisterData.objects.filter(certificate_date__year=date.today().year,
+                                                            certificate_date__month=date.today().month),
+
+               'list_expired': RegisterData.objects.filter(expiry_date__year=date.today().year,
+                                                           expiry_date__month=date.today().month),
+               }
+    if request.META.get("HTTP_HX_REQUEST") == 'true':
+        return render(request, 'partials/index.html', context)
+    return render(request, 'index.html', context)

@@ -1,13 +1,16 @@
+{% extends "layout.html" %}
 
+{% block content %}
     <div class="md:grid grid-cols-2 mt-20">
         {% load static %}
-{#        <img class="opacity-60" src="{% static "generic-car.png" %}">#}
+        <img class="opacity-60" src="{% static "generic-car.png" %}">
 
         <div>
             <h1 class="mb-6 text-2xl font-bold border-b-3 border-base-content uppercase">{{ car.make }} {{ car.model }}
                 Key Specs</h1>
             <ul>
-                <li><span class="font-semibold">Production years: </span> from {{ car.year_from }} to {{ car.year_to }}</li>
+                <li><span class="font-semibold">Production years: </span> from {{ car.year_from }} to {{ car.year_to }}
+                </li>
                 <li><span class="font-semibold">Body type: </span> {{ car.body_type }}</li>
                 <li><span class="font-semibold">Maximum power - Output - Horsepower: </span>{{ car.engine_hp }} HP</li>
                 <li>
@@ -20,7 +23,7 @@
             </ul>
 
 
-
             {# example: https://www.ultimatespecs.com/car-specs/Acura/M11503/ILX-2019 #}
         </div>
     </div>
+{% endblock %}

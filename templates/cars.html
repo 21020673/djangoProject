@@ -10,23 +10,28 @@
         <tr>
             <th class="bg-base-300 text-base-content">Make</th>
             <th class="bg-base-300 text-base-content">Model</th>
-            <th class="bg-base-300 text-base-content">Year</th>
+            <th class="bg-base-300 text-base-content">Generation</th>
             <th class="bg-base-300 text-base-content">Body Type</th>
-                    <th class="bg-base-300 text-base-content w-40"></th>
+            <th class="bg-base-300 text-base-content w-40"></th>
         </tr>
         </thead>
         <tbody>
         {% for car in page_obj %}
             <tr class="hover">
-            <td>{{ car.make }}</td>
-            <td>{{ car.model }}</td>
-            <td>{{ car.year_from }}</td>
-            <td>{{ car.body_type }}</td>
-                        <td><a href="{% url 'car_detail' car.id %}" class="btn btn-ghost btn-xs">View</a></tr>
+                <td>{{ car.make }}</td>
+                <td>{{ car.model }}</td>
+                <td>{{ car.generation }} - {{ car.year_from }}</td>
+                <td>{{ car.body_type }}</td>
+                <td>
+                    <!-- The button to open modal -->
+                    <label for="my-modal-3" class="btn" hx-get="{% url 'car_detail' car.id %}"
+                           hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click"
+                           hx-push-url="true">View</label>
+            </tr>
         {% endfor %}
         </tbody>
     </table>
-        <div class="mt-10">
+    <div class="mt-10">
         <div class="pagination mb-6">
             <div class="step-links btn-group">
                 {% if page_obj.has_previous %}
@@ -102,7 +107,7 @@
         </div>
     </div>
     <!-- Modal content -->
-    <input type="checkbox" id="my-modal" class="modal-toggle"/>
+    <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
     <div class="modal">
         <div class="modal-box relative" id="modal-content">
         </div>
