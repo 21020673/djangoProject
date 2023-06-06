@@ -6,6 +6,7 @@
 {% block title %}Report{% endblock %}
 
 {% block content %}
+
     <div class="lg:flex justify-between items-end">
         <div class="tabs tabs-boxed pb-3 lg:pb-0">
             <div class="mb-3 sm:mb-0">
@@ -14,7 +15,7 @@
                 <button value='{% url "report_quarter" %}' class="tab sm:tab-lg text-base">Quarter</button>
                 <button value='{% url "report_expire" %}' class="tab sm:tab-lg text-base">Expire</button>
             </div>
-            <button class="btn btn-sm sm:btn-md" id="predict" onclick="predict()">Predict</button>
+            <button class="btn btn-sm sm:btn-md" id="predict" onclick="predict(); load()">Predict</button>
         </div>
 
         <form method="get">

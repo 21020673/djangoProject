@@ -13,6 +13,7 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
     <title id="title">{% block title %} {% endblock %}</title>
     <style>
         *::-webkit-scrollbar {
@@ -21,6 +22,7 @@
     </style>
 </head>
 <body class="text-base-content bg-base-200">
+<script src="{% static 'js/loading.js' %}"></script>
 <div class="drawer"> <!-- root container -->
     <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
     <div class="drawer-content flex flex-col"> <!-- content wrapper -->
@@ -29,10 +31,14 @@
             {% if user.is_authenticated %}
 
                 <div> <!-- navbar -->
+                <div id="loading-circle"
+                             class="absolute z-20 opacity-70 left-1/2 bottom-1/2 place-items-center h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                             role="status">
+                        </div>
                     <div class="navbar bg-base-100 max-h-16 relative">
                         <a class="hidden md:flex px-12 navbar-tab {% if request.path == '/' %} font-semibold{% endif %}"
                            hx-get="{% url 'home' %}" hx-push-url="true" hx-target="#main-content"
-                           hx-swap="innerHTML" href="{% url 'home' %}">
+                           hx-swap="innerHTML" href="{% url 'home' %}" onclick="load()">
                             <img class="h-16" src="{% static "logo.png" %}" alt="">
                             <h1 class="absolute left-28 pl-2">RegistryTotal</h1>
                         </a>
@@ -41,14 +47,14 @@
                                 <li class="mx-8 lg:mx-12" tabindex="0">
                                     <a class="navbar-tab {% if '/database/' in request.path %} font-semibold{% endif %}"
                                        hx-get="{% url 'database' %}" hx-push-url="true"
-                                       hx-target="#main-content" hx-swap="innerHTML" href="{% url 'database' %}">
+                                       hx-target="#main-content" hx-swap="innerHTML" href="{% url 'database' %}" onclick="unload()">
                                         <span>Database</span>
                                     </a>
                                 </li>
                                 <li class="mx-8 lg:mx-12">
                                     <a class="navbar-tab{% if '/report/' in request.path %} font-semibold{% endif %}"
                                        hx-get="{% url 'report' %}" hx-push-url="true" hx-target="#main-content"
-                                       hx-swap="innerHTML" href="{% url 'report' %}">
+                                       hx-swap="innerHTML" href="{% url 'report' %}" onclick="load()">
                                         <span>Report</span></a>
                                 </li>
                             </ul>
@@ -114,6 +120,7 @@
                         {% include 'partials/toast.html' %}
                     </div>
                     <div id="main-content">
+
                         {% block content %}
 
                         {% endblock %}

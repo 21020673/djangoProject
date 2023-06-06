@@ -39,22 +39,31 @@
 
                 <div class="card bg-base-100 h-fit md:h-80 my-10">
                     <div class="card-body">
-                        <h2 class="card-title">Optional card</h2>
+                        <h2 class="card-title">Todo list</h2>
 
-                        {#                        <div class="card-actions mt-10">#}
-                        {##}
-                        {#                        </div>#}
+{#                        <div class="card-actions">#}
+{##}
+{#                            <div id="myDIV" class="header">#}
+{#                                <input type="text" id="myInput" placeholder="Title...">#}
+{#                                <span onclick="newElement()" class="addBtn">Add</span>#}
+{#                            </div>#}
+{##}
+{#                            <ul id="myUL">#}
+{#                                <li>Hit the gym</li>#}
+{#                                <li class="checked">Pay bills</li>#}
+{#                                <li>Meet George</li>#}
+{#                                <li>Buy eggs</li>#}
+{#                                <li>Read a book</li>#}
+{#                                <li>Organize office</li>#}
+{#                            </ul>#}
+{##}
+{#                        </div>#}
+
                     </div>
                 </div>
             </div>
 
             <div class="col-span-6 mx-5 mb-10 md:mb-0">
-                <div id="loading"
-                     class="absolute opacity-70 left-1/2 bottom-1/2 place-items-center h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                     role="status">
-                </div>
-                <script src="{% static 'js/loading.js' %}"></script>
-
                 <div class="pb-5 h-1/2">
                     <canvas id="myChart2" height="240"></canvas>
                 </div>

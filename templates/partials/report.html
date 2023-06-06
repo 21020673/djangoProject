@@ -3,8 +3,8 @@
 {% load static %}
 {% load tailwind_filters %}
 
-
 {% block content %}
+
     <div id="messages" hx-swap-oob="true">
         {% include 'partials/toast.html' %}
     </div>
@@ -16,7 +16,7 @@
                 <button value='{% url "report_quarter" %}' class="tab sm:tab-lg text-base">Quarter</button>
                 <button value='{% url "report_expire" %}' class="tab sm:tab-lg text-base">Expire</button>
             </div>
-            <button class="btn btn-sm sm:btn-md" id="predict" onclick="predict()">Predict</button>
+            <button class="btn btn-sm sm:btn-md" id="predict" onclick="predict(); load()">Predict</button>
         </div>
 
         <form method="get">

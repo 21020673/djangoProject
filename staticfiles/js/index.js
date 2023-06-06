@@ -6,6 +6,8 @@ $.ajax({
         'select': "default",
     },
     success: function (data) {
+        unload();
+
         new Chart(ctx, {
             type: "line",
             data: {
@@ -34,6 +36,8 @@ $.ajax({
         'select': "default",
     },
     success: function (data) {
+        unload();
+
         new Chart(ctx2, {
             type: "line",
             data: {
@@ -54,6 +58,3 @@ $.ajax({
     }
 });
 
-setTimeout(() => {
-    loading.style.visibility = 'hidden';
-}, 90);

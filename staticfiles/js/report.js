@@ -1,3 +1,4 @@
+var loading = document.getElementById('loading-circle');
 var ctx_report = document.getElementById('myChart');
 var url = "/report/month/";
 $.ajax({
@@ -7,6 +8,8 @@ $.ajax({
         'select': select.val(),
     },
     success: function (data) {
+        unload();
+
         myChart = new Chart(ctx_report, {
             type: "line",
             data: {
@@ -55,6 +58,8 @@ function getdata() {
             'select': select.val(),
         },
         success: function (data) {
+            unload();
+
             myChart.data.labels = data.labels;
             myChart.data.datasets = [];
             myChart.data.datasets.push({
@@ -90,6 +95,8 @@ function predict() {
             'select': select.val(),
         },
         success: function (data) {
+            unload();
+
             myChart.data.labels = data.labels;
             myChart.data.datasets.push({
                 label: 'Prediction',
