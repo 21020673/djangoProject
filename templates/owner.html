@@ -4,31 +4,33 @@
 
 {% load pagination_tags %}
 {% block table %}
-    <table class="table table-compact w-full">
-        <thead>
-        <tr>
-            <th class="bg-base-300 text-base-content">Name</th>
-            <th class="bg-base-300 text-base-content">Type</th>
-            <th class="bg-base-300 text-base-content">Phone</th>
-            <th class="bg-base-300 text-base-content">Address</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for owner in page_obj %}
-            <tr class="hover">
-                <td>{{ owner.name }}</td>
-                <td>{{ owner.type }}</td>
-                <td>{{ owner.phone }}</td>
-                <td>
-                    <div>
-                        <div>{{ owner.address }}</div>
-                        <div class="font-bold">{{ owner.city_province }}</div>
-                    </div>
-                </td>
+    <div class="overflow-auto">
+        <table class="table table-compact w-full overflow-auto">
+            <thead>
+            <tr>
+                <th class="bg-base-300 text-base-content">Name</th>
+                <th class="bg-base-300 text-base-content">Type</th>
+                <th class="bg-base-300 text-base-content">Phone</th>
+                <th class="bg-base-300 text-base-content">Address</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for owner in page_obj %}
+                <tr class="hover">
+                    <td>{{ owner.name }}</td>
+                    <td>{{ owner.type }}</td>
+                    <td>{{ owner.phone }}</td>
+                    <td>
+                        <div>
+                            <div>{{ owner.address }}</div>
+                            <div class="font-bold">{{ owner.city_province }}</div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div class="mt-10">
         <div class="pagination mb-6">
             <div class="step-links btn-group">

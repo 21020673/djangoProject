@@ -5,32 +5,34 @@
 {% load pagination_tags %}
 
 {% block table %}
-    <table class="table table-compact w-full">
-        <thead>
-        <tr>
-            <th class="bg-base-300 text-base-content">Make</th>
-            <th class="bg-base-300 text-base-content">Model</th>
-            <th class="bg-base-300 text-base-content">Generation</th>
-            <th class="bg-base-300 text-base-content">Body Type</th>
-            <th class="bg-base-300 text-base-content w-40"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for car in page_obj %}
-            <tr class="hover">
-                <td>{{ car.make }}</td>
-                <td>{{ car.model }}</td>
-                <td>{{ car.generation }} - {{ car.year_from }}</td>
-                <td>{{ car.body_type }}</td>
-                <td>
-                    <!-- The button to open modal -->
-                    <label for="my-modal-3" class="btn" hx-get="{% url 'car_detail' car.id %}"
-                           hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click"
-                           hx-push-url="true">View</label>
+    <div class="overflow-auto">
+        <table class="table table-compact w-full">
+            <thead>
+            <tr>
+                <th class="bg-base-300 text-base-content">Make</th>
+                <th class="bg-base-300 text-base-content">Model</th>
+                <th class="bg-base-300 text-base-content">Generation</th>
+                <th class="bg-base-300 text-base-content">Body Type</th>
+                <th class="bg-base-300 text-base-content w-40"></th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for car in page_obj %}
+                <tr class="hover">
+                    <td>{{ car.make }}</td>
+                    <td>{{ car.model }}</td>
+                    <td>{{ car.generation }} - {{ car.year_from }}</td>
+                    <td>{{ car.body_type }}</td>
+                    <td>
+                        <!-- The button to open modal -->
+                        <label for="my-modal-3" class="btn" hx-get="{% url 'car_detail' car.id %}"
+                               hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click"
+                               hx-push-url="true">View</label>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div class="mt-10">
         <div class="pagination mb-6">
             <div class="step-links btn-group">

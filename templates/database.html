@@ -3,21 +3,21 @@
 
 {% block title %}Database{% endblock %}
 {% block content %}
+
     <div class="overflow-hidden"> <!-- wrapper -->
         <div class="lg:flex justify-between items-baseline">
-            <div class="tabs tabs-boxed pb-4">
+            <div id="tabs-to-be-wrapped" class="tabs tabs-boxed pb-4">
                 <a href="{% url "database" %}" hx-get="{% url "database" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
                    hx-select="#div-table" hx-trigger="reload from:body, click"
-                   class="tab tab-lg text-base{% if '/register_data/' in request.path %} tab-active {% endif %}">General</a>
+                   class="tab sm:tab-lg text-base{% if '/register_data/' in request.path %} tab-active {% endif %}">General</a>
                 <a href="{% url "owner" %}" hx-get="{% url "owner" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
                    hx-select="#div-table"
-                   class="tab tab-lg text-base{% if '/owner/' in request.path %} tab-active {% endif %}">Owner</a>
+                   class="tab sm:tab-lg text-base{% if '/owner/' in request.path %} tab-active {% endif %}">Owner</a>
                 <a href="{% url "cars" %}" hx-get="{% url "cars" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
                    hx-select="#div-table"
-                   class="tab tab-lg text-base{% if '/cars/' in request.path %} tab-active {% endif %}">Car</a>
+                   class="tab sm:tab-lg text-base{% if '/cars/' in request.path %} tab-active {% endif %}">Car</a>
             </div>
-
-            <form hx-get hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML" hx-select="#div-table">
+            <form id="searchbar-to-be-wrapped" hx-get hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML" hx-select="#div-table">
                 <div class="form-control">
                     <div class="input-group">
                         <input name="search" type="text" placeholder="Search…" class="input input-bordered w-80 mb-4"/>
@@ -31,6 +31,7 @@
                     </div>
                 </div>
             </form>
+
             <div class="mb-4">
                 <span class="label-text mr-2">Filter</span>
                 <select class="select select-bordered" name="sort" hx-get="{% url "database" %}" hx-push-url="true"
@@ -44,7 +45,7 @@
                 </select>
             </div>
         </div>
-        <div class="overflow-auto" id="div-table">
+        <div id="div-table">
             {% block table %}{% endblock %}
         </div>
     </div>

@@ -7,16 +7,18 @@
 
 {% block content %}
     <div class="lg:flex justify-between items-end">
-        <div class="tabs tabs-boxed pb-3 md:pb-0">
-            <button value='{% url "report_month" %}' class="tab tab-lg text-base tab-active">Month</button>
-            <button value='{% url "report_year" %}' class="tab tab-lg text-base">Year</button>
-            <button value='{% url "report_quarter" %}' class="tab tab-lg text-base">Quarter</button>
-            <button value='{% url "report_expire" %}' class="tab tab-lg text-base">Expire</button>
-            <button class="btn" id="predict" onclick="predict()">Predict</button>
+        <div class="tabs tabs-boxed pb-3 lg:pb-0">
+            <div class="mb-3 sm:mb-0">
+                <button value='{% url "report_month" %}' class="tab sm:tab-lg text-base tab-active">Month</button>
+                <button value='{% url "report_year" %}' class="tab sm:tab-lg text-base">Year</button>
+                <button value='{% url "report_quarter" %}' class="tab sm:tab-lg text-base">Quarter</button>
+                <button value='{% url "report_expire" %}' class="tab sm:tab-lg text-base">Expire</button>
+            </div>
+            <button class="btn btn-sm sm:btn-md" id="predict" onclick="predict()">Predict</button>
         </div>
 
-        <form method="get" >
-            <div class="form-control max-w-xs">
+        <form method="get">
+            <div class="form-control max-w-xs pb-3">
                 {#                <label class="label">#}
                 {#                    <span class="label-text">Option</span>#}
                 {#                </label>#}
