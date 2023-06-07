@@ -19,6 +19,9 @@
         *::-webkit-scrollbar {
             display: none;
         }
+        .content-height {
+            height: calc(100% - 64px);
+        }
     </style>
 </head>
 <body class="text-base-content bg-base-200">
@@ -29,10 +32,9 @@
 
         <div class="overflow-x-hidden">
             {% if user.is_authenticated %}
-
                 <div> <!-- navbar -->
                 <div id="loading-circle"
-                             class="absolute z-20 opacity-70 left-1/2 bottom-1/2 place-items-center h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                             class="absolute z-20 opacity-70 left-1/2 top-1/2 place-items-center h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
                              role="status">
                         </div>
                     <div class="navbar bg-base-100 max-h-16 relative">
