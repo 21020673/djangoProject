@@ -32,7 +32,7 @@
         </table>
     </div>
     <div class="mt-10">
-        <div class="pagination mb-6">
+        <div class="pagination">
             <div class="step-links btn-group">
                 {% if page_obj.has_previous %}
                     <a class="btn" hx-get="?{% url_replace request 'page' 1 %}" hx-push-url="true"

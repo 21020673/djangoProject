@@ -1,6 +1,6 @@
-var loading = document.getElementById('loading-circle');
 var ctx_report = document.getElementById('myChart');
 var url = "/report/month/";
+load();
 $.ajax({
     url: url,
     type: "GET",
@@ -57,6 +57,9 @@ function getdata() {
         data: {
             'select': select.val(),
         },
+        beforeSend: function () {
+            load();
+        },
         success: function (data) {
             unload();
 
@@ -93,6 +96,9 @@ function predict() {
         type: "GET",
         data: {
             'select': select.val(),
+        },
+        beforeSend: function () {
+            load();
         },
         success: function (data) {
             unload();

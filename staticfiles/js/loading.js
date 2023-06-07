@@ -1,8 +1,6 @@
 function load() {
     let loading = document.getElementById('loading-circle');
-    setTimeout(() => {
-            loading.style.visibility = 'visible';
-        }, 300);
+    loading.style.visibility = 'visible';
 }
 
 function unload() {

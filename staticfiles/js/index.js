@@ -1,4 +1,5 @@
 var ctx = document.getElementById('myChart1');
+load();
 $.ajax({
     url: '/report/month/',
     type: "GET",
