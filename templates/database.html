@@ -5,7 +5,8 @@
 {% block content %}
 
     <div class="overflow-hidden"> <!-- wrapper -->
-        <div class="lg:flex justify-between items-baseline">
+        <div class="flex justify-between items-baseline">
+        <div class="">
             <div id="tabs-to-be-wrapped" class="tabs tabs-boxed pb-4">
                 <a href="{% url "database" %}" hx-get="{% url "database" %}" hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML"
                    hx-select="#div-table" hx-trigger="reload from:body, click"
@@ -17,7 +18,8 @@
                    hx-select="#div-table"
                    class="tab sm:tab-lg text-base{% if '/cars/' in request.path %} tab-active {% endif %}">Car</a>
             </div>
-            <form id="searchbar-to-be-wrapped" hx-get hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML" hx-select="#div-table">
+
+        <form id="searchbar-to-be-wrapped" hx-get hx-push-url="true" hx-target="#div-table" hx-swap="outerHTML" hx-select="#div-table">
                 <div class="form-control">
                     <div class="input-group">
                         <input name="search" type="text" placeholder="Search…" class="input input-bordered w-80 mb-4"/>
@@ -31,6 +33,8 @@
                     </div>
                 </div>
             </form>
+
+        </div>
 
             <div class="mb-4">
                 <span class="label-text mr-2">Filter</span>
