@@ -18,7 +18,7 @@
                 <button value='{% url "report_quarter" %}' class="tab sm:tab-lg text-base">Quarter</button>
                 <button value='{% url "report_expire" %}' class="tab sm:tab-lg text-base">Expire</button>
             </div>
-            <button class="btn btn-sm sm:btn-md" id="predict" onclick="predict()">Predict</button>
+            <button class="mb-3 sm:mb-0 btn btn-sm sm:btn-md" id="predict" onclick="predict()">Predict</button>
         </div>
 
         <form method="get">
@@ -43,7 +43,7 @@
     </div>
 
     <div class="report-chart-container">
-        <canvas id="myChart" height="460" width="600"></canvas>
+        <canvas id="myChart" height="440" width="600"></canvas>
     </div>
 
     <script>

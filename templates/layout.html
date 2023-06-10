@@ -24,6 +24,9 @@
         .report-chart-container {
             height: calc(100vh - 175px);
         }
+        .card-width {
+            width: 273px;
+        }
     </style>
 </head>
 <body class="text-base-content bg-base-200">
@@ -118,7 +121,7 @@
                 <div id="messages">
                     {% include 'partials/toast.html' %}
                 </div>
-                <div id="main-content" class="px-5 md:px-16 py-6 overflow-x-auto h-full">
+                <div id="main-content" class="px-5 md:px-16 pt-6 overflow-x-auto h-full">
                     {% block content %}{% endblock %}
                 </div>
             </main>
