@@ -78,8 +78,11 @@ class CertificateForm(ModelForm):
             'hx-swap': 'outerHTML'
         }
         self.helper.layout = Layout(
-            Div(Field('license_plate'), Field('expiry_date'), Field('make'), Field('model'), Field('generation'),
-                Field('owner_name'), Field('type'), Field('address'), Field('city'), Field('phone_number'),
+            Div(Field('license_plate', wrapper_class='order-1'), Field('expiry_date', wrapper_class='order-3'),
+                Field('make', wrapper_class='order-5'), Field('model', wrapper_class='order-7'),
+                Field('generation', wrapper_class='order-9'), Field('owner_name', wrapper_class='order-2'),
+                Field('type', wrapper_class='order-4'), Field('phone_number', wrapper_class='order-6'),
+                Field('address', wrapper_class='order-8'), Field('city', wrapper_class='order-10'),
                 css_class='md:grid grid-cols-2 gap-x-10'),
             HTML('<button class="btn btn-primary">Submit</button>'))
 
@@ -163,7 +166,6 @@ class FileUploadForm(forms.Form):
             'hx-target': '#upload-form',
             'hx-swap': 'outerHTML',
             'enctype': 'multipart/form-data',
-            'hx-select': "#div-table"
         }
         self.helper.layout = Layout(Field('file'), HTML('<button class="btn btn-primary">Upload</button>'))
 
@@ -173,12 +175,38 @@ class FileUploadForm(forms.Form):
         if not csv_file.name.endswith('.csv'):
             raise forms.ValidationError('File is not a CSV file')
         # Read the CSV file
+        data = csv_file.read().decode('utf-8-sig').splitlines()
+        reader = csv.reader(data)
+        columns = next(reader)
+        if len(columns) != 10:
+            raise forms.ValidationError('CSV file must have the correct format')
         try:
-            data = csv_file.read().decode('utf-8').splitlines()
-            reader = csv.reader(data)
-            next(reader)
             for row in reader:
+                if row[0] == '':
+                    raise forms.ValidationError('Register Center ID is empty')
                 register_center = RegisterCenter.objects.get(id=row[0])
+                if row[1] == '':
+                    raise forms.ValidationError('License Plate is empty')
+                pattern = re.compile(r'^[0-9]{2}[A-Z]-[0-9]{5}$')
+                if not pattern.match(row[1]):
+                    raise forms.ValidationError("License Plate is not valid")
+                if row[3] == '':
+                    raise forms.ValidationError('Owner Name is empty')
+                if row[4] == '':
+                    raise forms.ValidationError('Owner Type is empty')
+                if row[5] == '':
+                    raise forms.ValidationError('Phone Number is empty')
+                pattern = re.compile(r'^[0-9]{10}$')
+                if not pattern.match(row[5]):
+                    raise forms.ValidationError("Phone Number is not valid")
+                if row[6] == '':
+                    raise forms.ValidationError('Address is empty')
+                if row[7] == '':
+                    raise forms.ValidationError('City/Province is empty')
+                if row[8] == '':
+                    raise forms.ValidationError('Certificate Date is empty')
+                if row[9] == '':
+                    raise forms.ValidationError('Expiry Date is empty')
                 car = Cars.objects.get_or_create(license_plate=row[1])[0]
                 car.model_id = row[2]
                 car.save()
@@ -192,6 +220,6 @@ class FileUploadForm(forms.Form):
                                                                    certificate_date=row[8],
                                                                    expiry_date=row[9])[0]
                 id_list.append(register_data.id)
-        except csv.Error as e:
-            raise forms.ValidationError(e)
+        except Exception as e:
+            raise forms.ValidationError("Row " + str(reader.line_num) + ": " + str(e))
         return id_list

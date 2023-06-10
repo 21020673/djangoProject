@@ -1,13 +1,11 @@
 {% load tailwind_filters %}
 {% load crispy_forms_tags %}
-
 <span class="font-bold">Owner: </span>
 <span>{{ owner }}</span>
 <br>
 <span class="font-bold">License plate:</span>
 <span> {{ license_plate }}</span>
-<label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2" hx-get="{% url 'database' %}"
-       hx-push-url="true">✕</label>
+<label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
 
 {% block content %}
     {% crispy form %}

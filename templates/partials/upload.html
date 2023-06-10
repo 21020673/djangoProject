@@ -1,10 +1,7 @@
-<title id="title" hx-swap-oob="true">{{ title }}</title>
-
 {% load tailwind_filters %}
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2" hx-get="{% url 'home' %}"
-       hx-push-url="true">✕</label>
+    <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     {% crispy form %}
 {% endblock %}

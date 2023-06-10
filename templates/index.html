@@ -26,8 +26,7 @@
                             {% if user.is_superuser %}
                                 <!-- The button to open modal -->
                                 <label for="my-modal-3" class="btn btn-primary" hx-get="{% url 'upload' %}"
-                                       hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click"
-                                       hx-push-url="true">Upload</label>
+                                       hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click">Upload</label>
                                 <!-- Modal content -->
                                 <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
                                 <div class="modal">
