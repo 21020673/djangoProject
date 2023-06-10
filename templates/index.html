@@ -10,7 +10,7 @@
     </div>
     <div class="lg:grid grid-cols-12 gap-3 h-full"> <!-- grid wrapper -->
         <div class="col-span-3 flex flex-col">
-            <div class="card bg-base-100 h-fit md:h-1/3">
+            <div class="card bg-base-100 h-fit md:h-1/3 mb-8">
                 <div class="card-body">
                     <div class="flex justify-between lg:block">
                         <h2 class="card-title">Welcome, {{ user.username }}</h2>
@@ -40,30 +40,6 @@
                 </div>
             </div>
 
-            <div class="card bg-base-100 h-fit md:h-2/3 mt-10">
-                <div class="card-body">
-                    <h2 class="card-title">Todo list</h2>
-
-                    {#                        <div class="card-actions">#}
-                    {##}
-                    {#                            <div id="myDIV" class="header">#}
-                    {#                                <input type="text" id="myInput" placeholder="Title...">#}
-                    {#                                <span onclick="newElement()" class="addBtn">Add</span>#}
-                    {#                            </div>#}
-                    {##}
-                    {#                            <ul id="myUL">#}
-                    {#                                <li>Hit the gym</li>#}
-                    {#                                <li class="checked">Pay bills</li>#}
-                    {#                                <li>Meet George</li>#}
-                    {#                                <li>Buy eggs</li>#}
-                    {#                                <li>Read a book</li>#}
-                    {#                                <li>Organize office</li>#}
-                    {#                            </ul>#}
-                    {##}
-                    {#                        </div>#}
-
-                </div>
-            </div>
         </div>
 
         <div class="col-span-6 mx-5 mb-10 md:mb-0 chart-container">
@@ -75,8 +51,8 @@
             </div>
         </div>
 
-        <div class="col-span-3 flex flex-col">
-            <div class="card bg-base-100 h-1/2 overflow-y-auto card-width">
+        <div class="col-span-3 flex flex-col card-width">
+            <div class="card bg-base-100 card-height overflow-y-auto">
                 <div class="card-body">
                     <h2 class="card-title">
                         <a class="link link-hover" href="database/register_data/?sort=expire"
@@ -105,7 +81,7 @@
                     </table>
                 </div>
             </div>
-            <div class="card bg-base-100 h-1/2 overflow-y-auto card-width mt-10">
+            <div class="card bg-base-100 card-height overflow-y-auto mt-10 mb-10 lg:mb-0">
                 <div class="card-body">
                     <h2 class="card-title"><a class="link link-hover" href="database/register_data/?sort=month"
                                               hx-get="database/register_data/?sort=month" hx-push-url="true"

@@ -1,5 +1,6 @@
 {% load static %}
 {% block content %}
+    <script src="{% static 'js/filter_hide.js' %}"></script>
     <div id="messages" hx-swap-oob="true">
         {% include 'partials/toast.html' %}
     </div>
@@ -45,7 +46,7 @@
                 </div>
 
                 <!-- Filter -->
-                <div class="mb-4">
+                <div class="mb-4" id="filter-1">
                     <span class="label-text mr-2">Filter</span>
                     <select class="select select-bordered" name="sort" hx-get="{% url "database" %}" hx-push-url="true"
                             hx-target="#div-table"
@@ -95,7 +96,7 @@
                 </form>
 
                 <!-- Filter -->
-                <div class="mb-4">
+                <div class="mb-4" id="filter-2">
                     <span class="label-text mr-2">Filter</span>
                     <select class="select select-bordered" name="sort" hx-get="{% url "database" %}" hx-push-url="true"
                             hx-target="#div-table"

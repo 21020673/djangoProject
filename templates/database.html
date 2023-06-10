@@ -3,6 +3,7 @@
 
 {% block title %}Database{% endblock %}
 {% block content %}
+    <script src="{% static 'js/filter_hide.js' %}"></script>
 
     <div class="overflow-hidden"> <!-- wrapper -->
         <div>
@@ -45,7 +46,7 @@
                 </div>
 
                 <!-- Filter -->
-                <div class="mb-4">
+                <div class="mb-4" id="filter-3">
                     <span class="label-text mr-2">Filter</span>
                     <select class="select select-bordered" name="sort" hx-get="{% url "database" %}" hx-push-url="true"
                             hx-target="#div-table"
@@ -95,7 +96,7 @@
                 </form>
 
                 <!-- Filter -->
-                <div class="mb-4">
+                <div class="mb-4" id="filter-4">
                     <span class="label-text mr-2">Filter</span>
                     <select class="select select-bordered" name="sort" hx-get="{% url "database" %}" hx-push-url="true"
                             hx-target="#div-table"
