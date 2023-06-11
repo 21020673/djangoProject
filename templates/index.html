@@ -8,25 +8,33 @@
          class="absolute z-20 opacity-70 left-1/2 top-1/2 place-items-center h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
          role="status" style="visibility: hidden">
     </div>
-    <div class="lg:grid grid-cols-12 gap-3 h-full"> <!-- grid wrapper -->
-        <div class="col-span-3 flex flex-col">
-            <div class="card bg-base-100 h-fit md:h-1/3 mb-8">
+    <div class="lg:grid grid-cols-12 grid-flow-col gap-3"> <!-- grid wrapper -->
+
+        <div class="flex lg:hidden flex-col my-5">
+            <div class="card bg-base-100 h-fit md:h-1/3">
                 <div class="card-body">
-                    <div class="flex justify-between lg:block">
+                    <div class="flex justify-between">
                         <h2 class="card-title">Welcome, {{ user.username }}</h2>
 
-                        <div class="card-actions lg:mt-5">
+                        <div class="card-actions">
                             {% if not user.is_superuser %}
-                                <button class="btn btn-primary" href="{% url 'register-certificate' %}"
+                                <button class="btn btn-sm sm:btn-md btn-primary" href="{% url 'register-certificate' %}"
                                         hx-get="{% url 'register-certificate' %}" hx-push-url="true"
                                         hx-target="#main-content"
-                                        hx-swap="innerHTML">Register new car
+                                        hx-swap="innerHTML">
+                                    <span class="hidden sm:block">Register new car</span>
+                                    <span class="sm:hidden">Register</span>
                                 </button>
                             {% endif %}
                             {% if user.is_superuser %}
                                 <!-- The button to open modal -->
-                                <label for="my-modal-3" class="btn btn-primary" hx-get="{% url 'upload' %}"
-                                       hx-target="#modal-content" hx-swap="innerHTML" hx-trigger="click">Upload</label>
+                                <label for="my-modal-3" class="btn btn-sm sm:btn-md btn-primary"
+                                       hx-get="{% url 'upload' %}"
+                                       hx-target="#modal-content" hx-swap="innerHTML"
+                                       hx-trigger="click">
+                                    <span class="hidden sm:block">Upload database</span>
+                                    <span class="sm:hidden">Upload</span>
+                                </label>
                                 <!-- Modal content -->
                                 <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
                                 <div class="modal">
@@ -39,8 +47,7 @@
                 </div>
             </div>
 
-        </div>
-
+        </div> <!-- Welcome card on smaller screen size -->
         <div class="col-span-6 mx-5 mb-10 md:mb-0 chart-container">
             <div class="pb-3 h-1/2">
                 <canvas id="myChart2"></canvas>
@@ -48,67 +55,110 @@
             <div class=" h-1/2">
                 <canvas id="myChart1"></canvas>
             </div>
-        </div>
+        </div> <!-- Charts card-->
 
-        <div class="col-span-3 flex flex-col card-width">
-            <div class="card bg-base-100 card-height overflow-y-auto">
-                <div class="card-body">
-                    <h2 class="card-title">
-                        <a class="link link-hover" href="database/register_data/?sort=expire"
-                           hx-get="database/register_data/?sort=expire" hx-push-url="true" hx-target="#main-content"
-                           hx-swap="innerHTML">Certificates expiring
-                            this month</a></h2>
-                    <table class="table w-full table-compact md:table-normal">
-                        <thead>
-                        <tr class="text-neutral-content">
-                            <th class="bg-base-300 text-base-content">Owner</th>
-                            <th class="bg-base-300 text-base-content">LP</th>
-                        </tr>
-                        </thead>
-                        <tbody class="overflow-auto">
-                        {% for car in list_expired|slice:5 %}
-                            <tr class="hover">
-                                <td>{{ car.owner.name }}</td>
+        <div class="col-span-6">
+            <div class="hidden lg:flex flex-col mt-5">
+                <div class="card bg-base-100 h-fit md:h-1/3">
+                    <div class="card-body">
+                        <div class="flex justify-between">
+                            <h2 class="card-title">Welcome, {{ user.username }}</h2>
 
-                                <td>
-                                    <div>
-                                        <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                            <div class="card-actions lg:my-2.5">
+                                {% if not user.is_superuser %}
+                                    <button class="btn btn-sm sm:btn-md btn-primary"
+                                            href="{% url 'register-certificate' %}"
+                                            hx-get="{% url 'register-certificate' %}" hx-push-url="true"
+                                            hx-target="#main-content"
+                                            hx-swap="innerHTML">
+                                        <span class="hidden sm:block">Register new car</span>
+                                        <span class="sm:hidden">Register</span>
+                                    </button>
+                                {% endif %}
+                                {% if user.is_superuser %}
+                                    <!-- The button to open modal -->
+                                    <label for="my-modal-3" class="btn btn-sm sm:btn-md btn-primary"
+                                           hx-get="{% url 'upload' %}"
+                                           hx-target="#modal-content" hx-swap="innerHTML"
+                                           hx-trigger="click">
+                                        <span class="hidden sm:block">Upload database</span>
+                                        <span class="sm:hidden">Upload</span>
+                                    </label>
+                                    <!-- Modal content -->
+                                    <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
+                                    <div class="modal">
+                                        <div class="modal-box relative" id="modal-content">
+                                        </div>
                                     </div>
-                                </td>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- Welcome card on larger screen size -->
+
+            <div class="col-span-3 sm:grid grid-cols-2 gap-5 h-2/3 mt-5 mb-10 lg:mb-0"> <!-- Tables-->
+                <div class="card bg-base-100 overflow-y-auto">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <a class="link link-hover" href="database/register_data/?sort=expire"
+                               hx-get="database/register_data/?sort=expire" hx-push-url="true" hx-target="#main-content"
+                               hx-swap="innerHTML">Certificates expiring
+                                this month</a></h2>
+                        <table class="table w-full table-compact md:table-normal">
+                            <thead>
+                            <tr class="text-neutral-content">
+                                <th class="bg-base-300 text-base-content">Owner</th>
+                                <th class="bg-base-300 text-base-content">LP</th>
                             </tr>
-                        {% endfor %}
-                    </table>
+                            </thead>
+                            <tbody class="overflow-auto">
+                            {% for car in list_expired|slice:5 %}
+                                <tr class="hover">
+                                    <td>{{ car.owner.name }}</td>
+
+                                    <td>
+                                        <div>
+                                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <div class="card bg-base-100 overflow-y-auto mt-5 sm:mt-0">
+                    <div class="card-body">
+                        <h2 class="card-title"><a class="link link-hover" href="database/register_data/?sort=month"
+                                                  hx-get="database/register_data/?sort=month" hx-push-url="true"
+                                                  hx-target="#main-content" hx-swap="innerHTML">Cars registered this
+                            month</a></h2>
+                        <table class="table w-full table-compact md:table-normal">
+                            <thead>
+                            <tr class="text-neutral-content">
+                                <th class="bg-base-300 text-base-content">Owner</th>
+                                <th class="bg-base-300 text-base-content">LP</th>
+                            </tr>
+                            </thead>
+                            <tbody class="overflow-auto">
+                            {% for car in list_register|slice:5 %}
+                                <tr class="hover">
+                                    <td>{{ car.owner.name }}</td>
+
+                                    <td>
+                                        <div>
+                                            <div class="font-bold">{{ car.license_plate.license_plate }}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="card bg-base-100 card-height overflow-y-auto mt-10 mb-10 lg:mb-0">
-                <div class="card-body">
-                    <h2 class="card-title"><a class="link link-hover" href="database/register_data/?sort=month"
-                                              hx-get="database/register_data/?sort=month" hx-push-url="true"
-                                              hx-target="#main-content" hx-swap="innerHTML">Cars registered this
-                        month</a></h2>
-                    <table class="table w-full table-compact md:table-normal">
-                        <thead>
-                        <tr class="text-neutral-content">
-                            <th class="bg-base-300 text-base-content">Owner</th>
-                            <th class="bg-base-300 text-base-content">LP</th>
-                        </tr>
-                        </thead>
-                        <tbody class="overflow-auto">
-                        {% for car in list_register|slice:5 %}
-                            <tr class="hover">
-                                <td>{{ car.owner.name }}</td>
+        </div> <!-- Table cards-->
 
-                                <td>
-                                    <div>
-                                        <div class="font-bold">{{ car.license_plate.license_plate }}</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
     <script src="{% static 'js/loading.js' %}"></script>
     <script src="{% static 'js/index.js' %}"></script>
