@@ -37,8 +37,6 @@ class RegisterDataView(ListView):
             search_item = self.request.GET.get('search')
             objects = objects.filter(Q(owner__name__icontains=search_item) |
                                      Q(license_plate__license_plate__icontains=search_item) |
-                                     Q(license_plate__model__make__icontains=search_item) |
-                                     Q(license_plate__model__model__icontains=search_item) |
                                      Q(register_center__city_province__icontains=search_item)
                                      )
         ordering = self.request.GET.get('sort')

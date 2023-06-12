@@ -16,15 +16,6 @@
         *::-webkit-scrollbar {
             display: none;
         }
-
-        .chart-container {
-            height: calc(100vh - 112px);
-        }
-
-        .report-chart-container {
-            height: calc(100vh - 175px);
-        }
-
     </style>
 </head>
 <body class="text-base-content bg-base-200">
@@ -114,7 +105,7 @@
             <script src="{% static 'js/theme_switch.js' %}"></script>
 
             <!------- MAIN CONTENT ------->
-            <main class="content-height">
+            <main>
                 <div id="messages">
                     {% include 'partials/toast.html' %}
                 </div>
