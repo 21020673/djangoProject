@@ -1,4 +1,4 @@
-<div class="md:grid grid-cols-2 mt-20">
+<div class="">
     {% load static %}
     <img class="opacity-60" src="{% static "generic-car.png" %}">
 
@@ -9,7 +9,7 @@
             <li><span class="font-semibold">Production years: </span> from {{ car.year_from }} to {{ car.year_to }}
             </li>
             <li><span class="font-semibold">Body type: </span> {{ car.body_type }}</li>
-            <li><span class="font-semibold">Maximum power - Output - Horsepower: </span>{{ car.engine_hp }} HP</li>
+            <li><span class="font-semibold">Maximum power: </span>{{ car.engine_hp }} HP</li>
             <li>
                 <span class="font-semibold">Length: </span>{{ car.length_mm }} mm /
                 <span class="font-semibold">Width: </span>{{ car.width_mm }} mm /
@@ -18,9 +18,6 @@
             </li>
             <li><span class="font-semibold">Curb weight: </span> {{ car.curb_weight_kg }} kg</li>
         </ul>
-
-
-        {# example: https://www.ultimatespecs.com/car-specs/Acura/M11503/ILX-2019 #}
     </div>
 </div>
 <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>

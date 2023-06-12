@@ -28,17 +28,17 @@
                             {% endif %}
                             {% if user.is_superuser %}
                                 <!-- The button to open modal -->
-                                <label for="my-modal-3" class="btn btn-sm sm:btn-md btn-primary"
+                                <label for="my-modal-2" class="btn btn-sm sm:btn-md btn-primary"
                                        hx-get="{% url 'upload' %}"
-                                       hx-target="#modal-content" hx-swap="innerHTML"
+                                       hx-target="#modal-content-2" hx-swap="innerHTML"
                                        hx-trigger="click">
                                     <span class="hidden sm:block">Upload database</span>
                                     <span class="sm:hidden">Upload</span>
                                 </label>
                                 <!-- Modal content -->
-                                <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
+                                <input type="checkbox" id="my-modal-2" class="modal-toggle"/>
                                 <div class="modal">
-                                    <div class="modal-box relative" id="modal-content">
+                                    <div class="modal-box relative" id="modal-content-2">
                                     </div>
                                 </div>
                             {% endif %}

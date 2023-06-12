@@ -25,14 +25,6 @@
             height: calc(100vh - 175px);
         }
 
-        @media (min-width: 1024px) {
-            .card-width {
-                width: 273px;
-            }
-
-        }
-
-
     </style>
 </head>
 <body class="text-base-content bg-base-200">
@@ -224,8 +216,6 @@
 
             {% if perms.UserManagement.add_user %}
                 <li>
-
-
                     <a hx-get="{% url 'register' %}" hx-push-url="true" hx-target="#main-content"
                        hx-swap="innerHTML"
                        href="{% url 'register' %}">
@@ -238,12 +228,9 @@
                             <span class="ml-3">Register User</span>
                         </div>
                     </a>
-
                 </li>
             {% endif %}
             <li>
-
-
                 <a class="text-red-400" href="{% url 'logout' %}">
                     <div class="flex">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -254,7 +241,6 @@
                         <span class="ml-3">Log out</span>
                     </div>
                 </a>
-
             </li>
 
         </ul>
